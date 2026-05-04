@@ -143,8 +143,8 @@ class TransactionsViewModel @Inject constructor(
         transactionCurrenciesFlow.map { txCurrencies ->
             (txCurrencies + accountCurrencies).distinct().sortedWith { a, b ->
                 when {
-                    a == "INR" -> -1 // INR first
-                    b == "INR" -> 1
+                    a == "NPR" -> -1 // NPR first
+                    b == "NPR" -> 1
                     else -> a.compareTo(b) // Alphabetical for others
                 }
             }

@@ -1996,6 +1996,13 @@ private fun TransactionReceipt(
                     }
 
 
+                    val transactionTypeLabel = transaction.transactionType.name.lowercase()
+                        .replaceFirstChar { it.uppercase() }
+                    ReceiptInfoRow(
+                        label = "Type",
+                        value = transactionTypeLabel,
+                        icon = null
+                    )
                     if (transaction.cardType != null) {
                         ReceiptInfoRow(
                             label = "Card Type",
