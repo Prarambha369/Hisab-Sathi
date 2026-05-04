@@ -5,6 +5,9 @@ import com.ritesh.parser.core.Constants
 import com.ritesh.parser.core.ParsedTransaction
 import com.ritesh.parser.core.TransactionType
 import java.math.BigDecimal
+import java.time.LocalDate
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
 abstract class BankParser {
     abstract fun getBankName(): String
@@ -151,12 +154,19 @@ abstract class BankParser {
     }
 
     protected open fun extractDueDate(message: String): Long? {
-        val patterns = listOf(
-            Regex("""Due Date[:\s]+(\d{4}-\d{2}-\d{2})""", RegexOption.IGNORE_CASE),
-            Regex("""Due Date[:\s]+(\d{2}/\d{2}/\d{4})""", RegexOption.IGNORE_CASE)
-        )
-        for (pattern in patterns) {
-            pattern.find(message)?.let { return 1730764800000L }
+        val isoPattern = Regex("""Due Date[:\s]+(\d{4}-\d{2}-\d{2})""", RegexOption.IGNORE_CASE)
+        val dmyPattern = Regex("""Due Date[:\s]+(\d{2}/\d{2}/\d{4})""", RegexOption.IGNORE_CASE)
+        isoPattern.find(message)?.let { match ->
+            return try {
+                LocalDate.parse(match.groupValues[1], DateTimeFormatter.ISO_LOCAL_DATE)
+                    .atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
+            } catch (_: Exception) { null }
+        }
+        dmyPattern.find(message)?.let { match ->
+            return try {
+                LocalDate.parse(match.groupValues[1], DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+                    .atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
+            } catch (_: Exception) { null }
         }
         return null
     }

@@ -116,17 +116,17 @@ object CurrencyFormatter {
 
     /**
      * Gets the base currency for a bank using the BankParserFactory
-     * Returns INR as default for unknown banks
+     * Returns NPR as default for unknown banks
      */
     fun getBankBaseCurrency(bankName: String?): String {
-        if (bankName == null) return "INR"
+        if (bankName == null) return "NPR"
 
         // Try to find a parser that can handle this bank name
         return try {
             val parser = BankParserFactory.getParser(bankName)
-            parser?.getCurrency() ?: "INR"
+            parser?.getCurrency() ?: "NPR"
         } catch (e: Exception) {
-            "INR"
+            "NPR"
         }
     }
 }

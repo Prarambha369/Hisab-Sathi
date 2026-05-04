@@ -2003,6 +2003,17 @@ private fun TransactionReceipt(
                             icon = null
                         )
                     }
+                    if (transaction.dueDate != null) {
+                        val dueDateStr = java.time.Instant.ofEpochMilli(transaction.dueDate)
+                            .atZone(java.time.ZoneId.systemDefault())
+                            .toLocalDate()
+                            .format(DateTimeFormatter.ofPattern("d MMM yyyy"))
+                        ReceiptInfoRow(
+                            label = "Due Date",
+                            value = dueDateStr,
+                            icon = null
+                        )
+                    }
                     if (transaction.minDue != null) {
                         ReceiptInfoRow(
                             label = "Min Due",

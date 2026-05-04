@@ -670,9 +670,7 @@ data class TransactionUiState(
     val isRecurring: Boolean = false,
     val selectedAccount: AccountBalanceEntity? = null,
     val targetAccount: AccountBalanceEntity? = null,
-    val currency: String = "INR",
-    val isLoading: Boolean = false,
-    val error: String? = null
+    val currency: String = "NPR",
 ) {
     val isValid: Boolean
         get() =

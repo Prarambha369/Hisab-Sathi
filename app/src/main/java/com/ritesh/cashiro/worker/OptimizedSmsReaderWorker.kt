@@ -30,6 +30,7 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.flow.first
+import androidx.work.workDataOf
 import java.math.BigDecimal
 import java.time.Instant
 import java.time.LocalDateTime
@@ -81,15 +82,41 @@ class OptimizedSmsReaderWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         try {
-            Log.d(TAG, "Starting SMS reading and parsing work...")
+            // Check if this is a force resync request
+            val forceResync = inputData.getBoolean(INPUT_FORCE_RESYNC, false)
+            Log.d(TAG, "Starting SMS reading and parsing work... (forceResync: $forceResync)")
+
+            // If force resync, clear existing data first so old messages are reprocessed
+            if (forceResync) {
+                Log.d(TAG, "Force resync: Clearing existing transactions and account balances...")
+                transactionRepository.deleteAllTransactions()
+                accountBalanceRepository.deleteAllBalances()
+                Log.d(TAG, "Force resync: Database cleared, starting fresh scan")
+            }
 
             // Read SMS messages
-            val messages = readSmsMessages()
+            val messages = readSmsMessages(forceResync)
             Log.d(TAG, "Found ${messages.size} SMS messages")
+
+            val totalBatches = 1 // Sequential processing
+            // Report initial progress
+            setProgress(
+                workDataOf(
+                    PROGRESS_TOTAL to messages.size,
+                    PROGRESS_PROCESSED to 0,
+                    PROGRESS_PARSED to 0,
+                    PROGRESS_SAVED to 0,
+                    PROGRESS_TIME_ELAPSED to 0L,
+                    PROGRESS_ESTIMATED_TIME_REMAINING to 0L,
+                    PROGRESS_CURRENT_BATCH to 1,
+                    PROGRESS_TOTAL_BATCHES to totalBatches
+                )
+            )
 
             var parsedCount = 0
             var savedCount = 0
             var subscriptionCount = 0
+            val startTime = System.currentTimeMillis()
 
             // Process all messages from the scan period
             for (sms in messages) {
@@ -458,6 +485,21 @@ class OptimizedSmsReaderWorker @AssistedInject constructor(
                 }
             }
 
+            val elapsed = System.currentTimeMillis() - startTime
+            // Report final progress
+            setProgress(
+                workDataOf(
+                    PROGRESS_TOTAL to messages.size,
+                    PROGRESS_PROCESSED to messages.size,
+                    PROGRESS_PARSED to parsedCount,
+                    PROGRESS_SAVED to savedCount,
+                    PROGRESS_TIME_ELAPSED to elapsed,
+                    PROGRESS_ESTIMATED_TIME_REMAINING to 0L,
+                    PROGRESS_CURRENT_BATCH to totalBatches,
+                    PROGRESS_TOTAL_BATCHES to totalBatches
+                )
+            )
+
             Result.success()
         } catch (e: Exception) {
             Log.e(TAG, "Error in SMS parsing work", e)
@@ -469,7 +511,7 @@ class OptimizedSmsReaderWorker @AssistedInject constructor(
      * Reads SMS messages from the device's SMS content provider.
      * Also attempts to read RCS messages from MMS provider.
      */
-    private suspend fun readSmsMessages(): List<SmsMessage> {
+    private suspend fun readSmsMessages(forceResync: Boolean = false): List<SmsMessage> {
         val messages = mutableListOf<SmsMessage>()
 
         try {
@@ -481,7 +523,11 @@ class OptimizedSmsReaderWorker @AssistedInject constructor(
             val now = System.currentTimeMillis()
 
             // Determine if we need a full scan
-            val needsFullScan = lastScanTimestamp == 0L || scanAllTime || scanMonths > lastScanPeriod
+            val needsFullScan = forceResync || lastScanTimestamp == 0L || scanAllTime || scanMonths > lastScanPeriod
+
+            if (forceResync) {
+                Log.d(TAG, "Force resync requested - performing full scan and reprocessing all messages")
+            }
 
             // Calculate scan start time with 3-day buffer for incremental scans
             val scanStartTime = if (needsFullScan) {

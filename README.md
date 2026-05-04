@@ -73,23 +73,19 @@ Hisab Sathi is a comprehensive financial tracking manager designed for Nepal. It
 
 ## Supported Nepali Banks & Wallets
 
-Supporting **8+ Nepali financial institutions** with **NPR currency**:
+Supporting **8 Nepali financial institutions** with **NPR currency**:
 
 ### 💳 Digital Wallets (2)
 - **eSewa** - Nepal's most popular digital wallet
 - **Khalti** - Popular digital wallet for payments
 
-### 🏦 Commercial Banks (10)
+### 🏦 Commercial Banks (6)
 - **Nabil Bank** - First private bank of Nepal
-- **NIC Asia Bank** - Largest private bank by deposits
-- **Global IME Bank** - Leading commercial bank
 - **NMB Bank** - NMB Bank Limited
 - **Everest Bank** - Everest Bank Limited
 - **Laxmi Sunrise Bank** - Laxmi Sunrise Bank Limited
 - **Siddhartha Bank** - Siddhartha Bank Limited
 - **Himalayan Bank** - Himalayan Bank Limited
-- **Rastriya Banijya Bank** - Largest government bank
-- **Nepal Bank Limited** - Oldest bank of Nepal
 
 More Nepali banks coming soon! [Request your bank →](https://github.com/ritesh-kanwar/Hisab%20Sathi/issues/new?template=bank_support_request.md)
 

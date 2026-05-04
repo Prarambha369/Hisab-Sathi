@@ -22,9 +22,7 @@ constructor(private val subscriptionRepository: SubscriptionRepository) {
         bankName: String? = null,
         autoRenewal: Boolean = true,
         paymentReminder: Boolean = true,
-        currency: String = "INR",
-        notes: String? = null,
-        lastPaidDate: LocalDate? = null
+        currency: String = "NPR",
     ): Long {
         Log.d("AddSubscriptionUseCase", "Creating subscription entity...")
 

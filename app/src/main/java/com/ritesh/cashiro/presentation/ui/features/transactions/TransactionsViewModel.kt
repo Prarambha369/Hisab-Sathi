@@ -78,14 +78,14 @@ class TransactionsViewModel @Inject constructor(
     private val _sortOption = MutableStateFlow(SortOption.DATE_NEWEST)
     val sortOption: StateFlow<SortOption> = _sortOption.asStateFlow()
 
-    private val _selectedCurrency = MutableStateFlow("INR") // Default to INR
+    private val _selectedCurrency = MutableStateFlow("NPR") // Default to NPR
     val selectedCurrency: StateFlow<String> = _selectedCurrency.asStateFlow()
 
     val baseCurrency: StateFlow<String> = currencyRepository.baseCurrencyCode
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = "INR"
+            initialValue = "NPR"
         )
 
     // Store custom date range as epoch days to survive process death
