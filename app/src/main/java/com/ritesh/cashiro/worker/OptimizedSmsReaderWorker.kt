@@ -519,13 +519,14 @@ class OptimizedSmsReaderWorker @AssistedInject constructor(
                 incrementalStart
             }
 
-            // Query SMS inbox from the scan start time
+            // Query SMS inbox from the scan start time in chronological order so
+            // balance reconstruction uses earlier messages before later ones.
             val cursor = applicationContext.contentResolver.query(
                 Telephony.Sms.CONTENT_URI,
                 SMS_PROJECTION,
                 "${Telephony.Sms.TYPE} = ? AND ${Telephony.Sms.DATE} >= ?",
                 arrayOf(Telephony.Sms.MESSAGE_TYPE_INBOX.toString(), scanStartTime.toString()),
-                "${Telephony.Sms.DATE} DESC"
+                "${Telephony.Sms.DATE} ASC"
             )
 
             cursor?.use {
