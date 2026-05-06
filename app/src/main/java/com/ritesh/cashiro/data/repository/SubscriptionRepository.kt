@@ -3,10 +3,6 @@ package com.ritesh.cashiro.data.repository
 import com.ritesh.cashiro.data.database.dao.SubscriptionDao
 import com.ritesh.cashiro.data.database.entity.SubscriptionEntity
 import com.ritesh.cashiro.data.database.entity.SubscriptionState
-import com.ritesh.parser.core.bank.HDFCBankParser
-import com.ritesh.parser.core.bank.IndianBankParser
-import com.ritesh.parser.core.bank.SBIBankParser
-import com.ritesh.parser.core.bank.FederalBankParser
 import com.ritesh.parser.core.MandateInfo
 import com.ritesh.cashiro.presentation.common.icons.CategoryMapping
 import kotlinx.coroutines.flow.Flow
@@ -66,80 +62,10 @@ class SubscriptionRepository @Inject constructor(
     suspend fun deleteAllSubscriptions() =
         subscriptionDao.deleteAllSubscriptions()
     
-    /**
-     * Creates or updates a subscription from HDFC E-Mandate info
-     */
-    suspend fun createOrUpdateFromEMandate(
-        eMandateInfo: HDFCBankParser.EMandateInfo,
-        bankName: String = "HDFC Bank",
-        smsBody: String? = null
-    ): Long = createOrUpdateFromMandate(eMandateInfo, bankName, smsBody)
-    
-    /**
-     * Checks if a transaction matches any active subscription
-     */
-    suspend fun matchTransactionToSubscription(
-        merchantName: String,
-        amount: BigDecimal
-    ): SubscriptionEntity? {
-        val activeSubscription = subscriptionDao.getActiveSubscriptionByMerchant(merchantName)
         
-        // Check if amounts match (with some tolerance for small variations)
-        return if (activeSubscription != null && 
-                   areAmountsEqual(activeSubscription.amount, amount)) {
-            activeSubscription
-        } else {
-            null
-        }
-    }
-    
-    /**
-     * Updates the next payment date after a subscription charge
-     */
-    suspend fun updateNextPaymentDateAfterCharge(
-        subscriptionId: Long,
-        chargeDate: LocalDate = LocalDate.now()
-    ) {
-        // Assume monthly subscription, add 30 days
-        val nextDate = chargeDate.plusDays(30)
-        subscriptionDao.updateNextPaymentDate(subscriptionId, nextDate)
-    }
-    
-    
-    private fun areAmountsEqual(amount1: BigDecimal, amount2: BigDecimal): Boolean {
-        // Allow for small variations (up to 5%)
-        val tolerance = amount1.multiply(BigDecimal("0.05"))
-        val diff = amount1.subtract(amount2).abs()
-        return diff <= tolerance
-    }
-    
-    /**
-     * Creates or updates a subscription from Indian Bank Mandate info
-     */
-    suspend fun createOrUpdateFromIndianBankMandate(
-        mandateInfo: IndianBankParser.IndianMandateInfo,
-        bankName: String = "Indian Bank",
-        smsBody: String? = null
-    ): Long = createOrUpdateFromMandate(mandateInfo, bankName, smsBody)
-    
-    /**
-     * Creates or updates a subscription from SBI UPI-Mandate info
-     */
-    suspend fun createOrUpdateFromSBIMandate(
-        upiMandateInfo: SBIBankParser.UPIMandateInfo,
-        bankName: String = "SBI",
-        smsBody: String? = null
-    ): Long = createOrUpdateFromMandate(upiMandateInfo, bankName, smsBody)
 
-    /**
-     * Creates or updates a subscription from Federal Bank E-Mandate info
-     */
-    suspend fun createOrUpdateFromFederalBankMandate(
-        mandateInfo: FederalBankParser.EMandateInfo,
-        bankName: String = "Federal Bank",
-        smsBody: String? = null
-    ): Long = createOrUpdateFromMandate(mandateInfo, bankName, smsBody)
-
+    
+    
     /**
      * Creates or updates a subscription from any MandateInfo implementation.
      * This is the unified method that can handle mandates from any bank.
@@ -230,6 +156,33 @@ class SubscriptionRepository @Inject constructor(
 
     suspend fun updatePaymentStatus(id: Long, nextPaymentDate: LocalDate, lastPaidDate: LocalDate?) =
         subscriptionDao.updatePaymentStatus(id, nextPaymentDate, lastPaidDate)
+
+
+    suspend fun matchTransactionToSubscription(
+        merchantName: String,
+        amount: BigDecimal
+    ): SubscriptionEntity? {
+        val activeSubscription = subscriptionDao.getActiveSubscriptionByMerchant(merchantName)
+        return if (activeSubscription != null && areAmountsEqual(activeSubscription.amount, amount)) {
+            activeSubscription
+        } else {
+            null
+        }
+    }
+
+    suspend fun updateNextPaymentDateAfterCharge(
+        subscriptionId: Long,
+        chargeDate: LocalDate = LocalDate.now()
+    ) {
+        val nextDate = chargeDate.plusDays(30)
+        subscriptionDao.updateNextPaymentDate(subscriptionId, nextDate)
+    }
+
+    private fun areAmountsEqual(amount1: BigDecimal, amount2: BigDecimal): Boolean {
+        val tolerance = amount1.multiply(BigDecimal("0.05"))
+        val diff = amount1.subtract(amount2).abs()
+        return diff <= tolerance
+    }
 
     private fun determineCategory(merchantName: String): String {
         // Use unified category mapping

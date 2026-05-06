@@ -5,347 +5,124 @@ import com.ritesh.parser.core.Constants
 import com.ritesh.parser.core.ParsedTransaction
 import com.ritesh.parser.core.TransactionType
 import java.math.BigDecimal
+import java.time.LocalDate
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
-/**
- * Base class for bank-specific message parsers.
- * Each bank should extend this class and implement its specific parsing logic.
- * Hisab Sathi - नेपाली एसएमएस बैंकिङ एआई
- */
 abstract class BankParser {
-
-    /**
-     * Returns the name of the bank this parser handles.
-     */
     abstract fun getBankName(): String
-
-    /**
-     * Checks if this parser can handle messages from the given sender.
-     */
+    open fun getCurrency(): String = "NPR"
     abstract fun canHandle(sender: String): Boolean
 
-    /**
-     * Returns the currency used by this bank.
-     * Defaults to NPR for Nepali banks.
-     */
-    open fun getCurrency(): String = "NPR"
+    fun parse(message: String, sender: String, timestamp: Long): ParsedTransaction? {
+        if (!isTransactionMessage(message)) return null
 
-    /**
-     * Parses an SMS message and extracts transaction information.
-     * Returns null if the message cannot be parsed.
-     */
-    open fun parse(smsBody: String, sender: String, timestamp: Long): ParsedTransaction? {
-        // Skip non-transaction messages
-        if (!isTransactionMessage(smsBody)) {
-            return null
-        }
-
-        val amount = extractAmount(smsBody)
-        if (amount == null) {
-            return null
-        }
-
-        val type = extractTransactionType(smsBody)
-        if (type == null) {
-            return null
-        }
-
-        // Extract available limit for credit card transactions
-        val availableLimit = if (type == TransactionType.CREDIT) {
-            val limit = extractAvailableLimit(smsBody)
-            limit
-        } else {
-            null
-        }
+        val amount = extractAmount(message) ?: return null
+        val type = extractTransactionType(message) ?: return null
 
         return ParsedTransaction(
             amount = amount,
             type = type,
-            merchant = extractMerchant(smsBody, sender),
-            reference = extractReference(smsBody),
-            accountLast4 = extractAccountLast4(smsBody),
-            balance = extractBalance(smsBody),
-            creditLimit = availableLimit,
-            smsBody = smsBody,
+            merchant = extractMerchant(message, sender),
+            reference = extractReference(message),
+            accountLast4 = extractAccountLast4(message),
+            balance = extractBalance(message),
+            creditLimit = extractAvailableLimit(message),
+            smsBody = message,
             sender = sender,
             timestamp = timestamp,
             bankName = getBankName(),
-            isFromCard = detectIsCard(smsBody),
-            currency = getCurrency()
+            isFromCard = detectIsCard(message),
+            currency = getCurrency(),
+            cardType = extractCardType(message),
+            dueDate = extractDueDate(message),
+            minDue = extractMinDue(message)
         )
     }
 
-    /**
-     * Checks if the message is a transaction message (not OTP, promotional, etc.)
-     */
     protected open fun isTransactionMessage(message: String): Boolean {
         val lowerMessage = message.lowercase()
-
-        // Skip OTP messages
-        if (lowerMessage.contains("otp") ||
-            lowerMessage.contains("one time password") ||
-            lowerMessage.contains("verification code")
-        ) {
-            return false
-        }
-
-        // Skip promotional messages
-        if (lowerMessage.contains("offer") ||
-            lowerMessage.contains("discount") ||
-            lowerMessage.contains("cashback offer") ||
-            lowerMessage.contains("win ")
-        ) {
-            return false
-        }
-
-        // Skip payment request messages (common across banks)
-        if (lowerMessage.contains("has requested") ||
-            lowerMessage.contains("payment request") ||
-            lowerMessage.contains("collect request") ||
-            lowerMessage.contains("requesting payment") ||
-            lowerMessage.contains("requests rs") ||
-            lowerMessage.contains("ignore if already paid")
-        ) {
-            return false
-        }
-
-        // Skip merchant payment acknowledgments
-        if (lowerMessage.contains("have received payment")) {
-            return false
-        }
-
-        // Skip payment reminder/due messages
-        if (lowerMessage.contains("is due") ||
-            lowerMessage.contains("min amount due") ||
-            lowerMessage.contains("minimum amount due") ||
-            lowerMessage.contains("in arrears") ||
-            lowerMessage.contains("is overdue") ||
-            lowerMessage.contains("ignore if paid") ||
-            (lowerMessage.contains("pls pay") && lowerMessage.contains("min of"))
-        ) {
-            return false
-        }
-
-        // Must contain transaction keywords
-        val transactionKeywords = listOf(
-            "debited", "credited", "withdrawn", "deposited",
-            "spent", "received", "transferred", "paid"
-        )
-
+        if (lowerMessage.contains("otp") || lowerMessage.contains("verification code")) return false
+        val transactionKeywords = listOf("debited", "credited", "withdrawn", "deposited", "spent", "received", "transferred", "paid", "purchase")
         return transactionKeywords.any { lowerMessage.contains(it) }
     }
 
-    /**
-     * Extracts the transaction currency from the message.
-     * Can be overridden by specific bank parsers for custom logic.
-     */
-    protected open fun extractCurrency(message: String): String? {
-        val currencyPattern = Regex("""([A-Z]{3})\s*[0-9,]+(?:\.\d{2})?""", RegexOption.IGNORE_CASE)
-        currencyPattern.find(message)?.let { match ->
-            return match.groupValues[1].uppercase()
-        }
-        return null
-    }
-
-    /**
-     * Extracts the transaction amount from the message.
-     */
     protected open fun extractAmount(message: String): BigDecimal? {
         for (pattern in CompiledPatterns.Amount.ALL_PATTERNS) {
             pattern.find(message)?.let { match ->
                 val amountStr = match.groupValues[1].replace(",", "")
-                return try {
-                    BigDecimal(amountStr)
-                } catch (e: NumberFormatException) {
-                    null
-                }
+                return try { BigDecimal(amountStr) } catch (e: Exception) { null }
             }
         }
-
         return null
     }
 
-    /**
-     * Extracts the transaction type (INCOME/EXPENSE/INVESTMENT).
-     */
     protected open fun extractTransactionType(message: String): TransactionType? {
         val lowerMessage = message.lowercase()
-
-        // Check for investment transactions first (highest priority)
-        if (isInvestmentTransaction(lowerMessage)) {
-            return TransactionType.INVESTMENT
-        }
-
         return when {
-            lowerMessage.contains("debited") -> TransactionType.EXPENSE
-            lowerMessage.contains("withdrawn") -> TransactionType.EXPENSE
-            lowerMessage.contains("spent") -> TransactionType.EXPENSE
-            lowerMessage.contains("charged") -> TransactionType.EXPENSE
-            lowerMessage.contains("paid") -> TransactionType.EXPENSE
-            lowerMessage.contains("purchase") -> TransactionType.EXPENSE
-            lowerMessage.contains("deducted") -> TransactionType.EXPENSE
-
-            lowerMessage.contains("credited") -> TransactionType.INCOME
-            lowerMessage.contains("deposited") -> TransactionType.INCOME
-            lowerMessage.contains("received") -> TransactionType.INCOME
-            lowerMessage.contains("refund") -> TransactionType.INCOME
-            lowerMessage.contains("cashback") && !lowerMessage.contains("earn cashback") -> TransactionType.INCOME
-
+            lowerMessage.contains("debited") || lowerMessage.contains("withdrawn") || lowerMessage.contains("spent") || lowerMessage.contains("paid") || lowerMessage.contains("purchase") -> TransactionType.EXPENSE
+            lowerMessage.contains("credited") || lowerMessage.contains("deposited") || lowerMessage.contains("received") -> TransactionType.INCOME
             else -> null
         }
     }
 
-    /**
-     * Checks if the message is for an investment transaction.
-     */
-    protected open fun isInvestmentTransaction(lowerMessage: String): Boolean {
-        val investmentKeywords = listOf(
-            "mutual fund",
-            "sip",
-            "elss",
-            "ipo",
-            "folio",
-            "demat",
-            "stockbroker",
-            "nse",
-            "bse",
-            "cdsl",
-            "nsdl"
-        )
-
-        return investmentKeywords.any { lowerMessage.contains(it) }
-    }
-
-    /**
-     * Extracts merchant/payee information.
-     */
     protected open fun extractMerchant(message: String, sender: String): String? {
         for (pattern in CompiledPatterns.Merchant.ALL_PATTERNS) {
             pattern.find(message)?.let { match ->
                 val merchant = cleanMerchantName(match.groupValues[1].trim())
-                if (isValidMerchantName(merchant)) {
-                    return merchant
-                }
+                if (isValidMerchantName(merchant)) return merchant
             }
         }
-
         return null
     }
 
-    /**
-     * Extracts transaction reference number.
-     */
     protected open fun extractReference(message: String): String? {
         for (pattern in CompiledPatterns.Reference.ALL_PATTERNS) {
-            pattern.find(message)?.let { match ->
-                return match.groupValues[1].trim()
-            }
+            pattern.find(message)?.let { match -> return match.groupValues[1].trim() }
         }
-
         return null
     }
 
-    /**
-     * Extracts last 4 digits of account number.
-     */
     protected open fun extractAccountLast4(message: String): String? {
         for (pattern in CompiledPatterns.Account.ALL_PATTERNS) {
-            pattern.find(message)?.let { match ->
-                return match.groupValues[1]
-            }
+            pattern.find(message)?.let { match -> return extractLast4Digits(match.groupValues[1]) }
         }
-
         return null
     }
 
-    /**
-     * Extracts balance after transaction.
-     */
     protected open fun extractBalance(message: String): BigDecimal? {
         for (pattern in CompiledPatterns.Balance.ALL_PATTERNS) {
             pattern.find(message)?.let { match ->
                 val balanceStr = match.groupValues[1].replace(",", "")
-                return try {
-                    BigDecimal(balanceStr)
-                } catch (e: NumberFormatException) {
-                    null
-                }
+                return try { BigDecimal(balanceStr) } catch (e: Exception) { null }
             }
         }
-
         return null
     }
 
-    /**
-     * Extracts credit card available limit from the message.
-     */
     protected open fun extractAvailableLimit(message: String): BigDecimal? {
         val creditLimitPatterns = listOf(
             Regex("""Available\s+limit\s+Rs\.([0-9,]+(?:\.\d{2})?)""", RegexOption.IGNORE_CASE),
             Regex("""Available\s+limit:?\s*Rs\.?\s*([0-9,]+(?:\.\d{2})?)""", RegexOption.IGNORE_CASE),
-            Regex("""Avl\s+Lmt:?\s*Rs\.?\s*([0-9,]+(?:\.\d{2})?)""", RegexOption.IGNORE_CASE),
-            Regex("""Avail\s+Limit:?\s*Rs\.?\s*([0-9,]+(?:\.\d{2})?)""", RegexOption.IGNORE_CASE),
-            Regex("""Available\s+Credit\s+Limit:?\s*Rs\.?\s*([0-9,]+(?:\.\d{2})?)""", RegexOption.IGNORE_CASE),
-            Regex("""(?:^|\s)Limit:?\s*Rs\.?\s*([0-9,]+(?:\.\d{2})?)""", RegexOption.IGNORE_CASE)
+            Regex("""Avl\s+Lmt:?\s*Rs\.?\s*([0-9,]+(?:\.\d{2})?)""", RegexOption.IGNORE_CASE)
         )
-
         for (pattern in creditLimitPatterns) {
             pattern.find(message)?.let { match ->
                 val limitStr = match.groupValues[1].replace(",", "")
-                return try {
-                    BigDecimal(limitStr)
-                } catch (e: NumberFormatException) {
-                    null
-                }
+                return try { BigDecimal(limitStr) } catch (e: Exception) { null }
             }
         }
-
         return null
     }
 
-    /**
-     * Detects if the transaction is from a card (credit/debit).
-     */
     protected open fun detectIsCard(message: String): Boolean {
         val lowerMessage = message.lowercase()
-
-        // Exclude account-related patterns
-        val accountPatterns = listOf(
-            "a/c", "account", "ac ", "acc ", "saving account",
-            "current account", "savings a/c", "current a/c"
-        )
-
-        for (pattern in accountPatterns) {
-            if (lowerMessage.contains(pattern)) {
-                return false
-            }
-        }
-
-        // Check for card-specific patterns
-        val cardPatterns = listOf(
-            "card ending", "card xx", "debit card", "credit card",
-            "card no.", "card number", "card *", "card x"
-        )
-
-        for (pattern in cardPatterns) {
-            if (lowerMessage.contains(pattern)) {
-                return true
-            }
-        }
-
-        val maskedCardRegex = Regex("""(?:xx|XX|\*{2,})?\d{4}""")
-        if (lowerMessage.contains("ending") && maskedCardRegex.containsMatchIn(message)) {
-            return true
-        }
-
-        return false
+        val cardPatterns = listOf("card ending", "card xx", "debit card", "credit card")
+        return cardPatterns.any { lowerMessage.contains(it) }
     }
 
-    /**
-     * Cleans merchant name by removing common suffixes and noise.
-     */
     protected open fun cleanMerchantName(merchant: String): String {
-        return merchant
-            .replace(CompiledPatterns.Cleaning.TRAILING_PARENTHESES, "")
+        return merchant.replace(CompiledPatterns.Cleaning.TRAILING_PARENTHESES, "")
             .replace(CompiledPatterns.Cleaning.REF_NUMBER_SUFFIX, "")
             .replace(CompiledPatterns.Cleaning.DATE_SUFFIX, "")
             .replace(CompiledPatterns.Cleaning.UPI_SUFFIX, "")
@@ -356,16 +133,54 @@ abstract class BankParser {
             .trim()
     }
 
-    /**
-     * Validates if the extracted merchant name is valid.
-     */
     protected open fun isValidMerchantName(name: String): Boolean {
         val commonWords = setOf("USING", "VIA", "THROUGH", "BY", "WITH", "FOR", "TO", "FROM", "AT", "THE")
+        return name.length >= 3 && name.any { it.isLetter() } && name.uppercase() !in commonWords && !name.all { it.isDigit() } && !name.contains("@")
+    }
 
-        return name.length >= Constants.Parsing.MIN_MERCHANT_NAME_LENGTH &&
-                name.any { it.isLetter() } &&
-                name.uppercase() !in commonWords &&
-                !name.all { it.isDigit() } &&
-                !name.contains("@")
+    protected fun extractLast4Digits(raw: String): String? {
+        val digits = raw.filter { it.isDigit() }
+        return if (digits.length >= 4) digits.takeLast(4) else digits.ifEmpty { null }
+    }
+
+    protected open fun extractCardType(message: String): String? {
+        val lower = message.lowercase()
+        return when {
+            lower.contains("visa") -> "Visa"
+            lower.contains("mastercard") || lower.contains("mc") -> "Mastercard"
+            lower.contains("sct") -> "SCT"
+            else -> null
+        }
+    }
+
+    protected open fun extractDueDate(message: String): Long? {
+        val isoPattern = Regex("""Due Date[:\s]+(\d{4}-\d{2}-\d{2})""", RegexOption.IGNORE_CASE)
+        val dmyPattern = Regex("""Due Date[:\s]+(\d{2}/\d{2}/\d{4})""", RegexOption.IGNORE_CASE)
+        isoPattern.find(message)?.let { match ->
+            return try {
+                LocalDate.parse(match.groupValues[1], DateTimeFormatter.ISO_LOCAL_DATE)
+                    .atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
+            } catch (_: Exception) { null }
+        }
+        dmyPattern.find(message)?.let { match ->
+            return try {
+                LocalDate.parse(match.groupValues[1], DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+                    .atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
+            } catch (_: Exception) { null }
+        }
+        return null
+    }
+
+    protected open fun extractMinDue(message: String): BigDecimal? {
+        val patterns = listOf(
+            Regex("""Min(?:imum)?\s+Amt\s+Due[:\s]+(?:NPR|Rs\.?)\s*([0-9,]+(?:\.[0-9]{2})?)""", RegexOption.IGNORE_CASE)
+        )
+        for (pattern in patterns) {
+            pattern.find(message)?.let { match ->
+                val amountStr = match.groupValues[1].replace(",", "")
+                return try { BigDecimal(amountStr) } catch (e: Exception) { null }
+            }
+        }
+        return null
     }
 }

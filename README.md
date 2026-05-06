@@ -73,7 +73,7 @@ Hisab Sathi is a comprehensive financial tracking manager designed for Nepal. It
 
 ## Supported Nepali Banks & Wallets
 
-Supporting **8+ Nepali financial institutions** with **NPR currency**:
+Supporting **8 Nepali financial institutions** with **NPR currency**:
 
 ### 💳 Digital Wallets (2)
 - **eSewa** - Nepal's most popular digital wallet
