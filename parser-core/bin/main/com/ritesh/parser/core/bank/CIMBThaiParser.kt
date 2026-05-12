@@ -1,4 +1,4 @@
-package com.ritesh.parser.core.bank
+package com.prarambha.parser.core.bank
 
 /**
  * CIMB Thai Bank parser for Thai banking SMS messages.

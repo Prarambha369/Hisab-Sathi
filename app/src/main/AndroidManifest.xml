@@ -135,8 +135,8 @@
             android:name=".receiver.NotificationActionReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.ritesh.cashiro.ACTION_DELETE_TRANSACTION" />
-                <action android:name="com.ritesh.cashiro.ACTION_CONFIRM_TRANSACTION" />
+                <action android:name="com.prarambha.cashiro.ACTION_DELETE_TRANSACTION" />
+                <action android:name="com.prarambha.cashiro.ACTION_CONFIRM_TRANSACTION" />
             </intent-filter>
         </receiver>
 

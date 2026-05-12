@@ -1,7 +1,7 @@
-import com.ritesh.parser.core.TransactionType
-import com.ritesh.parser.core.test.ExpectedTransaction
-import com.ritesh.parser.core.test.ParserTestUtils
-import com.ritesh.parser.core.test.SimpleTestCase
+import com.prarambha.parser.core.TransactionType
+import com.prarambha.parser.core.test.ExpectedTransaction
+import com.prarambha.parser.core.test.ParserTestUtils
+import com.prarambha.parser.core.test.SimpleTestCase
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 

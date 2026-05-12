@@ -1,0 +1,210 @@
+package com.prarambha.cashiro.presentation.ui.features.settings.applock
+
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.fragment.app.FragmentActivity
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.prarambha.cashiro.domain.security.BiometricCapability
+import com.prarambha.cashiro.presentation.ui.theme.Spacing
+import com.prarambha.cashiro.presentation.ui.components.CustomTitleTopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import com.prarambha.cashiro.presentation.ui.icons.Iconax
+import com.prarambha.cashiro.presentation.ui.icons.Padlock
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.hazeSource
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AppLockScreen(
+    modifier: Modifier = Modifier,
+    onUnlocked: () -> Unit,
+    appLockViewModel: AppLockViewModel = hiltViewModel(),
+) {
+    val uiState by appLockViewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+
+    // Prevent back navigation when app is locked
+    BackHandler(enabled = true) {
+        // Do nothing - prevent back navigation
+        // User must authenticate to proceed
+    }
+
+    // Auto-trigger authentication when screen is shown
+    LaunchedEffect(Unit) {
+        if (uiState.canUseBiometric && context is FragmentActivity) {
+            triggerAuthentication(context, appLockViewModel)
+        }
+    }
+
+    // Navigate away only on explicit authentication success
+    LaunchedEffect(uiState.authenticationSucceeded) {
+        if (uiState.authenticationSucceeded) {
+            appLockViewModel.resetAuthenticationSucceeded()
+            onUnlocked()
+        }
+    }
+
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val scrollBehaviorSmall = TopAppBarDefaults.pinnedScrollBehavior()
+    val hazeState = remember { HazeState() }
+
+    Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            CustomTitleTopAppBar(
+                title = "App Lock",
+                scrollBehaviorSmall = scrollBehaviorSmall,
+                scrollBehaviorLarge = scrollBehaviorSmall,
+                hazeState = hazeState,
+                hasBackButton = false
+            )
+        }
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                        .fillMaxSize()
+                        .padding(bottom = innerPadding.calculateBottomPadding())
+                .hazeSource(state = hazeState)
+                .padding(Spacing.lg),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                // Lock icon
+                Icon(
+                    imageVector = Iconax.Padlock,
+                    contentDescription = "App Locked",
+                    modifier = Modifier.size(120.dp),
+                    tint = MaterialTheme.colorScheme.primary
+                )
+
+                Spacer(modifier = Modifier.height(Spacing.xl))
+
+                // Title
+                Text(
+                    text = "Cashiro is Locked",
+                    style = MaterialTheme.typography.headlineMedium,
+                    textAlign = TextAlign.Center
+                )
+
+                Spacer(modifier = Modifier.height(Spacing.md))
+
+                // Description
+                Text(
+                    text = "Authenticate to access your expense data",
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
+                Spacer(modifier = Modifier.height(Spacing.xl))
+
+                // Show error if authentication failed
+                if (uiState.authenticationError != null) {
+                    Card(
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.errorContainer
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = uiState.authenticationError!!,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onErrorContainer,
+                            modifier = Modifier.padding(Spacing.md),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(Spacing.md))
+                }
+
+                // Show capability-specific message
+                when (uiState.biometricCapability) {
+                    BiometricCapability.Available -> {
+                        // Unlock button
+                        Button(
+                            onClick = {
+                                if (context is FragmentActivity) {
+                                    appLockViewModel.clearAuthError()
+                                    triggerAuthentication(context, appLockViewModel)
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Unlock")
+                        }
+                    }
+                    else -> {
+                        // Show error for unavailable biometric
+                        Card(
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.errorContainer
+                            ),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(Spacing.md)
+                            ) {
+                                Text(
+                                    text = "Biometric authentication unavailable",
+                                    style = MaterialTheme.typography.titleSmall,
+                                    color = MaterialTheme.colorScheme.onErrorContainer
+                                )
+                                Spacer(modifier = Modifier.height(Spacing.sm))
+                                Text(
+                                    text = uiState.biometricCapability.getErrorMessage(),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onErrorContainer
+                                )
+                                Spacer(modifier = Modifier.height(Spacing.sm))
+                                Text(
+                                    text = "Please disable app lock in device settings or set up biometric authentication.",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onErrorContainer
+                                )
+                            }
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(Spacing.md))
+
+                // Privacy note
+                Text(
+                    text = "Your data is protected with ${
+                        when (uiState.timeoutMinutes) {
+                            0 -> "immediate locking"
+                            1 -> "1 minute timeout"
+                            else -> "${uiState.timeoutMinutes} minute timeout"
+                        }
+                    }",
+                    style = MaterialTheme.typography.bodySmall,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+    }
+}
+
+private fun triggerAuthentication(
+    activity: FragmentActivity,
+    appLockViewModel: AppLockViewModel
+) {
+    // Trigger authentication through the ViewModel
+    appLockViewModel.triggerAuthentication(activity)
+}

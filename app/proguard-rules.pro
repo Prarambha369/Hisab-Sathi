@@ -41,8 +41,8 @@
 -keepclassmembers @androidx.room.Entity class * {
     *;
 }
--keep class com.ritesh.cashiro.data.database.entity.** { *; }
--keep class com.ritesh.cashiro.data.database.dao.** { *; }
+-keep class com.prarambha.cashiro.data.database.entity.** { *; }
+-keep class com.prarambha.cashiro.data.database.dao.** { *; }
 
 # Hilt
 -keep class dagger.hilt.** { *; }
@@ -65,11 +65,11 @@
 -keepclasseswithmembers class kotlinx.serialization.json.** {
     kotlinx.serialization.KSerializer serializer(...);
 }
--keep,includedescriptorclasses class com.ritesh.cashiro.**$$serializer { *; }
--keepclassmembers class com.ritesh.cashiro.** {
+-keep,includedescriptorclasses class com.prarambha.cashiro.**$$serializer { *; }
+-keepclassmembers class com.prarambha.cashiro.** {
     *** Companion;
 }
--keepclasseswithmembers class com.ritesh.cashiro.** {
+-keepclasseswithmembers class com.prarambha.cashiro.** {
     kotlinx.serialization.KSerializer serializer(...);
 }
 
@@ -85,8 +85,8 @@
 }
 
 # Keep data classes
--keep class com.ritesh.cashiro.data.model.** { *; }
--keep class com.ritesh.cashiro.domain.model.** { *; }
+-keep class com.prarambha.cashiro.data.model.** { *; }
+-keep class com.prarambha.cashiro.domain.model.** { *; }
 
 # Keep enum classes
 -keepclassmembers enum * {

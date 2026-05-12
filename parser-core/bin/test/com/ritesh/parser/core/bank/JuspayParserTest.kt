@@ -1,10 +1,10 @@
-package com.ritesh.parser.core.bank
+package com.prarambha.parser.core.bank
 
-import com.ritesh.parser.core.TransactionType
-import com.ritesh.parser.core.bank.JuspayParser
-import com.ritesh.parser.core.test.ExpectedTransaction
-import com.ritesh.parser.core.test.ParserTestCase
-import com.ritesh.parser.core.test.ParserTestUtils
+import com.prarambha.parser.core.TransactionType
+import com.prarambha.parser.core.bank.JuspayParser
+import com.prarambha.parser.core.test.ExpectedTransaction
+import com.prarambha.parser.core.test.ParserTestCase
+import com.prarambha.parser.core.test.ParserTestUtils
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 
@@ -170,7 +170,7 @@ class JuspayParserTest {
     @Test
     fun `factory resolves juspay`() {
         val cases = listOf(
-            com.ritesh.parser.core.test.SimpleTestCase(
+            com.prarambha.parser.core.test.SimpleTestCase(
                 bankName = "Amazon Pay",
                 sender = "JUSPAY",
                 currency = "INR",
@@ -184,7 +184,7 @@ class JuspayParserTest {
                 ),
                 shouldHandle = true
             ),
-            com.ritesh.parser.core.test.SimpleTestCase(
+            com.prarambha.parser.core.test.SimpleTestCase(
                 bankName = "Amazon Pay",
                 sender = "APAY",
                 currency = "INR",

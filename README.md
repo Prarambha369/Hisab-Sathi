@@ -168,7 +168,7 @@ adb install app/build/outputs/apk/debug/app-debug.apk
 The app follows a modern Android architecture guideline, separating concerns into Data, Domain, and Presentation layers.
 
 ```
-com.ritesh.cashiro
+com.prarambha.cashiro
 ├── data                # Data layer (Repositories, Room Database, Data Sources)
 │   ├── database        # Room entities and DAOs
 │   ├── repository      # Repository implementations

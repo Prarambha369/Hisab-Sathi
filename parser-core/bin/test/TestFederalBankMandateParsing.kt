@@ -1,9 +1,9 @@
-import com.ritesh.parser.core.TransactionType
-import com.ritesh.parser.core.bank.FederalBankParser
-import com.ritesh.parser.core.test.ExpectedTransaction
-import com.ritesh.parser.core.test.ParserTestCase
-import com.ritesh.parser.core.test.ParserTestUtils
-import com.ritesh.parser.core.test.TestResult
+import com.prarambha.parser.core.TransactionType
+import com.prarambha.parser.core.bank.FederalBankParser
+import com.prarambha.parser.core.test.ExpectedTransaction
+import com.prarambha.parser.core.test.ParserTestCase
+import com.prarambha.parser.core.test.ParserTestUtils
+import com.prarambha.parser.core.test.TestResult
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 

@@ -1,4 +1,4 @@
-import com.ritesh.parser.core.bank.BankParserFactory
+import com.prarambha.parser.core.bank.BankParserFactory
 
 
 fun main() {

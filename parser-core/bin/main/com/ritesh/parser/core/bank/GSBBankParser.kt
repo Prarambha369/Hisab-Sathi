@@ -1,4 +1,4 @@
-package com.ritesh.parser.core.bank
+package com.prarambha.parser.core.bank
 
 /**
  * Government Savings Bank (GSB) parser for Thai banking SMS messages.

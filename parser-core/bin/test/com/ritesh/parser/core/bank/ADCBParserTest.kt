@@ -1,8 +1,8 @@
-package com.ritesh.parser.core.bank
+package com.prarambha.parser.core.bank
 
-import com.ritesh.parser.core.test.ExpectedTransaction
-import com.ritesh.parser.core.test.ParserTestCase
-import com.ritesh.parser.core.test.ParserTestUtils
+import com.prarambha.parser.core.test.ExpectedTransaction
+import com.prarambha.parser.core.test.ParserTestCase
+import com.prarambha.parser.core.test.ParserTestUtils
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 
@@ -25,7 +25,7 @@ class ADCBParserTest {
                 expected = ExpectedTransaction(
                     amount = BigDecimal("100.50"),
                     currency = "AED",
-                    type = com.ritesh.parser.core.TransactionType.EXPENSE,
+                    type = com.prarambha.parser.core.TransactionType.EXPENSE,
                     merchant = "MERCHANT123",
                     accountLast4 = "810001",
                     balance = BigDecimal("200.75")
@@ -39,7 +39,7 @@ class ADCBParserTest {
                 expected = ExpectedTransaction(
                     amount = BigDecimal("50.25"),
                     currency = "USD",
-                    type = com.ritesh.parser.core.TransactionType.EXPENSE,
+                    type = com.prarambha.parser.core.TransactionType.EXPENSE,
                     merchant = "ONLINEPLATFORM",
                     accountLast4 = "810001",
                     balance = BigDecimal("150.50")
@@ -53,7 +53,7 @@ class ADCBParserTest {
                 expected = ExpectedTransaction(
                     amount = BigDecimal("5000.00"),
                     currency = "AED",
-                    type = com.ritesh.parser.core.TransactionType.INCOME,
+                    type = com.prarambha.parser.core.TransactionType.INCOME,
                     merchant = "ATM Deposit: LOCATION123",
                     accountLast4 = "810001",
                     balance = BigDecimal("5200.25")
@@ -67,7 +67,7 @@ class ADCBParserTest {
                 expected = ExpectedTransaction(
                     amount = BigDecimal("750.50"),
                     currency = "AED",
-                    type = com.ritesh.parser.core.TransactionType.TRANSFER,
+                    type = com.prarambha.parser.core.TransactionType.TRANSFER,
                     merchant = "Transfer via ADCB Banking",
                     accountLast4 = "810001",
                     balance = BigDecimal("2000.00")
@@ -81,7 +81,7 @@ class ADCBParserTest {
                 expected = ExpectedTransaction(
                     amount = BigDecimal("200.00"),
                     currency = "AED",
-                    type = com.ritesh.parser.core.TransactionType.INCOME,
+                    type = com.prarambha.parser.core.TransactionType.INCOME,
                     merchant = "Account Credit",
                     accountLast4 = "810001",
                     balance = BigDecimal("220.25")
@@ -95,7 +95,7 @@ class ADCBParserTest {
                 expected = ExpectedTransaction(
                     amount = BigDecimal("2.10"),
                     currency = "AED",
-                    type = com.ritesh.parser.core.TransactionType.EXPENSE,
+                    type = com.prarambha.parser.core.TransactionType.EXPENSE,
                     merchant = "Account Debit",
                     accountLast4 = "810001",
                     balance = BigDecimal("13697.16")
@@ -109,7 +109,7 @@ class ADCBParserTest {
                 expected = ExpectedTransaction(
                     amount = BigDecimal("1500.50"),
                     currency = "AED",
-                    type = com.ritesh.parser.core.TransactionType.EXPENSE,
+                    type = com.prarambha.parser.core.TransactionType.EXPENSE,
                     merchant = "ATM Withdrawal: BANK123",
                     accountLast4 = "810001",
                     balance = BigDecimal("1200.75")
@@ -123,7 +123,7 @@ class ADCBParserTest {
                 expected = ExpectedTransaction(
                     amount = BigDecimal("350.25"),
                     currency = "EUR",
-                    type = com.ritesh.parser.core.TransactionType.EXPENSE,
+                    type = com.prarambha.parser.core.TransactionType.EXPENSE,
                     merchant = "ATM Withdrawal: SHOPPINGMALL",
                     accountLast4 = "810001",
                     balance = BigDecimal("150.50")
@@ -137,7 +137,7 @@ class ADCBParserTest {
                 expected = ExpectedTransaction(
                     amount = BigDecimal("4500.75"),
                     currency = "GBP",
-                    type = com.ritesh.parser.core.TransactionType.EXPENSE,
+                    type = com.prarambha.parser.core.TransactionType.EXPENSE,
                     merchant = "ATM Withdrawal: LOCATION123",
                     accountLast4 = "810001",
                     balance = BigDecimal("250.25")
@@ -151,7 +151,7 @@ class ADCBParserTest {
                 expected = ExpectedTransaction(
                     amount = BigDecimal("28.25"),
                     currency = "THB",
-                    type = com.ritesh.parser.core.TransactionType.EXPENSE,
+                    type = com.prarambha.parser.core.TransactionType.EXPENSE,
                     merchant = "SHOPPING MALL",
                     accountLast4 = "810001",
                     balance = BigDecimal("321.56")
@@ -165,7 +165,7 @@ class ADCBParserTest {
                 expected = ExpectedTransaction(
                     amount = BigDecimal("26.80"),
                     currency = "AED",
-                    type = com.ritesh.parser.core.TransactionType.EXPENSE,
+                    type = com.prarambha.parser.core.TransactionType.EXPENSE,
                     merchant = "TRANSPORT SERVICE",
                     accountLast4 = "810001",
                     balance = BigDecimal("2928.77")
@@ -179,7 +179,7 @@ class ADCBParserTest {
                 expected = ExpectedTransaction(
                     amount = BigDecimal("100.00"),
                     currency = "AED",
-                    type = com.ritesh.parser.core.TransactionType.EXPENSE,
+                    type = com.prarambha.parser.core.TransactionType.EXPENSE,
                     merchant = "TouchPoints Redemption",
                     accountLast4 = null,
                     balance = null
@@ -195,7 +195,7 @@ class ADCBParserTest {
                 expected = ExpectedTransaction(
                     amount = BigDecimal.ZERO,
                     currency = "",
-                    type = com.ritesh.parser.core.TransactionType.EXPENSE
+                    type = com.prarambha.parser.core.TransactionType.EXPENSE
                 )
             ),
 
@@ -207,7 +207,7 @@ class ADCBParserTest {
                 expected = ExpectedTransaction(
                     amount = BigDecimal.ZERO,
                     currency = "",
-                    type = com.ritesh.parser.core.TransactionType.EXPENSE
+                    type = com.prarambha.parser.core.TransactionType.EXPENSE
                 )
             ),
 
@@ -219,7 +219,7 @@ class ADCBParserTest {
                 expected = ExpectedTransaction(
                     amount = BigDecimal.ZERO,
                     currency = "",
-                    type = com.ritesh.parser.core.TransactionType.EXPENSE
+                    type = com.prarambha.parser.core.TransactionType.EXPENSE
                 )
             ),
 
@@ -231,7 +231,7 @@ class ADCBParserTest {
                 expected = ExpectedTransaction(
                     amount = BigDecimal.ZERO,
                     currency = "",
-                    type = com.ritesh.parser.core.TransactionType.EXPENSE
+                    type = com.prarambha.parser.core.TransactionType.EXPENSE
                 )
             )
         )
