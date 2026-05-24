@@ -46,6 +46,7 @@ tasksGenai = "0.10.29"  # MediaPipe Tasks GenAI
 - **Background**: WorkManager 2.11.0
 
 ### Modules
+
 | Module | Purpose | Constraints |
 |---|---|---|
 | `:app` | Android application | Full Android APIs |
