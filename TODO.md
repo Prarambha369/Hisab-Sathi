@@ -24,7 +24,7 @@
 
 ## Smart SMS Scanning
 - [X] Add last_scan_timestamp to UserPreferences
-- [X] Update SmsReaderWorker - first scan: 3 months, then: last 2 days
+- [X] Update SmsReaderWorker - first scan: 3 months, then: last 3 days
 - [X] Save timestamp after each successful scan
 - [ ] Test with week-old unscanned messages
 

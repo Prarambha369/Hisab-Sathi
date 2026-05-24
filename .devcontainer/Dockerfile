@@ -24,6 +24,7 @@ RUN mkdir -p ${ANDROID_SDK_ROOT}/cmdline-tools
 # Download Android command-line tools
 RUN wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip \
         -O /tmp/cmdline-tools.zip \
+    && echo "d313adb7aedccf6cf0cfca51ec180f0059f5f8f8  /tmp/cmdline-tools.zip" | sha1sum -c - \
     && unzip -q /tmp/cmdline-tools.zip -d /tmp/cmdline-tools-extract \
     && mv /tmp/cmdline-tools-extract/cmdline-tools ${ANDROID_SDK_ROOT}/cmdline-tools/latest \
     && rm -rf /tmp/cmdline-tools.zip /tmp/cmdline-tools-extract
