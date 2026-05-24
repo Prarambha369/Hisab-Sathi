@@ -6,7 +6,7 @@
 - [X] Check user video on model download problem
 - [X] Check calculations
 - [X] show date
-- [ ] data export
+- [X] data export
 - [X] all chip view is broken
 - [X] Jio Payments Bank
 - [X] sbi/bobs nerd discord
@@ -20,12 +20,12 @@
 
 ## Delete Transactions Feature
 - [X] Add deleted_transaction_hashes table to database
-- [ ] Edit transactions
+- [X] Edit transactions
 
 ## Smart SMS Scanning
-- [ ] Add last_scan_timestamp to UserPreferences
-- [ ] Update SmsReaderWorker - first scan: 3 months, then: last 2 days
-- [ ] Save timestamp after each successful scan
+- [X] Add last_scan_timestamp to UserPreferences
+- [X] Update SmsReaderWorker - first scan: 3 months, then: last 2 days
+- [X] Save timestamp after each successful scan
 - [ ] Test with week-old unscanned messages
 
 
