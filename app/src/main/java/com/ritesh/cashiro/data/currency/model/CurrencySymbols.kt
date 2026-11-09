@@ -14,7 +14,7 @@ object CurrencySymbols {
         "CHF" to "CHF",
         "HKD" to "HK$",
         "SGD" to "S$",
-        "INR" to "₨",
+        "INR" to "₹",
         "RUB" to "₽",
         "ZAR" to "R",
         "TRY" to "₺",

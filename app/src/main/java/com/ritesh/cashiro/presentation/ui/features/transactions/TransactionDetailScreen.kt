@@ -1996,10 +1996,28 @@ private fun TransactionReceipt(
                     }
 
 
+                    val transactionTypeLabel = transaction.transactionType.name.lowercase()
+                        .replaceFirstChar { it.uppercase() }
+                    ReceiptInfoRow(
+                        label = "Type",
+                        value = transactionTypeLabel,
+                        icon = null
+                    )
                     if (transaction.cardType != null) {
                         ReceiptInfoRow(
                             label = "Card Type",
                             value = transaction.cardType ?: "",
+                            icon = null
+                        )
+                    }
+                    if (transaction.dueDate != null) {
+                        val dueDateStr = java.time.Instant.ofEpochMilli(transaction.dueDate)
+                            .atZone(java.time.ZoneId.systemDefault())
+                            .toLocalDate()
+                            .format(DateTimeFormatter.ofPattern("d MMM yyyy"))
+                        ReceiptInfoRow(
+                            label = "Due Date",
+                            value = dueDateStr,
                             icon = null
                         )
                     }

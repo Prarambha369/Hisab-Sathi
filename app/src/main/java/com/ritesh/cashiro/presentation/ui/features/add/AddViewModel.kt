@@ -293,7 +293,6 @@ constructor(
                     bankName = state.selectedAccount?.bankName,
                     accountLast4 = state.selectedAccount?.accountLast4,
                     currency = state.currency,
-                    sourceAccountId = state.selectedAccount?.id,
                     targetAccountBankName = state.targetAccount?.bankName,
                     targetAccountLast4 = state.targetAccount?.accountLast4,
                     attachments = attachmentService.joinAttachments(_transactionAttachments.value)
@@ -317,7 +316,7 @@ constructor(
         _transactionUiState.update { currentState -> 
             currentState.copy(
                 selectedAccount = account,
-                currency = account?.currency ?: "INR"
+                currency = account?.currency ?: "NPR"
             ) 
         }
     }
@@ -504,7 +503,7 @@ constructor(
         _subscriptionUiState.update { currentState -> 
             currentState.copy(
                 selectedAccount = account,
-                currency = account?.currency ?: "INR"
+                currency = account?.currency ?: "NPR"
             ) 
         }
     }
@@ -584,7 +583,6 @@ constructor(
                         bankName = state.selectedAccount?.bankName,
                         accountLast4 = state.selectedAccount?.accountLast4,
                         currency = state.currency,
-                        sourceAccountId = state.selectedAccount?.id,
                         billingCycle = billingCycleToSave,
                         createSubscription = false
                     )
@@ -670,7 +668,7 @@ data class TransactionUiState(
     val isRecurring: Boolean = false,
     val selectedAccount: AccountBalanceEntity? = null,
     val targetAccount: AccountBalanceEntity? = null,
-    val currency: String = "INR",
+    val currency: String = "NPR",
     val isLoading: Boolean = false,
     val error: String? = null
 ) {
@@ -699,7 +697,7 @@ data class SubscriptionUiState(
     val subcategory: String? = null,
     val categoryError: String? = null,
     val selectedAccount: AccountBalanceEntity? = null,
-    val currency: String = "INR",
+    val currency: String = "NPR",
     val notes: String = "",
     val isCustomCycle: Boolean = false,
     val customCycleCount: Int = 1,
