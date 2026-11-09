@@ -1,5 +1,7 @@
 package com.prarambha.cashiro.data.database.converter
 
+import com.prarambha.cashiro.BuildConfig
+
 import androidx.room.TypeConverter
 import com.prarambha.cashiro.data.database.entity.SubscriptionState
 import com.prarambha.cashiro.data.database.entity.TransactionType
@@ -60,7 +62,7 @@ class Converters {
             try {
                 LocalDate.parse(dateString, dateFormatter)
             } catch (e: Exception) {
-                android.util.Log.w("Converters", "Invalid date format: $dateString", e)
+                android.util.if (BuildConfig.DEBUG) Log.w("Converters", "Invalid date format: $dateString", e)
                 null
             }
         }

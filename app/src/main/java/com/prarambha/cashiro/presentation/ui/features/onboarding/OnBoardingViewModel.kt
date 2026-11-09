@@ -1,5 +1,7 @@
 package com.prarambha.cashiro.presentation.ui.features.onboarding
 
+import com.prarambha.cashiro.BuildConfig
+
 import android.Manifest
 import android.content.Context
 import android.util.Log
@@ -355,7 +357,7 @@ constructor(
                     accountBalanceRepository.deleteAccount(source.bankName, source.accountLast4)
                 }
             } catch (e: Exception) {
-                Log.e("OnBoardingViewModel", "Error merging accounts", e)
+                if (BuildConfig.DEBUG) Log.e("OnBoardingViewModel", "Error merging accounts", e)
             } finally {
                 _uiState.update { it.copy(isLoading = false, selectedAccountsForMerge = emptySet()) }
             }

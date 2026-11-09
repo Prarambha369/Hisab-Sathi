@@ -1,5 +1,7 @@
 package com.prarambha.cashiro.presentation.common.icons
 
+import com.prarambha.cashiro.BuildConfig
+
 import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Category
@@ -923,7 +925,7 @@ object CategoryMapping {
         val duplicates = RULES.flatMap { it.includes + it.excludes }.groupingBy { it }.eachCount()
             .filter { it.value > 1 }.keys
         if (duplicates.isNotEmpty()) {
-            println("Duplicate keywords found across categories: $duplicates")
+            if (BuildConfig.DEBUG) println("Duplicate keywords found across categories: $duplicates")
         }
         return duplicates
     }

@@ -1,5 +1,7 @@
 package com.prarambha.cashiro.data.manager
 
+import com.prarambha.cashiro.BuildConfig
+
 import android.util.Log
 import com.prarambha.parser.core.ParsedTransaction
 import com.prarambha.parser.core.bank.BankParserFactory
@@ -77,12 +79,12 @@ class SmsTransactionProcessor @Inject constructor(
                     reason = "Could not parse transaction from SMS"
                 )
 
-            Log.d(TAG, "Parsed transaction: ${parsedTransaction.amount} from ${parsedTransaction.bankName}")
+            if (BuildConfig.DEBUG) Log.d(TAG, "Parsed transaction: ${parsedTransaction.amount} from ${parsedTransaction.bankName}")
 
             // Save the transaction
             return saveParsedTransaction(parsedTransaction, body)
         } catch (e: Exception) {
-            Log.e(TAG, "Error processing SMS", e)
+            if (BuildConfig.DEBUG) Log.e(TAG, "Error processing SMS", e)
             return ProcessingResult(false, reason = e.message)
         }
     }
@@ -107,18 +109,18 @@ class SmsTransactionProcessor @Inject constructor(
             val existingTransaction = transactionRepository.getTransactionByHash(entity.transactionHash)
             if (existingTransaction != null) {
                 if (existingTransaction.isDeleted) {
-                    Log.d(TAG, "Skipping previously deleted transaction with hash: ${entity.transactionHash}")
+                    if (BuildConfig.DEBUG) Log.d(TAG, "Skipping previously deleted transaction with hash: ${entity.transactionHash}")
                     return ProcessingResult(false, reason = "Transaction was previously deleted")
                 }
                 // Transaction already exists and not deleted - normal deduplication
-                Log.d(TAG, "Transaction already exists: ${entity.transactionHash}")
+                if (BuildConfig.DEBUG) Log.d(TAG, "Transaction already exists: ${entity.transactionHash}")
                 return ProcessingResult(false, reason = "Duplicate transaction")
             }
 
             // Check for custom merchant mapping
             val customCategory = merchantMappingRepository.getCategoryForMerchant(entity.merchantName)
             val entityWithMapping = if (customCategory != null) {
-                Log.d(TAG, "Found custom category mapping: ${entity.merchantName} -> $customCategory")
+                if (BuildConfig.DEBUG) Log.d(TAG, "Found custom category mapping: ${entity.merchantName} -> $customCategory")
                 entity.copy(category = customCategory)
             } else {
                 entity
@@ -135,7 +137,7 @@ class SmsTransactionProcessor @Inject constructor(
             )
 
             if (blockingRule != null) {
-                Log.d(TAG, "Transaction blocked by rule: ${blockingRule.name}")
+                if (BuildConfig.DEBUG) Log.d(TAG, "Transaction blocked by rule: ${blockingRule.name}")
                 return ProcessingResult(false, reason = "Blocked by rule: ${blockingRule.name}")
             }
 
@@ -146,7 +148,7 @@ class SmsTransactionProcessor @Inject constructor(
             )
 
             if (ruleApplications.isNotEmpty()) {
-                Log.d(TAG, "Applied ${ruleApplications.size} rules to transaction")
+                if (BuildConfig.DEBUG) Log.d(TAG, "Applied ${ruleApplications.size} rules to transaction")
             }
 
             // Check if this transaction matches an active subscription
@@ -156,7 +158,7 @@ class SmsTransactionProcessor @Inject constructor(
             )
 
             val finalEntity = if (matchedSubscription != null) {
-                Log.d(TAG, "Transaction matched to active subscription: ${matchedSubscription.merchantName}")
+                if (BuildConfig.DEBUG) Log.d(TAG, "Transaction matched to active subscription: ${matchedSubscription.merchantName}")
                 subscriptionRepository.updateNextPaymentDateAfterCharge(
                     matchedSubscription.id,
                     entityWithRules.dateTime.toLocalDate()
@@ -168,7 +170,7 @@ class SmsTransactionProcessor @Inject constructor(
 
             val rowId = transactionRepository.insertTransaction(finalEntity)
             if (rowId != -1L) {
-                Log.d(TAG, "Saved new transaction with ID: $rowId${if (finalEntity.isRecurring) " (Recurring)" else ""}")
+                if (BuildConfig.DEBUG) Log.d(TAG, "Saved new transaction with ID: $rowId${if (finalEntity.isRecurring) " (Recurring)" else ""}")
 
                 // Save rule applications if any rules were applied
                 if (ruleApplications.isNotEmpty()) {
@@ -183,11 +185,11 @@ class SmsTransactionProcessor @Inject constructor(
 
                 return ProcessingResult(true, transactionId = rowId)
             } else {
-                Log.d(TAG, "Transaction already exists (duplicate): ${entity.transactionHash}")
+                if (BuildConfig.DEBUG) Log.d(TAG, "Transaction already exists (duplicate): ${entity.transactionHash}")
                 return ProcessingResult(false, reason = "Duplicate transaction")
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error saving transaction: ${e.message}")
+            if (BuildConfig.DEBUG) Log.e(TAG, "Error saving transaction: ${e.message}")
             return ProcessingResult(false, reason = e.message)
         }
     }
@@ -221,7 +223,7 @@ class SmsTransactionProcessor @Inject constructor(
             }
 
             if (card == null) {
-                Log.w(TAG, "Could not create/find card for ${parsedTransaction.bankName}")
+                if (BuildConfig.DEBUG) Log.w(TAG, "Could not create/find card for ${parsedTransaction.bankName}")
                 null
             } else {
                 // Update card's balance
@@ -301,7 +303,7 @@ class SmsTransactionProcessor @Inject constructor(
             )
 
             accountBalanceRepository.insertBalance(balanceEntity)
-            Log.d(TAG, "Saved balance update for ${parsedTransaction.bankName} **$targetAccountLast4")
+            if (BuildConfig.DEBUG) Log.d(TAG, "Saved balance update for ${parsedTransaction.bankName} **$targetAccountLast4")
         }
     }
 }

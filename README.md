@@ -1,10 +1,10 @@
 <a name="top"></a>
-[![Hisab Sathi Banner](banner.png)](https://github.com/sarim2000/pennywiseai-tracker)
+[![Hisab Sathi Banner](banner.png)](https://github.com/Prarambha369/Hisab-Sathi)
 
 [//]: # ([![GitHub stars]&#40;https://img.shields.io/github/stars/sarim2000/pennywiseai-tracker?style=social&#41;]&#40;https://github.com/sarim2000/pennywiseai-tracker&#41;)
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
 [![Android](https://img.shields.io/badge/Android-8.0+-3DDC84)](https://developer.android.com/about/versions/oreo)
-[![Kotlin](https://img.shields.io/badge/Kotlin-2.0.21-7F52FF)](https://kotlinlang.org/)
+[![Kotlin](https://img.shields.io/badge/Kotlin-2.3.0-7F52FF)](https://kotlinlang.org/)
 [![Privacy](https://img.shields.io/badge/AI-100%25_On--Device-FF6B6B)](https://developers.google.com/mediapipe)
 
 [//]: # ([![Downloads]&#40;https://img.shields.io/badge/Downloads-100+-green&#41;]&#40;https://play.google.com/store/apps/details?id=com.pennywiseai.tracker&#41;)
@@ -87,7 +87,7 @@ Supporting **8 Nepali financial institutions** with **NPR currency**:
 - **Siddhartha Bank** - Siddhartha Bank Limited
 - **Himalayan Bank** - Himalayan Bank Limited
 
-More Nepali banks coming soon! [Request your bank →](https://github.com/ritesh-kanwar/Hisab%20Sathi/issues/new?template=bank_support_request.md)
+More Nepali banks coming soon! [Request your bank →](https://github.com/Prarambha369/Hisab-Sathi/issues/new?template=bank_support_request.md)
 
 ## Privacy First
 
@@ -138,8 +138,8 @@ All processing happens on your device using MediaPipe's LLM. Your financial data
 
 ```bash
 # Clone repository
-git clone https://github.com/ritesh-kanwar/Hisab Sathi.git
-cd Hisab Sathi
+git clone https://github.com/Prarambha369/Hisab-Sathi.git
+cd Hisab-Sathi
 
 # Build APK
 ./gradlew assembleDebug
@@ -216,14 +216,14 @@ val testRegistry = BankParserRegistry(listOf(NabilBankParser()))
 
 ### Adding a new bank parser
 
-1. Create `parser-core/src/main/kotlin/com/ritesh/parser/core/bank/MyBankParser.kt` extending `BankParser`.
+1. Create `parser-core/src/main/kotlin/com/prarambha/parser/core/bank/MyBankParser.kt` extending `BankParser`.
 2. Register the parser in the `parsers` list inside `BankParserFactory`.
-3. Add tests in `parser-core/src/test/kotlin/com/ritesh/parser/core/bank/MyBankParserTest.kt` using `ParserTestUtils`.
+3. Add tests in `parser-core/src/test/kotlin/com/prarambha/parser/core/bank/MyBankParserTest.kt` using `ParserTestUtils`.
 
 ## Community & Support
 
 [//]: # (- **Discord**: Join the community, share feedback, and get help — [Join Discord]&#40;https://discord.gg/H3xWeMWjKQ&#41;)
-- **Issues**: Report bugs or request features — [Open an issue](https://github.com/ritesh-kanwar/Hisab Sathi/issues)
+- **Issues**: Report bugs or request features — [Open an issue](https://github.com/Prarambha369/Hisab-Sathi/issues)
 
 ## Contributing
 
@@ -300,7 +300,7 @@ GNU General Public License v3.0 - see [LICENSE](LICENSE)
 ---
 
 <p align="center">
-<a href="https://github.com/ritesh-kanwar/Hisab Sathi/releases">Download</a> •
-<a href="https://github.com/ritesh-kanwar/Hisab Sathi/issues">Report Bug</a> •
-<a href="https://github.com/ritesh-kanwar/Hisab Sathi/issues">Request Feature</a>
+<a href="https://github.com/Prarambha369/Hisab-Sathi/releases">Download</a> •
+<a href="https://github.com/Prarambha369/Hisab-Sathi/issues">Report Bug</a> •
+<a href="https://github.com/Prarambha369/Hisab-Sathi/issues">Request Feature</a>
 </p>

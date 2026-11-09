@@ -1,5 +1,7 @@
 package com.prarambha.cashiro.data.service
 
+import com.prarambha.cashiro.BuildConfig
+
 import android.content.Context
 import android.util.Log
 import com.google.mediapipe.tasks.genai.llminference.LlmInference
@@ -50,22 +52,22 @@ class LlmServiceImpl @Inject constructor(
     override fun generateResponseStream(prompt: String): Flow<String> = callbackFlow {
         val inference = llmInference ?: throw IllegalStateException("LLM not initialized")
         
-        Log.d("LlmServiceImpl", "Starting generateResponseAsync for prompt: ${prompt.take(50)}...")
+        if (BuildConfig.DEBUG) Log.d("LlmServiceImpl", "Starting generateResponseAsync for prompt: ${prompt.take(50)}...")
         
         inference.generateResponseAsync(prompt) { partialResult, done ->
-            Log.d("LlmServiceImpl", "Received partial result: ${partialResult.take(20)}..., done=$done")
+            if (BuildConfig.DEBUG) Log.d("LlmServiceImpl", "Received partial result: ${partialResult.take(20)}..., done=$done")
             val sent = trySend(partialResult).isSuccess
-            Log.d("LlmServiceImpl", "Sent partial result: $sent")
+            if (BuildConfig.DEBUG) Log.d("LlmServiceImpl", "Sent partial result: $sent")
             
             if (done) {
-                Log.d("LlmServiceImpl", "Response generation complete, closing channel")
+                if (BuildConfig.DEBUG) Log.d("LlmServiceImpl", "Response generation complete, closing channel")
                 close()
             }
             done
         }
         
         awaitClose { 
-            Log.d("LlmServiceImpl", "Flow closed")
+            if (BuildConfig.DEBUG) Log.d("LlmServiceImpl", "Flow closed")
         }
     }
     

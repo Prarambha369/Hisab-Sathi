@@ -1,5 +1,7 @@
 package com.prarambha.cashiro.presentation.ui.features.settings.unrecognized
 
+import com.prarambha.cashiro.BuildConfig
+
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -81,9 +83,9 @@ class UnrecognizedSmsViewModel @Inject constructor(
                 // Mark as reported
                 unrecognizedSmsRepository.markAsReported(listOf(message.id))
                 
-                Log.d("UnrecognizedSmsViewModel", "Opened report for message from: ${message.sender}")
+                if (BuildConfig.DEBUG) Log.d("UnrecognizedSmsViewModel", "Opened report for message from: ${message.sender}")
             } catch (e: Exception) {
-                Log.e("UnrecognizedSmsViewModel", "Error opening report", e)
+                if (BuildConfig.DEBUG) Log.e("UnrecognizedSmsViewModel", "Error opening report", e)
             }
         }
     }
@@ -93,9 +95,9 @@ class UnrecognizedSmsViewModel @Inject constructor(
             try {
                 // Delete the specific message
                 unrecognizedSmsRepository.deleteMessage(message.id)
-                Log.d("UnrecognizedSmsViewModel", "Deleted message from: ${message.sender}")
+                if (BuildConfig.DEBUG) Log.d("UnrecognizedSmsViewModel", "Deleted message from: ${message.sender}")
             } catch (e: Exception) {
-                Log.e("UnrecognizedSmsViewModel", "Error deleting message", e)
+                if (BuildConfig.DEBUG) Log.e("UnrecognizedSmsViewModel", "Error deleting message", e)
             }
         }
     }
@@ -104,9 +106,9 @@ class UnrecognizedSmsViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 unrecognizedSmsRepository.deleteAll()
-                Log.d("UnrecognizedSmsViewModel", "Deleted all unrecognized messages")
+                if (BuildConfig.DEBUG) Log.d("UnrecognizedSmsViewModel", "Deleted all unrecognized messages")
             } catch (e: Exception) {
-                Log.e("UnrecognizedSmsViewModel", "Error deleting all messages", e)
+                if (BuildConfig.DEBUG) Log.e("UnrecognizedSmsViewModel", "Error deleting all messages", e)
             }
         }
     }

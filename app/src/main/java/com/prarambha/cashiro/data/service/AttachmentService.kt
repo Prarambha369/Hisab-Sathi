@@ -1,5 +1,7 @@
 package com.prarambha.cashiro.data.service
 
+import com.prarambha.cashiro.BuildConfig
+
 import android.content.Context
 import android.net.Uri
 import android.webkit.MimeTypeMap
@@ -52,7 +54,7 @@ class AttachmentService @Inject constructor(
             // Return relative path for storage in database
             "$ATTACHMENTS_DIR/$fileName"
         } catch (e: Exception) {
-            e.printStackTrace()
+            if (BuildConfig.DEBUG) e.printStackTrace()
             null
         }
     }
@@ -67,7 +69,7 @@ class AttachmentService @Inject constructor(
             val file = File(context.filesDir, relativePath)
             if (file.exists()) file.delete() else true
         } catch (e: Exception) {
-            e.printStackTrace()
+            if (BuildConfig.DEBUG) e.printStackTrace()
             false
         }
     }
@@ -86,7 +88,7 @@ class AttachmentService @Inject constructor(
                 FileProvider.getUriForFile(context, authority, file)
             } else null
         } catch (e: Exception) {
-            e.printStackTrace()
+            if (BuildConfig.DEBUG) e.printStackTrace()
             null
         }
     }

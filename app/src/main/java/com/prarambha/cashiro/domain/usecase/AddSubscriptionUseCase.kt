@@ -1,5 +1,7 @@
 package com.prarambha.cashiro.domain.usecase
 
+import com.prarambha.cashiro.BuildConfig
+
 import android.util.Log
 import com.prarambha.cashiro.data.database.entity.SubscriptionEntity
 import com.prarambha.cashiro.data.database.entity.SubscriptionState
@@ -26,7 +28,7 @@ constructor(private val subscriptionRepository: SubscriptionRepository) {
         notes: String? = null,
         lastPaidDate: LocalDate? = null
     ): Long {
-        Log.d("AddSubscriptionUseCase", "Creating subscription entity...")
+        if (BuildConfig.DEBUG) Log.d("AddSubscriptionUseCase", "Creating subscription entity...")
 
         val subscription = SubscriptionEntity(
             merchantName = merchantName,
@@ -44,11 +46,11 @@ constructor(private val subscriptionRepository: SubscriptionRepository) {
             lastPaidDate = lastPaidDate
         )
 
-        Log.d("AddSubscriptionUseCase", "Subscription entity created: $subscription")
-        Log.d("AddSubscriptionUseCase", "Calling repository.insertSubscription...")
+        if (BuildConfig.DEBUG) Log.d("AddSubscriptionUseCase", "Subscription entity created: $subscription")
+        if (BuildConfig.DEBUG) Log.d("AddSubscriptionUseCase", "Calling repository.insertSubscription...")
 
         val id = subscriptionRepository.insertSubscription(subscription)
-        Log.d("AddSubscriptionUseCase", "Subscription inserted with ID: $id")
+        if (BuildConfig.DEBUG) Log.d("AddSubscriptionUseCase", "Subscription inserted with ID: $id")
 
         return id
     }

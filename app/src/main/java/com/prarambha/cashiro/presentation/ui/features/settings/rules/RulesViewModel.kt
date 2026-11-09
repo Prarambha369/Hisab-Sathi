@@ -1,5 +1,7 @@
 package com.prarambha.cashiro.presentation.ui.features.settings.rules
 
+import com.prarambha.cashiro.BuildConfig
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.prarambha.cashiro.domain.model.rule.TransactionRule
@@ -65,7 +67,7 @@ class RulesViewModel @Inject constructor(
                 initializeRuleTemplatesUseCase()
             } catch (e: Exception) {
                 // Log error but don't crash
-                e.printStackTrace()
+                if (BuildConfig.DEBUG) e.printStackTrace()
             } finally {
             _uiState.update { it.copy(isLoading = false) }
             }
@@ -78,7 +80,7 @@ class RulesViewModel @Inject constructor(
                 ruleRepository.setRuleActive(ruleId, isActive)
             } catch (e: Exception) {
                 // Log error
-                e.printStackTrace()
+                if (BuildConfig.DEBUG) e.printStackTrace()
             }
         }
     }
@@ -88,7 +90,7 @@ class RulesViewModel @Inject constructor(
             try {
                 ruleRepository.insertRule(rule)
             } catch (e: Exception) {
-                e.printStackTrace()
+                if (BuildConfig.DEBUG) e.printStackTrace()
             }
         }
     }
@@ -98,7 +100,7 @@ class RulesViewModel @Inject constructor(
             try {
                 ruleRepository.deleteRule(ruleId)
             } catch (e: Exception) {
-                e.printStackTrace()
+                if (BuildConfig.DEBUG) e.printStackTrace()
             }
         }
     }
@@ -108,7 +110,7 @@ class RulesViewModel @Inject constructor(
             try {
                 ruleRepository.updateRule(rule)
             } catch (e: Exception) {
-                e.printStackTrace()
+                if (BuildConfig.DEBUG) e.printStackTrace()
             }
         }
     }
@@ -124,7 +126,7 @@ class RulesViewModel @Inject constructor(
                 // Force reset to default templates
                 initializeRuleTemplatesUseCase(forceReset = true)
             } catch (e: Exception) {
-                e.printStackTrace()
+                if (BuildConfig.DEBUG) e.printStackTrace()
             } finally {
             _uiState.update { it.copy(isLoading = false) }
             }
@@ -158,7 +160,7 @@ class RulesViewModel @Inject constructor(
                 }
                 _uiState.update { it.copy(batchApplyResult = result) }
             } catch (e: Exception) {
-                e.printStackTrace()
+                if (BuildConfig.DEBUG) e.printStackTrace()
                 _uiState.update { it.copy(batchApplyResult = BatchApplyResult(
                     totalProcessed = 0,
                     totalUpdated = 0,
@@ -185,7 +187,7 @@ class RulesViewModel @Inject constructor(
                 )
                 _uiState.update { it.copy(batchApplyResult = result) }
             } catch (e: Exception) {
-                e.printStackTrace()
+                if (BuildConfig.DEBUG) e.printStackTrace()
                 _uiState.update { it.copy(batchApplyResult = BatchApplyResult(
                     totalProcessed = 0,
                     totalUpdated = 0,

@@ -1,5 +1,7 @@
 package com.prarambha.cashiro.data.repository
 
+import com.prarambha.cashiro.BuildConfig
+
 import android.util.Log
 import com.prarambha.cashiro.data.database.dao.ChatDao
 import com.prarambha.cashiro.data.database.entity.ChatMessage
@@ -92,7 +94,7 @@ class LlmRepository @Inject constructor(
                 isSystemPrompt = true
             )
             chatDao.insertMessage(systemMessage)
-            Log.d("LlmRepository", "System prompt added to new chat")
+            if (BuildConfig.DEBUG) Log.d("LlmRepository", "System prompt added to new chat")
         }
         
         // Check token limit before processing
@@ -110,9 +112,9 @@ class LlmRepository @Inject constructor(
             message = userMessage,
             isUser = true
         )
-        Log.d("LlmRepository", "Saving user message: ${userMessage.take(50)}...")
+        if (BuildConfig.DEBUG) Log.d("LlmRepository", "Saving user message: ${userMessage.take(50)}...")
         chatDao.insertMessage(userChatMessage)
-        Log.d("LlmRepository", "User message saved")
+        if (BuildConfig.DEBUG) Log.d("LlmRepository", "User message saved")
         
         // Check if model is downloading
         val currentModelState = modelRepository.modelState.first()
@@ -138,13 +140,13 @@ class LlmRepository @Inject constructor(
         val conversationContext = buildConversationContext(allMessages, userMessage)
         
         // Log the final message being sent to LLM
-        Log.d("LlmRepository", "=== SENDING TO LLM ===")
-        Log.d("LlmRepository", "Total messages in context: ${allMessages.size}")
-        Log.d("LlmRepository", "Context length: ${conversationContext.length} characters")
-        Log.d("LlmRepository", "Estimated tokens: ${conversationContext.length / 4}")
-        Log.d("LlmRepository", "=== FULL CONTEXT ===")
-        Log.d("LlmRepository", conversationContext)
-        Log.d("LlmRepository", "=== END CONTEXT ===")
+        if (BuildConfig.DEBUG) Log.d("LlmRepository", "=== SENDING TO LLM ===")
+        if (BuildConfig.DEBUG) Log.d("LlmRepository", "Total messages in context: ${allMessages.size}")
+        if (BuildConfig.DEBUG) Log.d("LlmRepository", "Context length: ${conversationContext.length} characters")
+        if (BuildConfig.DEBUG) Log.d("LlmRepository", "Estimated tokens: ${conversationContext.length / 4}")
+        if (BuildConfig.DEBUG) Log.d("LlmRepository", "=== FULL CONTEXT ===")
+        if (BuildConfig.DEBUG) Log.d("LlmRepository", conversationContext)
+        if (BuildConfig.DEBUG) Log.d("LlmRepository", "=== END CONTEXT ===")
         
         // Stream response and accumulate for saving
         val responseBuilder = StringBuilder()
@@ -158,13 +160,13 @@ class LlmRepository @Inject constructor(
         
         // Save the complete AI response at the end
         val finalResponse = responseBuilder.toString()
-        Log.d("LlmRepository", "Saving AI response: ${finalResponse.take(50)}...")
+        if (BuildConfig.DEBUG) Log.d("LlmRepository", "Saving AI response: ${finalResponse.take(50)}...")
         val aiMessage = ChatMessage(
             message = finalResponse,
             isUser = false
         )
         chatDao.insertMessage(aiMessage)
-        Log.d("LlmRepository", "AI response saved")
+        if (BuildConfig.DEBUG) Log.d("LlmRepository", "AI response saved")
     }
     
     suspend fun deleteAllMessages() {
@@ -210,7 +212,7 @@ class LlmRepository @Inject constructor(
         contextBuilder.append("User: $currentMessage\n")
         contextBuilder.append("Assistant:")
         
-        Log.d("LlmRepository", "Context composition: $systemPromptCount system prompts, $userMessageCount user messages, $aiMessageCount AI messages")
+        if (BuildConfig.DEBUG) Log.d("LlmRepository", "Context composition: $systemPromptCount system prompts, $userMessageCount user messages, $aiMessageCount AI messages")
         
         return contextBuilder.toString()
     }
@@ -265,7 +267,7 @@ class LlmRepository @Inject constructor(
         val chatContext = aiContextRepository.getChatContext()
         val newPrompt = buildSystemPrompt(chatContext)
         userPreferencesRepository.updateSystemPrompt(newPrompt)
-        Log.d("LlmRepository", "System prompt updated with latest financial data")
+        if (BuildConfig.DEBUG) Log.d("LlmRepository", "System prompt updated with latest financial data")
     }
     
     suspend fun getFormattedContextForDisplay(): String {

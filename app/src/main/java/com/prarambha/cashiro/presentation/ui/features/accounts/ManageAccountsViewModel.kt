@@ -1,5 +1,7 @@
 package com.prarambha.cashiro.presentation.ui.features.accounts
 
+import com.prarambha.cashiro.BuildConfig
+
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -404,7 +406,7 @@ constructor(
     fun linkCardToAccount(cardId: Long, accountLast4: String) {
         viewModelScope.launch {
             try {
-                Log.d(
+                if (BuildConfig.DEBUG) Log.d(
                         "ManageAccountsViewModel",
                         "Starting to link card $cardId to account $accountLast4"
                 )
@@ -428,7 +430,7 @@ constructor(
                                         smsSource = card.lastBalanceSource,
                                         sourceType = "CARD_LINK"
                                 )
-                        Log.d(
+                        if (BuildConfig.DEBUG) Log.d(
                                 "ManageAccountsViewModel",
                                 "Balance copied to account. Insert ID: $insertedId"
                         )
@@ -438,7 +440,7 @@ constructor(
                                 "Card linked successfully. Balance updated to ${CurrencyFormatter.formatCurrency(card.lastBalance)}"
                         _uiState.update { it.copy(successMessage = message) }
                     } catch (e: Exception) {
-                        Log.e(
+                        if (BuildConfig.DEBUG) Log.e(
                                 "ManageAccountsViewModel",
                                 "Failed to copy balance: ${e.message}",
                                 e
@@ -463,7 +465,7 @@ constructor(
                 loadCards()
                 loadAccounts()
             } catch (e: Exception) {
-                Log.e("ManageAccountsViewModel", "Failed to link card", e)
+                if (BuildConfig.DEBUG) Log.e("ManageAccountsViewModel", "Failed to link card", e)
                 _uiState.update { it.copy(errorMessage = "Failed to link card: ${e.message}") }
             }
         }
@@ -479,7 +481,7 @@ constructor(
     fun deleteCard(cardId: Long) {
         viewModelScope.launch {
             try {
-                Log.d("ManageAccountsViewModel", "Deleting card with ID: $cardId")
+                if (BuildConfig.DEBUG) Log.d("ManageAccountsViewModel", "Deleting card with ID: $cardId")
                 cardRepository.deleteCard(cardId)
                 _uiState.update { it.copy(successMessage = "Card deleted successfully") }
 
@@ -489,7 +491,7 @@ constructor(
 
                 loadCards()
             } catch (e: Exception) {
-               Log.e("ManageAccountsViewModel", "Failed to delete card", e)
+               if (BuildConfig.DEBUG) Log.e("ManageAccountsViewModel", "Failed to delete card", e)
                 _uiState.update { it.copy(errorMessage = "Failed to delete card: ${e.message}") }
             }
         }

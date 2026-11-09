@@ -1,5 +1,7 @@
 package com.prarambha.cashiro.data.currency
 
+import com.prarambha.cashiro.BuildConfig
+
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.android.*
@@ -57,7 +59,7 @@ class FreeExchangeRateProvider @Inject constructor() : ExchangeRateProvider {
             val rates = fetchAllExchangeRates(fromCurrency)
             rates?.get(toCurrency.uppercase())
         } catch (e: Exception) {
-            println("Failed to fetch exchange rate from API: ${e.message}")
+            if (BuildConfig.DEBUG) println("Failed to fetch exchange rate from API: ${e.message}")
             null
         }
     }
@@ -84,7 +86,7 @@ class FreeExchangeRateProvider @Inject constructor() : ExchangeRateProvider {
                         responseBody = response.body<String>()
                     }
                 } catch (e: Exception) {
-                    println("Primary API failed, trying fallback: ${e.message}")
+                    if (BuildConfig.DEBUG) println("Primary API failed, trying fallback: ${e.message}")
                 }
                 
                 // Try Fallback URL if primary failed
@@ -97,7 +99,7 @@ class FreeExchangeRateProvider @Inject constructor() : ExchangeRateProvider {
                             responseBody = response.body<String>()
                         }
                     } catch (e: Exception) {
-                        println("Fallback API also failed: ${e.message}")
+                        if (BuildConfig.DEBUG) println("Fallback API also failed: ${e.message}")
                     }
                 }
 
@@ -147,7 +149,7 @@ class FreeExchangeRateProvider @Inject constructor() : ExchangeRateProvider {
                 }
             }
         } catch (e: Exception) {
-            println("Failed to fetch exchange rates: ${e.message}")
+            if (BuildConfig.DEBUG) println("Failed to fetch exchange rates: ${e.message}")
             null
         }
     }
@@ -189,7 +191,7 @@ class FreeExchangeRateProvider @Inject constructor() : ExchangeRateProvider {
                 }
             }
         } catch (e: Exception) {
-            println("Failed to fetch currencies mapping: ${e.message}")
+            if (BuildConfig.DEBUG) println("Failed to fetch currencies mapping: ${e.message}")
             null
         }
     }

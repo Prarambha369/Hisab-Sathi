@@ -1,5 +1,7 @@
 package com.prarambha.cashiro.presentation.ui.features.add
 
+import com.prarambha.cashiro.BuildConfig
+
 import com.prarambha.cashiro.utils.SubscriptionUtils
 
 import android.content.Context
@@ -510,14 +512,14 @@ constructor(
 
     fun saveSubscription(onSuccess: () -> Unit) {
         val state = _subscriptionUiState.value
-        Log.d("AddViewModel", "saveSubscription called with state: $state")
+        if (BuildConfig.DEBUG) Log.d("AddViewModel", "saveSubscription called with state: $state")
 
         // Validate all fields
         val serviceError = if (state.serviceName.isBlank()) "Service name is required" else null
         val amountError = validateAmount(state.amount)
         val categoryError = validateCategory(state.category)
 
-        Log.d(
+        if (BuildConfig.DEBUG) Log.d(
             "AddViewModel",
             "Validation - serviceError: $serviceError, amountError: $amountError, categoryError: $categoryError"
         )
@@ -535,7 +537,7 @@ constructor(
 
         viewModelScope.launch {
             try {
-                Log.d("AddViewModel", "Starting to save subscription...")
+                if (BuildConfig.DEBUG) Log.d("AddViewModel", "Starting to save subscription...")
                 _subscriptionUiState.update { it.copy(isLoading = true) }
 
                 val amount = BigDecimal(state.amount)
@@ -563,7 +565,7 @@ constructor(
                             updatedAt = java.time.LocalDateTime.now()
                         )
                         updateSubscriptionUseCase.execute(updatedSubscription)
-                        Log.d("AddViewModel", "Subscription updated successfully: ${state.subscriptionId}")
+                        if (BuildConfig.DEBUG) Log.d("AddViewModel", "Subscription updated successfully: ${state.subscriptionId}")
                     } else {
                         throw Exception("Subscription not found for update")
                     }
@@ -588,7 +590,7 @@ constructor(
                     )
 
                     val actualNextPaymentDate = SubscriptionUtils.calculateNextPaymentDate(state.nextPaymentDate, billingCycleToSave)
-                    Log.d("AddViewModel", "DEBUG_SUBSCRIPTION: fromDate=${state.nextPaymentDate}, billingCycle=$billingCycleToSave, today=${LocalDate.now()}, result=$actualNextPaymentDate")
+                    if (BuildConfig.DEBUG) Log.d("AddViewModel", "DEBUG_SUBSCRIPTION: fromDate=${state.nextPaymentDate}, billingCycle=$billingCycleToSave, today=${LocalDate.now()}, result=$actualNextPaymentDate")
 
                     val subscriptionId =
                         addSubscriptionUseCase.execute(
@@ -606,12 +608,12 @@ constructor(
                             lastPaidDate = state.nextPaymentDate
                         )
 
-                    Log.d("AddViewModel", "Subscription saved successfully with ID: $subscriptionId")
+                    if (BuildConfig.DEBUG) Log.d("AddViewModel", "Subscription saved successfully with ID: $subscriptionId")
                 }
                 onSuccess()
             } catch (e: Exception) {
-                Log.e("AddViewModel", "Error saving subscription", e)
-                e.printStackTrace()
+                if (BuildConfig.DEBUG) Log.e("AddViewModel", "Error saving subscription", e)
+                if (BuildConfig.DEBUG) e.printStackTrace()
                 _subscriptionUiState.update { currentState ->
                     currentState.copy(
                         isLoading = false,

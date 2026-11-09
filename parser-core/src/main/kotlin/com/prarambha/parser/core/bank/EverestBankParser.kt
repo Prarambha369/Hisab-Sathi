@@ -15,15 +15,18 @@ class EverestBankParser : BankParser() {
     override fun canHandle(sender: String): Boolean {
         val upperSender = sender.uppercase()
         return when {
-            // Numeric senders (phone numbers, short codes)
+            // Numeric gateway senders (Everest Bank delivers SMS from phone-like
+            // numbers in Nepal, e.g. 9843368). Intentional and covered by
+            // TestEverestBankParser; parse() still requires transaction keywords,
+            // an amount and a type, so personal SMS are rejected downstream.
             sender.matches(Regex("""^\d{7,10}$""")) -> true
 
             // Text-based senders
             upperSender == "EVEREST" ||
                     upperSender.contains("EVERESTBANK") ||
                     upperSender.contains("EBL") ||
-                    upperSender == "UJJ SH" ||
-                    upperSender == "CWRD" ||  // ATM withdrawal code
+                    upperSender == "UJJ SH" ||  // Fonepay/IBFT receiver code seen in SMS bodies
+                    upperSender == "CWRD" ||    // ATM withdrawal short code
 
                     // DLT patterns for Nepal
                     upperSender.matches(Regex("""^[A-Z]{2}-EVEREST-[A-Z]$""")) -> true

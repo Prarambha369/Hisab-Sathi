@@ -1,5 +1,7 @@
 package com.prarambha.cashiro.data.currency
 
+import com.prarambha.cashiro.BuildConfig
+
 import com.prarambha.cashiro.data.database.dao.ExchangeRateDao
 import com.prarambha.cashiro.data.database.entity.ExchangeRateEntity
 import com.prarambha.cashiro.data.preferences.UserPreferencesRepository
@@ -137,10 +139,10 @@ class CurrencyConversionService @Inject constructor(
 
         // Check if we need to refresh by looking at the newest rate in our database
         if (!shouldRefreshRates(apiBaseCurrency)) {
-            println("Currency rates are fresh, skipping refresh")
+            if (BuildConfig.DEBUG) println("Currency rates are fresh, skipping refresh")
             return // Rates are still fresh, no need to refresh
         }
-        println("Currency rates are stale, refreshing from API")
+        if (BuildConfig.DEBUG) println("Currency rates are stale, refreshing from API")
         fetchAndSaveAllRates(apiBaseCurrency, currencies)
     }
 
@@ -265,7 +267,7 @@ class CurrencyConversionService @Inject constructor(
             }
         } catch (e: Exception) {
             // Log error but don't crash
-            println("Failed to fetch exchange rate for $fromCurrency to $toCurrency: ${e.message}")
+            if (BuildConfig.DEBUG) println("Failed to fetch exchange rate for $fromCurrency to $toCurrency: ${e.message}")
         }
 
         return null

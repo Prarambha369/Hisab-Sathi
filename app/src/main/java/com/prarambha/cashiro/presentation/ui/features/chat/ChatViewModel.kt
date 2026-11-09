@@ -1,5 +1,7 @@
 package com.prarambha.cashiro.presentation.ui.features.chat
 
+import com.prarambha.cashiro.BuildConfig
+
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -117,17 +119,17 @@ class ChatViewModel @Inject constructor(
     )
     
     init {
-        Log.d("ChatViewModel", "Initializing ChatViewModel")
+        if (BuildConfig.DEBUG) Log.d("ChatViewModel", "Initializing ChatViewModel")
         modelRepository.checkModelState()
         
         // Log initial state
         val isDownloaded = modelRepository.isModelDownloaded()
-        Log.d("ChatViewModel", "Initial model downloaded check: $isDownloaded")
+        if (BuildConfig.DEBUG) Log.d("ChatViewModel", "Initial model downloaded check: $isDownloaded")
         
         // Also observe state changes
         viewModelScope.launch {
             modelRepository.modelState.collect { state ->
-                Log.d("ChatViewModel", "Model state changed to: $state")
+                if (BuildConfig.DEBUG) Log.d("ChatViewModel", "Model state changed to: $state")
             }
         }
         
@@ -160,7 +162,7 @@ class ChatViewModel @Inject constructor(
                 // Use streaming for better UX
                 llmRepository.sendMessageStream(message)
                     .catch { error ->
-                        Log.e("ChatViewModel", "Error in stream", error)
+                        if (BuildConfig.DEBUG) Log.e("ChatViewModel", "Error in stream", error)
                         val errorMessage = when {
                             error.message?.contains("memory is full") == true -> 
                                 "Chat memory is full. Please clear the chat to continue."
@@ -180,11 +182,11 @@ class ChatViewModel @Inject constructor(
                     }
                 
                 // Stream completed successfully
-                Log.d("ChatViewModel", "Stream completed, resetting state")
+                if (BuildConfig.DEBUG) Log.d("ChatViewModel", "Stream completed, resetting state")
                 _uiState.value = _uiState.value.copy(isLoading = false)
                 _currentResponse.value = ""
             } catch (e: Exception) {
-                Log.e("ChatViewModel", "Exception in sendMessage", e)
+                if (BuildConfig.DEBUG) Log.e("ChatViewModel", "Exception in sendMessage", e)
                 val errorMessage = when {
                     e.message?.contains("memory is full") == true -> 
                         "Chat memory is full. Please clear the chat to continue."

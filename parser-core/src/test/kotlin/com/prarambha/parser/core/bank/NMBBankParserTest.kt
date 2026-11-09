@@ -68,11 +68,15 @@ Your  Esewa Wallet Load for 9850000007 of 300.00 is successful on 24-May-2025 18
             )
         )
 
+        // NABIL senders belong to NabilBankParser (registered before this one);
+        // NMB must never claim them. NIMB (Nepal Investment Mega Bank) is a
+        // future parser and must not be shadowed by the "NMB" contains-match.
         val handleCases: List<Pair<String, Boolean>> = listOf(
             "NMB_ALERT" to true,
             "NMB" to true,
             "NMBBANK" to true,
-            "NABIL" to true,
+            "NABIL" to false,
+            "NIMB_ALERT" to false,
             "HDFC" to false,
             "SBI" to false,
             "" to false

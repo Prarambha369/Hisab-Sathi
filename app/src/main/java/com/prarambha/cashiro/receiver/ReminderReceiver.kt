@@ -1,5 +1,7 @@
 package com.prarambha.cashiro.receiver
 
+import com.prarambha.cashiro.BuildConfig
+
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -35,7 +37,7 @@ class ReminderReceiver : BroadcastReceiver() {
     private val receiverScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     override fun onReceive(context: Context, intent: Intent) {
-        Log.d(TAG, "Reminder alarm received")
+        if (BuildConfig.DEBUG) Log.d(TAG, "Reminder alarm received")
 
         val entryPoint = EntryPointAccessors.fromApplication(
             context.applicationContext,
@@ -51,10 +53,10 @@ class ReminderReceiver : BroadcastReceiver() {
                 if (scanEnabled || upcomingEnabled) {
                     sendReminderNotification(context)
                 } else {
-                    Log.d(TAG, "Notifications are disabled, skipping")
+                    if (BuildConfig.DEBUG) Log.d(TAG, "Notifications are disabled, skipping")
                 }
             } catch (e: Exception) {
-                Log.e(TAG, "Error processing reminder alarm", e)
+                if (BuildConfig.DEBUG) Log.e(TAG, "Error processing reminder alarm", e)
             }
         }
     }
@@ -92,7 +94,7 @@ class ReminderReceiver : BroadcastReceiver() {
             .build()
 
         notificationManager.notify(NOTIFICATION_ID, notification)
-        Log.d(TAG, "Daily reminder notification sent via AlarmManager")
+        if (BuildConfig.DEBUG) Log.d(TAG, "Daily reminder notification sent via AlarmManager")
     }
 
     companion object {

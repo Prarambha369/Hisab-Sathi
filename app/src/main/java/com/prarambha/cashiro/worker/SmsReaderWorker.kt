@@ -1,5 +1,7 @@
 package com.prarambha.cashiro.worker
 
+import com.prarambha.cashiro.BuildConfig
+
 import android.content.Context
 import android.net.Uri
 import android.provider.Telephony
@@ -81,11 +83,11 @@ class SmsReaderWorker @AssistedInject constructor(
     
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         try {
-            Log.d(TAG, "Starting SMS reading and parsing work...")
+            if (BuildConfig.DEBUG) Log.d(TAG, "Starting SMS reading and parsing work...")
             
             // Read SMS messages
             val messages = readSmsMessages()
-            Log.d(TAG, "Found ${messages.size} SMS messages")
+            if (BuildConfig.DEBUG) Log.d(TAG, "Found ${messages.size} SMS messages")
             
             var parsedCount = 0
             var savedCount = 0
@@ -102,14 +104,14 @@ class SmsReaderWorker @AssistedInject constructor(
                 val isDop = senderUpper.contains("DOPBNK") || senderUpper.contains("DOP")
                 
                 if ((senderUpper.endsWith("-P") || senderUpper.endsWith("-G")) && !isKnownBank && !isTransaction && !isDop) {
-                    Log.d(TAG, "Skipping promotional/government SMS from: ${sms.sender}")
+                    if (BuildConfig.DEBUG) Log.d(TAG, "Skipping promotional/government SMS from: ${sms.sender}")
                     continue
                 }
                 
                 // Check if sender is from a known bank
                 val parser = BankParserFactory.getParser(sms.sender)
                 if (parser != null) {
-                    Log.d(TAG, "Processing SMS from ${parser.getBankName()}")
+                    if (BuildConfig.DEBUG) Log.d(TAG, "Processing SMS from ${parser.getBankName()}")
                     
                     // Calculate SMS age for subscription filtering
                     val smsDateTime = LocalDateTime.ofInstant(
@@ -124,7 +126,7 @@ class SmsReaderWorker @AssistedInject constructor(
                     
                     if (parsedTransaction != null) {
                         parsedCount++
-                        Log.d(TAG, """
+                        if (BuildConfig.DEBUG) Log.d(TAG, """
                             Parsed Transaction:
                             Bank: ${parsedTransaction.bankName}
                             Amount: ${parsedTransaction.amount}
@@ -144,18 +146,18 @@ class SmsReaderWorker @AssistedInject constructor(
                         val existingTransaction = transactionRepository.getTransactionByHash(entity.transactionHash)
                         if (existingTransaction != null) {
                             if (existingTransaction.isDeleted) {
-                                Log.d(TAG, "Skipping previously deleted transaction with hash: ${entity.transactionHash}")
+                                if (BuildConfig.DEBUG) Log.d(TAG, "Skipping previously deleted transaction with hash: ${entity.transactionHash}")
                                 continue
                             }
                             // Transaction already exists and not deleted - normal deduplication
-                            Log.d(TAG, "Transaction already exists: ${entity.transactionHash}")
+                            if (BuildConfig.DEBUG) Log.d(TAG, "Transaction already exists: ${entity.transactionHash}")
                             continue
                         }
 
                         // Check for custom merchant mapping
                         val customCategory = merchantMappingRepository.getCategoryForMerchant(entity.merchantName)
                         val entityWithMapping = if (customCategory != null) {
-                            Log.d(TAG, "Found custom category mapping: ${entity.merchantName} -> $customCategory")
+                            if (BuildConfig.DEBUG) Log.d(TAG, "Found custom category mapping: ${entity.merchantName} -> $customCategory")
                             entity.copy(category = customCategory)
                         } else {
                             entity
@@ -173,7 +175,7 @@ class SmsReaderWorker @AssistedInject constructor(
                         )
 
                         if (blockingRule != null) {
-                            Log.d(TAG, "Transaction blocked by rule: ${blockingRule.name}")
+                            if (BuildConfig.DEBUG) Log.d(TAG, "Transaction blocked by rule: ${blockingRule.name}")
                             continue  // Don't save the transaction
                         }
 
@@ -184,9 +186,9 @@ class SmsReaderWorker @AssistedInject constructor(
                         )
 
                         if (ruleApplications.isNotEmpty()) {
-                            Log.d(TAG, "Applied ${ruleApplications.size} rules to transaction")
+                            if (BuildConfig.DEBUG) Log.d(TAG, "Applied ${ruleApplications.size} rules to transaction")
                             ruleApplications.forEach { app ->
-                                Log.d(TAG, "Applied rule: ${app.ruleName}")
+                                if (BuildConfig.DEBUG) Log.d(TAG, "Applied rule: ${app.ruleName}")
                             }
                         }
 
@@ -199,7 +201,7 @@ class SmsReaderWorker @AssistedInject constructor(
 
                             // If matched to active subscription, update the entity to mark as recurring
                             val finalEntity = if (matchedSubscription != null) {
-                                Log.d(TAG, "Transaction matched to active subscription: ${matchedSubscription.merchantName}")
+                                if (BuildConfig.DEBUG) Log.d(TAG, "Transaction matched to active subscription: ${matchedSubscription.merchantName}")
                                 // Update next payment date for the subscription
                                 subscriptionRepository.updateNextPaymentDateAfterCharge(
                                     matchedSubscription.id,
@@ -213,7 +215,7 @@ class SmsReaderWorker @AssistedInject constructor(
                             val rowId = transactionRepository.insertTransaction(finalEntity)
                             if (rowId != -1L) {
                                 savedCount++
-                                Log.d(TAG, "Saved new transaction with ID: $rowId${if (finalEntity.isRecurring) " (Recurring)" else ""}")
+                                if (BuildConfig.DEBUG) Log.d(TAG, "Saved new transaction with ID: $rowId${if (finalEntity.isRecurring) " (Recurring)" else ""}")
 
                                 // Save rule applications if any rules were applied
                                 if (ruleApplications.isNotEmpty()) {
@@ -221,7 +223,7 @@ class SmsReaderWorker @AssistedInject constructor(
                                         it.copy(transactionId = rowId.toString())
                                     }
                                     ruleRepository.saveRuleApplications(applicationsWithId)
-                                    Log.d(TAG, "Saved ${ruleApplications.size} rule applications for transaction: $rowId")
+                                    if (BuildConfig.DEBUG) Log.d(TAG, "Saved ${ruleApplications.size} rule applications for transaction: $rowId")
                                 }
                                 
                                 // Only save balance/credit limit information for NEW transactions (not duplicates)
@@ -231,7 +233,7 @@ class SmsReaderWorker @AssistedInject constructor(
                                 // Determine if this transaction is from a card based on the message pattern
                                 val isFromCard = parsedTransaction.isFromCard
                                 
-                                Log.d(TAG, """
+                                if (BuildConfig.DEBUG) Log.d(TAG, """
                                     Processing transaction:
                                     - Bank: ${parsedTransaction.bankName}
                                     - Number: **${parsedTransaction.accountLast4}
@@ -243,7 +245,7 @@ class SmsReaderWorker @AssistedInject constructor(
                                 // Handle card vs account logic
                                 val targetAccountLast4 = if (isFromCard) {
                                     // This is a card transaction
-                                    Log.d(TAG, "Transaction identified as CARD transaction")
+                                    if (BuildConfig.DEBUG) Log.d(TAG, "Transaction identified as CARD transaction")
                                     
                                     var card = parsedTransaction.accountLast4?.let {
                                         cardRepository.getCard(parsedTransaction.bankName, it)
@@ -253,7 +255,7 @@ class SmsReaderWorker @AssistedInject constructor(
                                         // First time seeing this card - create it
                                         // Determine if it's a credit card based on transaction type
                                         val isCredit = (parsedTransaction.type.toEntityType() == TransactionType.CREDIT)
-                                        Log.d(TAG, "Creating new card for ${parsedTransaction.bankName}")
+                                        if (BuildConfig.DEBUG) Log.d(TAG, "Creating new card for ${parsedTransaction.bankName}")
                                         
                                         card = parsedTransaction.accountLast4?.let { accountLast4 ->
                                             cardRepository.findOrCreateCard(
@@ -267,13 +269,13 @@ class SmsReaderWorker @AssistedInject constructor(
                                         card = parsedTransaction.accountLast4?.let {
                                             cardRepository.getCard(parsedTransaction.bankName, it)
                                         }!!
-                                        Log.d(TAG, "Card created/found successfully")
+                                        if (BuildConfig.DEBUG) Log.d(TAG, "Card created/found successfully")
                                     } else {
-                                        Log.d(TAG, "Found existing card")
+                                        if (BuildConfig.DEBUG) Log.d(TAG, "Found existing card")
                                     }
                                     
                                     // Always update card's balance and source (for debugging)
-                                    Log.d(TAG, "Updating card balance")
+                                    if (BuildConfig.DEBUG) Log.d(TAG, "Updating card balance")
                                     cardRepository.updateCardBalance(
                                         cardId = card.id,
                                         balance = parsedTransaction.balance,  // Can be null
@@ -288,24 +290,24 @@ class SmsReaderWorker @AssistedInject constructor(
                                     val result = when {
                                         card.cardType == com.prarambha.cashiro.data.database.entity.CardType.CREDIT -> {
                                             // Credit cards get balance entries
-                                            Log.d(TAG, "CREDIT card - will create balance entry")
+                                            if (BuildConfig.DEBUG) Log.d(TAG, "CREDIT card - will create balance entry")
                                             parsedTransaction.accountLast4
                                         }
                                         card.cardType == com.prarambha.cashiro.data.database.entity.CardType.DEBIT && card.accountLast4 != null -> {
                                             // Linked debit card - use the linked account for balance
-                                            Log.d(TAG, "DEBIT card linked to account **${card.accountLast4} - will update linked account balance")
+                                            if (BuildConfig.DEBUG) Log.d(TAG, "DEBIT card linked to account **${card.accountLast4} - will update linked account balance")
                                             card.accountLast4
                                         }
                                         else -> {
                                             // Unlinked debit card - no balance entry
-                                            Log.d(TAG, "DEBIT card NOT linked - NO balance entry will be created")
+                                            if (BuildConfig.DEBUG) Log.d(TAG, "DEBIT card NOT linked - NO balance entry will be created")
                                             null
                                         }
                                     }
                                     result
                                 } else {
                                     // This is a direct account transaction - always create balance entry
-                                    Log.d(TAG, "Transaction identified as ACCOUNT transaction - will create balance entry")
+                                    if (BuildConfig.DEBUG) Log.d(TAG, "Transaction identified as ACCOUNT transaction - will create balance entry")
                                     parsedTransaction.accountLast4
                                 }
                                 
@@ -348,7 +350,7 @@ class SmsReaderWorker @AssistedInject constructor(
                                         }
                                     }
                                     
-                                    Log.d(TAG, """
+                                    if (BuildConfig.DEBUG) Log.d(TAG, """
                                         Saving account balance:
                                         - Bank: ${parsedTransaction.bankName}
                                         - Original: **${parsedTransaction.accountLast4}
@@ -392,19 +394,19 @@ class SmsReaderWorker @AssistedInject constructor(
                                         } else {
                                             "Saved balance update for ${parsedTransaction.bankName} **$targetAccountLast4"
                                         }
-                                        Log.d(TAG, logMsg)
+                                        if (BuildConfig.DEBUG) Log.d(TAG, logMsg)
                                     } else {
-                                        Log.d(TAG, "Skipped saving balance: ${parsedTransaction.bankName} **$targetAccountLast4")
+                                        if (BuildConfig.DEBUG) Log.d(TAG, "Skipped saving balance: ${parsedTransaction.bankName} **$targetAccountLast4")
                                     }
                                 } else {
-                                    Log.d(TAG, "No balance entry created for unlinked debit card: ${parsedTransaction.bankName} **${parsedTransaction.accountLast4}")
+                                    if (BuildConfig.DEBUG) Log.d(TAG, "No balance entry created for unlinked debit card: ${parsedTransaction.bankName} **${parsedTransaction.accountLast4}")
                                 }
                             }
                             } else {
-                                Log.d(TAG, "Transaction already exists (duplicate), skipping both transaction and balance update: ${entity.transactionHash}")
+                                if (BuildConfig.DEBUG) Log.d(TAG, "Transaction already exists (duplicate), skipping both transaction and balance update: ${entity.transactionHash}")
                             }
                         } catch (e: Exception) {
-                            Log.e(TAG, "Error saving transaction: ${e.message}")
+                            if (BuildConfig.DEBUG) Log.e(TAG, "Error saving transaction: ${e.message}")
                         }
                     }
                 } else {
@@ -427,12 +429,12 @@ class SmsReaderWorker @AssistedInject constructor(
                                     )
                                 )
                                 unrecognizedSmsRepository.insert(unrecognizedSms)
-                                Log.d(TAG, "Stored unrecognized SMS from potential financial provider: ${sms.sender}")
+                                if (BuildConfig.DEBUG) Log.d(TAG, "Stored unrecognized SMS from potential financial provider: ${sms.sender}")
                             } else {
-                                Log.d(TAG, "Skipping duplicate unrecognized SMS from: ${sms.sender}")
+                                if (BuildConfig.DEBUG) Log.d(TAG, "Skipping duplicate unrecognized SMS from: ${sms.sender}")
                             }
                         } catch (e: Exception) {
-                            Log.e(TAG, "Error storing unrecognized SMS: ${e.message}")
+                            if (BuildConfig.DEBUG) Log.e(TAG, "Error storing unrecognized SMS: ${e.message}")
                         }
                     }
                 }
@@ -441,26 +443,26 @@ class SmsReaderWorker @AssistedInject constructor(
             // Clean up old unrecognized SMS entries
             try {
                 unrecognizedSmsRepository.cleanupOldEntries()
-                Log.d(TAG, "Cleaned up old unrecognized SMS entries")
+                if (BuildConfig.DEBUG) Log.d(TAG, "Cleaned up old unrecognized SMS entries")
             } catch (e: Exception) {
-                Log.e(TAG, "Error cleaning up unrecognized SMS: ${e.message}")
+                if (BuildConfig.DEBUG) Log.e(TAG, "Error cleaning up unrecognized SMS: ${e.message}")
             }
             
-            Log.d(TAG, "SMS parsing completed. Parsed: $parsedCount, Saved: $savedCount, Subscriptions: $subscriptionCount")
+            if (BuildConfig.DEBUG) Log.d(TAG, "SMS parsing completed. Parsed: $parsedCount, Saved: $savedCount, Subscriptions: $subscriptionCount")
             
             // Update system prompt with new financial data if any transactions were saved
             if (savedCount > 0) {
                 try {
                     llmRepository.updateSystemPrompt()
-                    Log.d(TAG, "Updated system prompt with latest financial data")
+                    if (BuildConfig.DEBUG) Log.d(TAG, "Updated system prompt with latest financial data")
                 } catch (e: Exception) {
-                    Log.e(TAG, "Error updating system prompt: ${e.message}")
+                    if (BuildConfig.DEBUG) Log.e(TAG, "Error updating system prompt: ${e.message}")
                 }
             }
             
             Result.success()
         } catch (e: Exception) {
-            Log.e(TAG, "Error in SMS parsing work", e)
+            if (BuildConfig.DEBUG) Log.e(TAG, "Error in SMS parsing work", e)
             Result.failure()
         }
     }
@@ -490,10 +492,10 @@ class SmsReaderWorker @AssistedInject constructor(
                     if (scanAllTime) {
                         // Scan all time - go back 10 years (effectively all SMS)
                         add(java.util.Calendar.YEAR, -10)
-                        Log.d(TAG, "Performing full SMS scan for all time")
+                        if (BuildConfig.DEBUG) Log.d(TAG, "Performing full SMS scan for all time")
                     } else {
                         add(java.util.Calendar.MONTH, -scanMonths)
-                        Log.d(TAG, "Performing full SMS scan for last $scanMonths months")
+                        if (BuildConfig.DEBUG) Log.d(TAG, "Performing full SMS scan for last $scanMonths months")
                     }
                     set(java.util.Calendar.HOUR_OF_DAY, 0)
                     set(java.util.Calendar.MINUTE, 0)
@@ -515,7 +517,7 @@ class SmsReaderWorker @AssistedInject constructor(
                 )
                 
                 val daysSinceLastScan = (now - lastScanTimestamp) / (24 * 60 * 60 * 1000L)
-                Log.d(TAG, "Performing incremental SMS scan (last scan: $daysSinceLastScan days ago, buffer: 3 days)")
+                if (BuildConfig.DEBUG) Log.d(TAG, "Performing incremental SMS scan (last scan: $daysSinceLastScan days ago, buffer: 3 days)")
                 incrementalStart
             }
             
@@ -553,7 +555,7 @@ class SmsReaderWorker @AssistedInject constructor(
                 userPreferencesRepository.setLastScanPeriod(scanMonths)
             }
             
-            Log.d(TAG, "SMS scan completed. Processed ${messages.size} messages")
+            if (BuildConfig.DEBUG) Log.d(TAG, "SMS scan completed. Processed ${messages.size} messages")
             
             // Try to read RCS messages from MMS provider
             try {
@@ -595,7 +597,7 @@ class SmsReaderWorker @AssistedInject constructor(
                                 if (senderUpper.contains("PUNJAB NATIONAL BANK") || 
                                     senderUpper.contains("DEPARTMENT OF POST") || 
                                     senderUpper.contains("DOPBNK")) {
-                                    Log.d(TAG, "RCS message from recognized sender: $sender")
+                                    if (BuildConfig.DEBUG) Log.d(TAG, "RCS message from recognized sender: $sender")
                                     val rcsMessage = SmsMessage(
                                         id = messageId,
                                         sender = sender,
@@ -605,17 +607,17 @@ class SmsReaderWorker @AssistedInject constructor(
                                     )
                                     messages.add(rcsMessage)
                                 } else {
-                                    Log.d(TAG, "Skipping RCS message from non-financial sender: $sender")
+                                    if (BuildConfig.DEBUG) Log.d(TAG, "Skipping RCS message from non-financial sender: $sender")
                                 }
                             }
                         }
                     }
                 }
             } catch (e: Exception) {
-                Log.e(TAG, "Error reading RCS messages: ${e.message}")
+                if (BuildConfig.DEBUG) Log.e(TAG, "Error reading RCS messages: ${e.message}")
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error querying SMS content provider", e)
+            if (BuildConfig.DEBUG) Log.e(TAG, "Error querying SMS content provider", e)
         }
         
         return messages
@@ -655,7 +657,7 @@ class SmsReaderWorker @AssistedInject constructor(
             // If no pattern matches, return null
             null
         } catch (e: Exception) {
-            Log.e(TAG, "Error extracting RCS sender: ${e.message}")
+            if (BuildConfig.DEBUG) Log.e(TAG, "Error extracting RCS sender: ${e.message}")
             null
         }
     }
@@ -715,7 +717,7 @@ class SmsReaderWorker @AssistedInject constructor(
             
             null
         } catch (e: Exception) {
-            Log.e(TAG, "Error getting RCS message text: ${e.message}", e)
+            if (BuildConfig.DEBUG) Log.e(TAG, "Error getting RCS message text: ${e.message}", e)
             null
         }
     }
@@ -797,7 +799,7 @@ class SmsReaderWorker @AssistedInject constructor(
             // If no text found, it might be a media-only message
             null
         } catch (e: Exception) {
-            Log.e(TAG, "Error parsing RCS JSON: ${e.message}")
+            if (BuildConfig.DEBUG) Log.e(TAG, "Error parsing RCS JSON: ${e.message}")
             // Not JSON, return as plain text
             json
         }

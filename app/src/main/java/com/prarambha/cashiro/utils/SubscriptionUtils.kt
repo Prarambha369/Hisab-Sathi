@@ -1,5 +1,7 @@
 package com.prarambha.cashiro.utils
 
+import com.prarambha.cashiro.BuildConfig
+
 import android.util.Log
 import java.time.LocalDate
 
@@ -46,10 +48,10 @@ object SubscriptionUtils {
                     if (nextDate.isAfter(endDate)) {
                         // For now we still return it, letting the system handle expiry later
                         // or we could return null/special value if it shouldn't repeat anymore.
-                        Log.d("SubscriptionUtils", "Next date $nextDate is after end date $endDate")
+                        if (BuildConfig.DEBUG) Log.d("SubscriptionUtils", "Next date $nextDate is after end date $endDate")
                     }
                 } catch (e: Exception) {
-                    Log.e("SubscriptionUtils", "Error parsing end date: $endDateStr", e)
+                    if (BuildConfig.DEBUG) Log.e("SubscriptionUtils", "Error parsing end date: $endDateStr", e)
                 }
             }
             

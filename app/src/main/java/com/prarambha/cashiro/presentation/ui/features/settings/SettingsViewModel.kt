@@ -1,5 +1,7 @@
 package com.prarambha.cashiro.presentation.ui.features.settings
 
+import com.prarambha.cashiro.BuildConfig
+
 import android.app.DownloadManager
 import android.content.Context
 import android.net.Uri
@@ -152,7 +154,7 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             // First check for active download
             val savedDownloadId = userPreferencesRepository.getActiveDownloadId()
-            Log.d("SettingsViewModel", "Checking download status, saved ID: $savedDownloadId")
+            if (BuildConfig.DEBUG) Log.d("SettingsViewModel", "Checking download status, saved ID: $savedDownloadId")
 
             if (savedDownloadId != null) {
                 // Query DownloadManager for this ID
@@ -164,7 +166,7 @@ class SettingsViewModel @Inject constructor(
 
                     if (statusIndex != -1) {
                         val status = cursor.getInt(statusIndex)
-                        Log.d("SettingsViewModel", "Found active download with status: $status")
+                        if (BuildConfig.DEBUG) Log.d("SettingsViewModel", "Found active download with status: $status")
 
                         when (status) {
                             DownloadManager.STATUS_RUNNING,
@@ -223,7 +225,7 @@ class SettingsViewModel @Inject constructor(
                     cursor.close()
                 } else {
                     // Download ID not found in DownloadManager, clear it and check file
-                    Log.d(
+                    if (BuildConfig.DEBUG) Log.d(
                         "SettingsViewModel",
                         "Download ID not found in DownloadManager, checking file"
                     )
@@ -243,8 +245,8 @@ class SettingsViewModel @Inject constructor(
             context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS),
             Constants.ModelDownload.MODEL_FILE_NAME
         )
-        Log.d("SettingsViewModel", "Checking model file at: ${modelFile.absolutePath}")
-        Log.d(
+        if (BuildConfig.DEBUG) Log.d("SettingsViewModel", "Checking model file at: ${modelFile.absolutePath}")
+        if (BuildConfig.DEBUG) Log.d(
             "SettingsViewModel",
             "Model file exists: ${modelFile.exists()}, size: ${modelFile.length()}, expected: ${Constants.ModelDownload.MODEL_SIZE_BYTES}"
         )
@@ -264,7 +266,7 @@ class SettingsViewModel @Inject constructor(
                 )
             }
             // Update model repository state
-            Log.d(
+            if (BuildConfig.DEBUG) Log.d(
                 "SettingsViewModel",
                 "Model complete (${modelFile.length()} bytes), updating repository state to READY"
             )
@@ -279,21 +281,21 @@ class SettingsViewModel @Inject constructor(
                     downloadProgress = 100
                 )
             }
-            Log.d(
+            if (BuildConfig.DEBUG) Log.d(
                 "SettingsViewModel",
                 "Model file larger than expected (${modelFile.length()} bytes), but marking as complete"
             )
             modelRepository.updateModelState(ModelState.READY)
         } else if (modelFile.exists()) {
             // Partial file exists, delete it
-            Log.d(
+            if (BuildConfig.DEBUG) Log.d(
                 "SettingsViewModel",
                 "Partial model file found (${modelFile.length()} bytes), deleting"
             )
             modelFile.delete()
             _uiState.update { it.copy(downloadStatus = DownloadState.NOT_DOWNLOADED) }
         } else {
-            Log.d("SettingsViewModel", "Model not found")
+            if (BuildConfig.DEBUG) Log.d("SettingsViewModel", "Model not found")
             _uiState.update { it.copy(downloadStatus = DownloadState.NOT_DOWNLOADED) }
         }
     }
@@ -303,7 +305,7 @@ class SettingsViewModel @Inject constructor(
             // Guard: if model file is already fully downloaded, do NOT start a new download
             // (DownloadManager would delete the existing file before writing the new one)
             if (modelRepository.isModelDownloaded()) {
-                Log.d("SettingsViewModel", "Model already downloaded — skipping download")
+                if (BuildConfig.DEBUG) Log.d("SettingsViewModel", "Model already downloaded — skipping download")
                 _uiState.update {
                     it.copy(
                         downloadStatus = DownloadState.COMPLETED,
@@ -331,7 +333,7 @@ class SettingsViewModel @Inject constructor(
                             status == DownloadManager.STATUS_PAUSED
                         ) {
                             // Download is already active, just monitor it
-                            Log.d(
+                            if (BuildConfig.DEBUG) Log.d(
                                 "SettingsViewModel",
                                 "Download already active with ID: $existingDownloadId"
                             )
@@ -375,7 +377,7 @@ class SettingsViewModel @Inject constructor(
 
             // Save download ID
             userPreferencesRepository.saveActiveDownloadId(currentDownloadId!!)
-            Log.d("SettingsViewModel", "Started download with ID: $currentDownloadId")
+            if (BuildConfig.DEBUG) Log.d("SettingsViewModel", "Started download with ID: $currentDownloadId")
 
             // Start monitoring progress via repository
             modelRepository.monitorDownload(currentDownloadId!!)
@@ -400,7 +402,7 @@ class SettingsViewModel @Inject constructor(
                     Constants.ModelDownload.MODEL_FILE_NAME
                 )
                 modelRepository.deleteModel()
-                Log.d("SettingsViewModel", "Download cancelled and cleaned up")
+                if (BuildConfig.DEBUG) Log.d("SettingsViewModel", "Download cancelled and cleaned up")
             }
         }
     }
@@ -414,7 +416,7 @@ class SettingsViewModel @Inject constructor(
                 _uiState.update { it.copy(totalMB = 0) }
                 // Clear any saved download ID
                 userPreferencesRepository.clearActiveDownloadId()
-                Log.d("SettingsViewModel", "Model deleted")
+                if (BuildConfig.DEBUG) Log.d("SettingsViewModel", "Model deleted")
             }
         }
     }
@@ -478,9 +480,9 @@ class SettingsViewModel @Inject constructor(
                 .build()
 
             notificationManager.notify(999, notification) // ID 999 for test
-            Log.d("SettingsViewModel", "Sent test notification")
+            if (BuildConfig.DEBUG) Log.d("SettingsViewModel", "Sent test notification")
         } catch (e: Exception) {
-            Log.e("SettingsViewModel", "Error sending test notification", e)
+            if (BuildConfig.DEBUG) Log.e("SettingsViewModel", "Error sending test notification", e)
         }
     }
 
@@ -491,7 +493,7 @@ class SettingsViewModel @Inject constructor(
             // If increasing scan period, reset scan timestamp to force full scan
             if (months > currentMonths) {
                 userPreferencesRepository.setLastScanTimestamp(0L)
-                Log.d("SettingsViewModel", "Scan period increased from $currentMonths to $months months - will perform full scan")
+                if (BuildConfig.DEBUG) Log.d("SettingsViewModel", "Scan period increased from $currentMonths to $months months - will perform full scan")
             }
 
             userPreferencesRepository.updateSmsScanMonths(months)
@@ -503,7 +505,7 @@ class SettingsViewModel @Inject constructor(
             // If enabling all time scanning, reset scan timestamp to force full scan
             if (allTime) {
                 userPreferencesRepository.setLastScanTimestamp(0L)
-                Log.d("SettingsViewModel", "All time scanning enabled - will perform full scan")
+                if (BuildConfig.DEBUG) Log.d("SettingsViewModel", "All time scanning enabled - will perform full scan")
             }
 
             userPreferencesRepository.updateSmsScanAllTime(allTime)
@@ -543,12 +545,12 @@ class SettingsViewModel @Inject constructor(
                     // Mark as reported
                     unrecognizedSmsRepository.markAsReported(listOf(firstUnreported.id))
 
-                    Log.d("SettingsViewModel", "Opened report for unrecognized SMS from: ${firstUnreported.sender}")
+                    if (BuildConfig.DEBUG) Log.d("SettingsViewModel", "Opened report for unrecognized SMS from: ${firstUnreported.sender}")
                 } else {
-                    Log.d("SettingsViewModel", "No unreported SMS messages found")
+                    if (BuildConfig.DEBUG) Log.d("SettingsViewModel", "No unreported SMS messages found")
                 }
             } catch (e: Exception) {
-                Log.e("SettingsViewModel", "Error opening unrecognized SMS report", e)
+                if (BuildConfig.DEBUG) Log.e("SettingsViewModel", "Error opening unrecognized SMS report", e)
             }
         }
     }
@@ -566,13 +568,13 @@ class SettingsViewModel @Inject constructor(
                     }
                     is ExportResult.Error -> {
                         _uiState.update { it.copy(importExportMessage = "Export failed: ${result.message}") }
-                        Log.e("SettingsViewModel", "Export failed: ${result.message}")
+                        if (BuildConfig.DEBUG) Log.e("SettingsViewModel", "Export failed: ${result.message}")
                     }
                     else -> {}
                 }
             } catch (e: Exception) {
                 _uiState.update { it.copy(importExportMessage = "Export error: ${e.message}") }
-                Log.e("SettingsViewModel", "Export error", e)
+                if (BuildConfig.DEBUG) Log.e("SettingsViewModel", "Export error", e)
             }
         }
     }
@@ -593,7 +595,7 @@ class SettingsViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 _uiState.update { it.copy(importExportMessage = "Failed to save backup: ${e.message}") }
-                Log.e("SettingsViewModel", "Error saving backup", e)
+                if (BuildConfig.DEBUG) Log.e("SettingsViewModel", "Error saving backup", e)
             }
         }
     }
@@ -625,7 +627,7 @@ class SettingsViewModel @Inject constructor(
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             })
         } catch (e: Exception) {
-            Log.e("SettingsViewModel", "Error sharing backup file", e)
+            if (BuildConfig.DEBUG) Log.e("SettingsViewModel", "Error sharing backup file", e)
         }
     }
 
@@ -639,12 +641,12 @@ class SettingsViewModel @Inject constructor(
                     }
                     is ImportResult.Error -> {
                         _uiState.update { it.copy(importExportMessage = "Import failed: ${result.message}") }
-                        Log.e("SettingsViewModel", "Import failed: ${result.message}")
+                        if (BuildConfig.DEBUG) Log.e("SettingsViewModel", "Import failed: ${result.message}")
                     }
                 }
             } catch (e: Exception) {
                 _uiState.update { it.copy(importExportMessage = "Import error: ${e.message}") }
-                Log.e("SettingsViewModel", "Import error", e)
+                if (BuildConfig.DEBUG) Log.e("SettingsViewModel", "Import error", e)
             }
         }
     }
@@ -1074,7 +1076,7 @@ class SettingsViewModel @Inject constructor(
                 
                 _uiState.update { it.copy(seedMessage = "All data deleted successfully") }
             } catch (e: Exception) {
-                Log.e("SettingsViewModel", "Error deleting data", e)
+                if (BuildConfig.DEBUG) Log.e("SettingsViewModel", "Error deleting data", e)
                 _uiState.update { it.copy(seedMessage = "Failed to delete data: ${e.message}") }
             }
         }

@@ -1,5 +1,7 @@
 package com.prarambha.cashiro.receiver
 
+import com.prarambha.cashiro.BuildConfig
+
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -29,7 +31,7 @@ class BootReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
-            Log.d(TAG, "Device rebooted, rescheduling alarms")
+            if (BuildConfig.DEBUG) Log.d(TAG, "Device rebooted, rescheduling alarms")
 
             val entryPoint = EntryPointAccessors.fromApplication(
                 context.applicationContext,
@@ -41,7 +43,7 @@ class BootReceiver : BroadcastReceiver() {
                 try {
                     scheduler.scheduleDailyReminder()
                 } catch (e: Exception) {
-                    Log.e(TAG, "Error rescheduling alarms after boot", e)
+                    if (BuildConfig.DEBUG) Log.e(TAG, "Error rescheduling alarms after boot", e)
                 }
             }
         }

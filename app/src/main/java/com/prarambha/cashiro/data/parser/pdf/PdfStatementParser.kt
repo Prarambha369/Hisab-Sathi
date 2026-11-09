@@ -1,5 +1,7 @@
 package com.prarambha.cashiro.data.parser.pdf
 
+import com.prarambha.cashiro.BuildConfig
+
 import android.util.Log
 import com.prarambha.parser.core.ParsedTransaction
 import com.prarambha.parser.core.TransactionType
@@ -17,12 +19,12 @@ class GPayPdfParser : PdfStatementParser {
     override fun canHandle(text: String): Boolean {
         val canHandle = (text.contains("GPay", ignoreCase = true) || text.contains("Google Pay", ignoreCase = true)) 
                         && text.contains("UPI Transaction ID", ignoreCase = true)
-        Log.d("PDF_PARSER_DEBUG", "GPayPdfParser canHandle: $canHandle")
+        if (BuildConfig.DEBUG) Log.d("PDF_PARSER_DEBUG", "GPayPdfParser canHandle: $canHandle")
         return canHandle
     }
 
     override fun parse(text: String): List<ParsedTransaction> {
-        Log.d("PDF_PARSER_DEBUG", "GPayPdfParser starting parse. Text size: ${text.length}")
+        if (BuildConfig.DEBUG) Log.d("PDF_PARSER_DEBUG", "GPayPdfParser starting parse. Text size: ${text.length}")
         val transactions = mutableListOf<ParsedTransaction>()
 
         // Regex to find start of a transaction (Date pattern)
@@ -151,12 +153,12 @@ class GPayPdfParser : PdfStatementParser {
 class PhonePePdfParser : PdfStatementParser {
     override fun canHandle(text: String): Boolean {
         val canHandle = text.contains("PhonePe", ignoreCase = true) || text.contains("Phone Pe", ignoreCase = true)
-        Log.e("PDF_PARSER_DEBUG", "PhonePePdfParser canHandle: $canHandle")
+        if (BuildConfig.DEBUG) Log.e("PDF_PARSER_DEBUG", "PhonePePdfParser canHandle: $canHandle")
         return canHandle
     }
 
     override fun parse(text: String): List<ParsedTransaction> {
-        Log.e("PDF_PARSER_DEBUG", "PhonePePdfParser starting parse. Text length: ${text.length}")
+        if (BuildConfig.DEBUG) Log.e("PDF_PARSER_DEBUG", "PhonePePdfParser starting parse. Text length: ${text.length}")
         val transactions = mutableListOf<ParsedTransaction>()
         
         // Flexible Date Regex for PhonePe statements
@@ -165,13 +167,13 @@ class PhonePePdfParser : PdfStatementParser {
         val dateRegex = Regex("""(\d{1,2}\s+[A-Za-z]{3,10},?\s*\d{4}|[A-Za-z]{3,10}\s+\d{1,2},?\s*\d{4})\s*(\d{1,2}[^\d\n\r]{1,5}\d{2}\s*[ap]m)""", RegexOption.IGNORE_CASE)
         
         val matches = dateRegex.findAll(text).toList()
-        Log.d("PDF_PARSER_DEBUG", "Found ${matches.size} date matches for PhonePe")
+        if (BuildConfig.DEBUG) Log.d("PDF_PARSER_DEBUG", "Found ${matches.size} date matches for PhonePe")
 
         if (matches.isEmpty()) {
             val firstPart = text.take(500)
             val hexDump = firstPart.map { String.format("\\u%04x", it.toInt()) }.joinToString("")
-            Log.e("PDF_PARSER_DEBUG", "No date matches found in PhonePe text. First 500 chars: $firstPart")
-            Log.e("PDF_PARSER_DEBUG", "Hex dump of first 500 chars: $hexDump")
+            if (BuildConfig.DEBUG) Log.e("PDF_PARSER_DEBUG", "No date matches found in PhonePe text. First 500 chars: $firstPart")
+            if (BuildConfig.DEBUG) Log.e("PDF_PARSER_DEBUG", "Hex dump of first 500 chars: $hexDump")
             return emptyList()
         }
 
@@ -234,7 +236,7 @@ class PhonePePdfParser : PdfStatementParser {
                 }
                 parsedDate ?: throw Exception("All patterns failed for: $combined")
             } catch (e: Exception) {
-                Log.w("PDF_PARSER_DEBUG", "Failed to parse date: $dateStr $timeStr - ${e.message}")
+                if (BuildConfig.DEBUG) Log.w("PDF_PARSER_DEBUG", "Failed to parse date: $dateStr $timeStr - ${e.message}")
                 continue
             }
             
@@ -248,7 +250,7 @@ class PhonePePdfParser : PdfStatementParser {
                 amountStr = plainAmountMatch?.groupValues?.get(1)
             }
             if (amountStr == null) {
-                Log.w("PDF_PARSER_DEBUG", "No amount found in row: $row")
+                if (BuildConfig.DEBUG) Log.w("PDF_PARSER_DEBUG", "No amount found in row: $row")
                 continue
             }
             val amount = BigDecimal(amountStr)
@@ -271,7 +273,7 @@ class PhonePePdfParser : PdfStatementParser {
                 val fallbackMatch = Regex("""Paid to\s+(.+?)(?=\s+(?:Transact\s*ion|UTR|CREDIT|DEBIT|$))""", RegexOption.IGNORE_CASE).find(row)
                 fallbackMatch?.groupValues?.get(1)?.trim()
             } ?: run {
-                Log.w("PDF_PARSER_DEBUG", "Merchant not found in row: $row")
+                if (BuildConfig.DEBUG) Log.w("PDF_PARSER_DEBUG", "Merchant not found in row: $row")
                 "Unknown"
             }
             
@@ -324,7 +326,7 @@ class PhonePePdfParser : PdfStatementParser {
             )
         }
         
-        Log.d("PDF_PARSER_DEBUG", "Final transactions count for PhonePe: ${transactions.size}")
+        if (BuildConfig.DEBUG) Log.d("PDF_PARSER_DEBUG", "Final transactions count for PhonePe: ${transactions.size}")
         return transactions
     }
 }

@@ -3,7 +3,6 @@ name: Feature request
 about: Suggest an idea for Hisab Sathi
 title: '[FEATURE] '
 labels: enhancement
-assignees: 'ritesh-kanwar'
 
 ---
 

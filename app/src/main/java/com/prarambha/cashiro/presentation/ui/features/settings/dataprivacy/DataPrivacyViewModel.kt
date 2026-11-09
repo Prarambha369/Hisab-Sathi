@@ -1,5 +1,7 @@
 package com.prarambha.cashiro.presentation.ui.features.settings.dataprivacy
 
+import com.prarambha.cashiro.BuildConfig
+
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -139,7 +141,7 @@ class DataPrivacyViewModel @Inject constructor(
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             })
         } catch (e: Exception) {
-            Log.e("DataPrivacyViewModel", "Error sharing backup file", e)
+            if (BuildConfig.DEBUG) Log.e("DataPrivacyViewModel", "Error sharing backup file", e)
         }
     }
     
@@ -156,7 +158,7 @@ class DataPrivacyViewModel @Inject constructor(
                     }
                 } ?: throw Exception("Failed to open PDF")
 
-                Log.d("DataPrivacyViewModel", "Extracted Text (first 500 chars): ${text.take(500)}")
+                if (BuildConfig.DEBUG) Log.d("DataPrivacyViewModel", "Extracted Text (first 500 chars): ${text.take(500)}")
 
                 val parsers = listOf(GPayPdfParser(), PhonePePdfParser())
                 var parsedTransactions = emptyList<com.prarambha.parser.core.ParsedTransaction>()
@@ -243,7 +245,7 @@ class DataPrivacyViewModel @Inject constructor(
                     )
                 }
             } catch (e: Exception) {
-                Log.e("DataPrivacyViewModel", "Error analyzing PDF", e)
+                if (BuildConfig.DEBUG) Log.e("DataPrivacyViewModel", "Error analyzing PDF", e)
                 _uiState.update { it.copy(isPdfProcessing = false, pdfProcessingError = e.message) }
             }
         }
@@ -332,7 +334,7 @@ class DataPrivacyViewModel @Inject constructor(
                         )
 
                         if (blockingRule != null) {
-                            Log.d("DataPrivacyViewModel", "Transaction blocked by rule: ${blockingRule.name}")
+                            if (BuildConfig.DEBUG) Log.d("DataPrivacyViewModel", "Transaction blocked by rule: ${blockingRule.name}")
                             return@forEachIndexed
                         }
 
@@ -351,7 +353,7 @@ class DataPrivacyViewModel @Inject constructor(
                                     it.copy(transactionId = rowId.toString())
                                 }
                                 ruleRepository.saveRuleApplications(applicationsWithId)
-                                Log.d("DataPrivacyViewModel", "Applied ${ruleApplications.size} rules to transaction")
+                                if (BuildConfig.DEBUG) Log.d("DataPrivacyViewModel", "Applied ${ruleApplications.size} rules to transaction")
                             }
                             importedCount++
                         }
@@ -367,7 +369,7 @@ class DataPrivacyViewModel @Inject constructor(
                     )
                 }
             } catch (e: Exception) {
-                Log.e("DataPrivacyViewModel", "Error committing PDF import", e)
+                if (BuildConfig.DEBUG) Log.e("DataPrivacyViewModel", "Error committing PDF import", e)
                 _uiState.update { it.copy(isPdfProcessing = false, pdfProcessingError = e.message) }
             }
         }

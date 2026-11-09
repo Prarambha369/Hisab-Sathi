@@ -4,7 +4,7 @@ import com.prarambha.parser.core.TransactionType
 import java.math.BigDecimal
 
 /**
- * Parser for NMB Bank (Nabil Bank - Nepal) SMS messages
+ * Parser for NMB Bank (Nepal) SMS messages
  *
  * Handles formats like:
  * - "Fund transfer of NPR 250.00 to A/C 01000000055 was successful"
@@ -13,6 +13,9 @@ import java.math.BigDecimal
  *
  * Common sender: NMB_ALERT
  * Currency: NPR (Nepalese Rupee)
+ *
+ * Note: senders containing "NIMB" (Nepal Investment Mega Bank) are explicitly
+ * excluded so a future NIMB parser is not shadowed by this one.
  */
 class NMBBankParser : BankParser() {
 
@@ -22,10 +25,9 @@ class NMBBankParser : BankParser() {
 
     override fun canHandle(sender: String): Boolean {
         val normalizedSender = sender.uppercase()
-        return normalizedSender.contains("NMB") ||
-                normalizedSender == "NMB_ALERT" ||
+        return normalizedSender == "NMB_ALERT" ||
                 normalizedSender == "NMBBANK" ||
-                normalizedSender.contains("NABIL")
+                (normalizedSender.contains("NMB") && !normalizedSender.contains("NIMB"))
     }
 
     override fun extractAmount(message: String): BigDecimal? {

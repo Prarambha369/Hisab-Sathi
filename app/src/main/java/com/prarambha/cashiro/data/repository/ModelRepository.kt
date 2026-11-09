@@ -1,5 +1,7 @@
 package com.prarambha.cashiro.data.repository
 
+import com.prarambha.cashiro.BuildConfig
+
 import android.app.DownloadManager
 import android.content.Context
 import android.os.Environment
@@ -40,7 +42,7 @@ class ModelRepository @Inject constructor(
     
     fun getModelFile(): File {
         val file = File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), Constants.ModelDownload.MODEL_FILE_NAME)
-        Log.d("ModelRepository", "Model file path: ${file.absolutePath}")
+        if (BuildConfig.DEBUG) Log.d("ModelRepository", "Model file path: ${file.absolutePath}")
         return file
     }
     
@@ -53,12 +55,12 @@ class ModelRepository @Inject constructor(
         val minSize = (expectedSize * 0.99).toLong() 
         val isDownloaded = exists && size >= minSize
         
-        Log.d("ModelRepository", "Checking model: exists=$exists, size=$size bytes (${size/1024/1024}MB), expectedMinSize=$minSize, isDownloaded=$isDownloaded")
+        if (BuildConfig.DEBUG) Log.d("ModelRepository", "Checking model: exists=$exists, size=$size bytes (${size/1024/1024}MB), expectedMinSize=$minSize, isDownloaded=$isDownloaded")
         return isDownloaded
     }
     
     fun updateModelState(state: ModelState) {
-        Log.d("ModelRepository", "Updating model state from ${_modelState.value} to $state")
+        if (BuildConfig.DEBUG) Log.d("ModelRepository", "Updating model state from ${_modelState.value} to $state")
         _modelState.value = state
     }
 
@@ -70,7 +72,7 @@ class ModelRepository @Inject constructor(
         repositoryScope.launch {
             val activeDownloadId = userPreferencesRepository.getActiveDownloadId()
             if (activeDownloadId != null) {
-                Log.d("ModelRepository", "checkModelState: active download found, monitoring ID: $activeDownloadId")
+                if (BuildConfig.DEBUG) Log.d("ModelRepository", "checkModelState: active download found, monitoring ID: $activeDownloadId")
                 monitorDownload(activeDownloadId)
                 return@launch
             }
@@ -81,7 +83,7 @@ class ModelRepository @Inject constructor(
             } else {
                 ModelState.NOT_DOWNLOADED
             }
-            Log.d("ModelRepository", "checkModelState: setting state to $newState")
+            if (BuildConfig.DEBUG) Log.d("ModelRepository", "checkModelState: setting state to $newState")
             _modelState.value = newState
         }
     }
@@ -98,7 +100,7 @@ class ModelRepository @Inject constructor(
     fun monitorDownload(downloadId: Long) {
         monitorJob?.cancel()
         monitorJob = repositoryScope.launch {
-            Log.d("ModelRepository", "Starting monitoring for download ID: $downloadId")
+            if (BuildConfig.DEBUG) Log.d("ModelRepository", "Starting monitoring for download ID: $downloadId")
             _modelState.value = ModelState.DOWNLOADING
             
             while (isActive && _modelState.value == ModelState.DOWNLOADING) {
@@ -123,7 +125,7 @@ class ModelRepository @Inject constructor(
                     if (statusColumnIndex != -1) {
                         when (cursor.getInt(statusColumnIndex)) {
                             DownloadManager.STATUS_SUCCESSFUL -> {
-                                Log.d("ModelRepository", "Download successful!")
+                                if (BuildConfig.DEBUG) Log.d("ModelRepository", "Download successful!")
                                 _downloadProgress.value = 100
                                 _modelState.value = ModelState.READY
                                 userPreferencesRepository.clearActiveDownloadId()
@@ -131,7 +133,7 @@ class ModelRepository @Inject constructor(
                                 return@launch
                             }
                             DownloadManager.STATUS_FAILED -> {
-                                Log.d("ModelRepository", "Download failed")
+                                if (BuildConfig.DEBUG) Log.d("ModelRepository", "Download failed")
                                 _modelState.value = ModelState.NOT_DOWNLOADED
                                 _downloadProgress.value = 0
                                 userPreferencesRepository.clearActiveDownloadId()
