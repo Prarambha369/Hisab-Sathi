@@ -24,7 +24,10 @@ data class ExpectedTransaction(
     val creditLimit: BigDecimal? = null,
     val isFromCard: Boolean? = null,
     val fromAccount: String? = null,
-    val toAccount: String? = null
+    val toAccount: String? = null,
+    // Set these to assert the field really came back null, which a null above leaves unchecked.
+    val expectNullMerchant: Boolean = false,
+    val expectNullAccountLast4: Boolean = false
 )
 
 data class ParserTestCase(
@@ -118,6 +121,8 @@ object ParserTestUtils {
         expected.isFromCard?.let { if (result.isFromCard != it) errors.add("isFromCard mismatch: expected $it, got ${result.isFromCard}") }
         expected.fromAccount?.let { if (result.fromAccount != it) errors.add("From account mismatch: expected $it, got ${result.fromAccount}") }
         expected.toAccount?.let { if (result.toAccount != it) errors.add("To account mismatch: expected $it, got ${result.toAccount}") }
+        if (expected.expectNullMerchant && result.merchant != null) errors.add("Merchant should be null, got ${result.merchant}")
+        if (expected.expectNullAccountLast4 && result.accountLast4 != null) errors.add("Account should be null, got ${result.accountLast4}")
 
         return errors
     }
@@ -168,6 +173,12 @@ object ParserTestUtils {
                 expected.toAccount?.let {
                     assertEquals(it, parsed.toAccount, "To account mismatch")
                 }
+            },
+            {
+                if (expected.expectNullMerchant) assertNull(parsed.merchant, "Merchant should be null")
+            },
+            {
+                if (expected.expectNullAccountLast4) assertNull(parsed.accountLast4, "Account should be null")
             }
         )
     }

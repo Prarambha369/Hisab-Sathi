@@ -82,12 +82,12 @@ object Constants {
      */
     object Links {
         const val DISCORD_URL = "https://discord.gg/6qaYgpJTg"
-        const val GITHUB_URL = "https://github.com/ritesh-kanwar/HisabSathi"
-        const val WEBSITE_URL = "https://ritesh-kanwar.github.io/hisabsathi.showcase"
-        const val PRIVACY_POLICY_URL = "https://ritesh-kanwar.github.io/hisabsathi.showcase/privacy"
-        const val TERMS_OF_SERVICE_URL = "https://ritesh-kanwar.github.io/hisabsathi.showcase/terms"
-        const val FAQ_URL = "https://ritesh-kanwar.github.io/hisabsathi.showcase/faq"
-        const val GUIDE_URL = "https://ritesh-kanwar.github.io/hisabsathi.showcase/guides"
-        const val REPORT_BUG_URL = "https://github.com/ritesh-kanwar/HisabSathi/issues/new/choose"
+        const val GITHUB_URL = "https://github.com/Prarambha369/HisabSathi"
+        const val WEBSITE_URL = "https://Prarambha369.github.io/hisabsathi.showcase"
+        const val PRIVACY_POLICY_URL = "https://Prarambha369.github.io/hisabsathi.showcase/privacy"
+        const val TERMS_OF_SERVICE_URL = "https://Prarambha369.github.io/hisabsathi.showcase/terms"
+        const val FAQ_URL = "https://Prarambha369.github.io/hisabsathi.showcase/faq"
+        const val GUIDE_URL = "https://Prarambha369.github.io/hisabsathi.showcase/guides"
+        const val REPORT_BUG_URL = "https://github.com/Prarambha369/HisabSathi/issues/new/choose"
     }
 }

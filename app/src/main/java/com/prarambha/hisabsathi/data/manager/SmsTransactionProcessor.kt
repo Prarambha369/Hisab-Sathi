@@ -105,15 +105,16 @@ class SmsTransactionProcessor @Inject constructor(
             // Convert to entity
             val entity = parsedTransaction.toEntity()
 
-            // Check if this transaction was previously deleted by the user
+            // Check if this transaction was previously deleted by the user or already exists
             val existingTransaction = transactionRepository.getTransactionByHash(entity.transactionHash)
+                ?: transactionRepository.getTransactionByHash(parsedTransaction.generateLegacyTransactionId())
             if (existingTransaction != null) {
                 if (existingTransaction.isDeleted) {
-                    if (BuildConfig.DEBUG) Log.d(TAG, "Skipping previously deleted transaction with hash: ${entity.transactionHash}")
+                    if (BuildConfig.DEBUG) Log.d(TAG, "Skipping previously deleted transaction with hash: ${existingTransaction.transactionHash}")
                     return ProcessingResult(false, reason = "Transaction was previously deleted")
                 }
                 // Transaction already exists and not deleted - normal deduplication
-                if (BuildConfig.DEBUG) Log.d(TAG, "Transaction already exists: ${entity.transactionHash}")
+                if (BuildConfig.DEBUG) Log.d(TAG, "Transaction already exists: ${existingTransaction.transactionHash}")
                 return ProcessingResult(false, reason = "Duplicate transaction")
             }
 

@@ -238,7 +238,7 @@ fun AboutScreen(
                     )
                     AboutListItem(
                         title = "Github",
-                        subtitle = "ritesh-kanwar/HisabSathi",
+                        subtitle = "Prarambha369/HisabSathi",
                         icon = Iconax.Github,
                         iconColor = green_dark,
                         iconBackground = green_light,

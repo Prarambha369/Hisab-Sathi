@@ -536,7 +536,7 @@ class SettingsViewModel @Inject constructor(
                     val encodedTitle = URLEncoder.encode(issueTitle, "UTF-8")
                     val encodedBody = URLEncoder.encode(issueBody, "UTF-8")
 
-                    val url = "https://github.com/ritesh-kanwar/HisabSathi/issues/new?title=$encodedTitle&body=$encodedBody"
+                    val url = "https://github.com/Prarambha369/HisabSathi/issues/new?title=$encodedTitle&body=$encodedBody"
 
                     // Open in browser
                     val intent = Intent(Intent.ACTION_VIEW, url.toUri())

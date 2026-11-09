@@ -112,7 +112,7 @@ app/
 ## Community
 
 [//]: # (- Join our [Discord]&#40;https://discord.gg/H3xWeMWjKQ&#41; for discussions)
-- Follow development updates on [GitHub](https://github.com/ritesh-kanwar/Hisab Sathi)
+- Follow development updates on [GitHub](https://github.com/Prarambha369/Hisab Sathi)
 
 ## Code of Conduct
 

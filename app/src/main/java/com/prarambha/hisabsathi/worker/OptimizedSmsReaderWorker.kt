@@ -169,15 +169,16 @@ class OptimizedSmsReaderWorker @AssistedInject constructor(
                         // Convert to entity and save
                         val entity = parsedTransaction.toEntity()
 
-                        // Check if this transaction was previously deleted by the user
+                        // Check if this transaction was previously deleted by the user or already exists
                         val existingTransaction = transactionRepository.getTransactionByHash(entity.transactionHash)
+                            ?: transactionRepository.getTransactionByHash(parsedTransaction.generateLegacyTransactionId())
                         if (existingTransaction != null) {
                             if (existingTransaction.isDeleted) {
-                                if (BuildConfig.DEBUG) Log.d(TAG, "Skipping previously deleted transaction with hash: ${entity.transactionHash}")
+                                if (BuildConfig.DEBUG) Log.d(TAG, "Skipping previously deleted transaction with hash: ${existingTransaction.transactionHash}")
                                 continue
                             }
                             // Transaction already exists and not deleted - normal deduplication
-                            if (BuildConfig.DEBUG) Log.d(TAG, "Transaction already exists: ${entity.transactionHash}")
+                            if (BuildConfig.DEBUG) Log.d(TAG, "Transaction already exists: ${existingTransaction.transactionHash}")
                             continue
                         }
 
