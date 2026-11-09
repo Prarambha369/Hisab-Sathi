@@ -6,7 +6,7 @@ Thank you for your interest in contributing to Hisab Sathi! We welcome contribut
 
 ### 🐛 Reporting Bugs
 
-1. Check if the bug has already been reported in [Issues](https://github.com/sarim2000/pennywiseai-tracker/issues)
+1. Check if the bug has already been reported in [Issues](https://github.com/Prarambha369/pennywiseai-tracker/issues)
 2. If not, create a new issue using the bug report template
 3. Include:
    - Device model and Android version
@@ -17,7 +17,7 @@ Thank you for your interest in contributing to Hisab Sathi! We welcome contribut
 
 ### 💡 Suggesting Features
 
-1. Check [existing issues](https://github.com/sarim2000/pennywiseai-tracker/issues) for similar suggestions
+1. Check [existing issues](https://github.com/Prarambha369/pennywiseai-tracker/issues) for similar suggestions
 2. Create a new issue using the feature request template
 3. Describe the problem it solves and how it would work
 
@@ -75,7 +75,7 @@ To add support for a new bank:
 
 ```bash
 # Clone the repo
-git clone https://github.com/sarim2000/pennywiseai-tracker.git
+git clone https://github.com/Prarambha369/pennywiseai-tracker.git
 cd pennywiseai-tracker
 
 # Build debug APK
