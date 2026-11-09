@@ -1,0 +1,17 @@
+{
+  "name": "Hisab-Sathi",
+  "build": {
+    "context": ".",
+    "dockerfile": "Dockerfile"
+  },
+  "postCreateCommand": "chmod +x gradlew && ./gradlew :parser-core:test --no-daemon",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "fwcd.kotlin",
+        "mathiasfrohlich.Kotlin",
+        "vscjava.vscode-gradle"
+      ]
+    }
+  }
+}
