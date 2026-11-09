@@ -77,12 +77,12 @@ Bank parsers are now in the `parser-core` module for reusability across platform
 5. **Registration**: Add new parser to `BankParserFactory.parsers` list in parser-core
 6. **Return Type**: Use `ParsedTransaction` from parser-core
 7. **Imports for parser-core**:
-   - `com.ritesh.parser.core.TransactionType`
-   - `com.ritesh.parser.core.ParsedTransaction`
+   - `com.prarambha.parser.core.TransactionType`
+   - `com.prarambha.parser.core.ParsedTransaction`
    - `java.math.BigDecimal` for amounts
 
 ### Integration in main app:
-- Use `com.ritesh.tracker.data.mapper.toEntity()` to convert ParsedTransaction to TransactionEntity
+- Use `com.prarambha.tracker.data.mapper.toEntity()` to convert ParsedTransaction to TransactionEntity
 - The mapper handles type conversions between modules
 
 ## Supported Banks (44 parsers)

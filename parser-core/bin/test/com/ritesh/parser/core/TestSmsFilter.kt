@@ -1,4 +1,4 @@
-package com.ritesh.parser.core
+package com.prarambha.parser.core
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test

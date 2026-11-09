@@ -6,9 +6,9 @@
         android:icon="@drawable/ic_shortcut_add_transaction"
         android:shortcutShortLabel="@string/add_transaction">
         <intent
-            android:action="com.ritesh.cashiro.action.ADD_TRANSACTION"
-            android:targetPackage="com.ritesh.cashiro"
-            android:targetClass="com.ritesh.cashiro.MainActivity" />
+            android:action="com.prarambha.cashiro.action.ADD_TRANSACTION"
+            android:targetPackage="com.prarambha.cashiro"
+            android:targetClass="com.prarambha.cashiro.MainActivity" />
     </shortcut>
     <shortcut
         android:shortcutId="add_subscription"
@@ -16,9 +16,9 @@
         android:icon="@drawable/ic_shortcut_add_subscription"
         android:shortcutShortLabel="@string/add_subscription">
         <intent
-            android:action="com.ritesh.cashiro.action.ADD_SUBSCRIPTION"
-            android:targetPackage="com.ritesh.cashiro"
-            android:targetClass="com.ritesh.cashiro.MainActivity" />
+            android:action="com.prarambha.cashiro.action.ADD_SUBSCRIPTION"
+            android:targetPackage="com.prarambha.cashiro"
+            android:targetClass="com.prarambha.cashiro.MainActivity" />
     </shortcut>
     <shortcut
         android:shortcutId="add_transfer"
@@ -26,8 +26,8 @@
         android:icon="@drawable/ic_shortcut_transfer"
         android:shortcutShortLabel="@string/add_transfer">
         <intent
-            android:action="com.ritesh.cashiro.action.ADD_TRANSFER"
-            android:targetPackage="com.ritesh.cashiro"
-            android:targetClass="com.ritesh.cashiro.MainActivity" />
+            android:action="com.prarambha.cashiro.action.ADD_TRANSFER"
+            android:targetPackage="com.prarambha.cashiro"
+            android:targetClass="com.prarambha.cashiro.MainActivity" />
     </shortcut>
 </shortcuts>

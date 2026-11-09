@@ -1,4 +1,4 @@
-package com.ritesh.parser.core.bank
+package com.prarambha.parser.core.bank
 
 /**
  * Parsian Bank parser for Iranian banking SMS messages.

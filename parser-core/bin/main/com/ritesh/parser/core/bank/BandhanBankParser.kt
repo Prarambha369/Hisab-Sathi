@@ -1,4 +1,4 @@
-package com.ritesh.parser.core.bank
+package com.prarambha.parser.core.bank
 
 import java.math.BigDecimal
 

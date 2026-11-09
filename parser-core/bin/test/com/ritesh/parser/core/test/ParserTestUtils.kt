@@ -1,9 +1,9 @@
-package com.ritesh.parser.core.test
+package com.prarambha.parser.core.test
 
-import com.ritesh.parser.core.ParsedTransaction
-import com.ritesh.parser.core.TransactionType
-import com.ritesh.parser.core.bank.BankParser
-import com.ritesh.parser.core.bank.BankParserFactory
+import com.prarambha.parser.core.ParsedTransaction
+import com.prarambha.parser.core.TransactionType
+import com.prarambha.parser.core.bank.BankParser
+import com.prarambha.parser.core.bank.BankParserFactory
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.DynamicTest.dynamicTest

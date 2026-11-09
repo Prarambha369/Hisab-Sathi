@@ -1,4 +1,4 @@
-package com.ritesh.parser.core.bank
+package com.prarambha.parser.core.bank
 
 /**
  * Bank for Agriculture and Agricultural Cooperatives (BAAC) parser for Thai banking SMS messages.

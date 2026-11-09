@@ -1,4 +1,4 @@
-package com.ritesh.parser.core
+package com.prarambha.parser.core
 
 object CompiledPatterns {
     object Amount {

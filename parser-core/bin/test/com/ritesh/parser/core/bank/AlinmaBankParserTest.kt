@@ -1,8 +1,8 @@
-package com.ritesh.parser.core.bank
+package com.prarambha.parser.core.bank
 
-import com.ritesh.parser.core.test.ExpectedTransaction
-import com.ritesh.parser.core.test.ParserTestCase
-import com.ritesh.parser.core.test.ParserTestUtils
+import com.prarambha.parser.core.test.ExpectedTransaction
+import com.prarambha.parser.core.test.ParserTestCase
+import com.prarambha.parser.core.test.ParserTestUtils
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 
@@ -33,7 +33,7 @@ class AlinmaBankParserTest {
                 expected = ExpectedTransaction(
                     amount = BigDecimal("50"),
                     currency = "SAR",
-                    type = com.ritesh.parser.core.TransactionType.EXPENSE,
+                    type = com.prarambha.parser.core.TransactionType.EXPENSE,
                     merchant = "Establishment Name",
                     accountLast4 = "5678",
                     balance = BigDecimal("500.50"),
@@ -56,7 +56,7 @@ class AlinmaBankParserTest {
                 expected = ExpectedTransaction(
                     amount = BigDecimal("3"),
                     currency = "SAR",
-                    type = com.ritesh.parser.core.TransactionType.EXPENSE,
+                    type = com.prarambha.parser.core.TransactionType.EXPENSE,
                     merchant = "Meed Express",
                     accountLast4 = "0000",
                     balance = BigDecimal("101.00"),
@@ -77,7 +77,7 @@ class AlinmaBankParserTest {
                 expected = ExpectedTransaction(
                     amount = BigDecimal("125.50"),
                     currency = "SAR",
-                    type = com.ritesh.parser.core.TransactionType.EXPENSE,
+                    type = com.prarambha.parser.core.TransactionType.EXPENSE,
                     merchant = "Commercial Self-Technolog",
                     accountLast4 = "9999",
                     balance = BigDecimal("875.75"),
@@ -98,7 +98,7 @@ class AlinmaBankParserTest {
                 expected = ExpectedTransaction(
                     amount = BigDecimal("75.25"),
                     currency = "SAR",
-                    type = com.ritesh.parser.core.TransactionType.EXPENSE,
+                    type = com.prarambha.parser.core.TransactionType.EXPENSE,
                     merchant = "Establishment Name",
                     accountLast4 = "8888",
                     isFromCard = true

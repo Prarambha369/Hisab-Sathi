@@ -1,4 +1,4 @@
-package com.ritesh.parser.core.bank
+package com.prarambha.parser.core.bank
 
 /**
  * Siam Commercial Bank (SCB) parser for Thai banking SMS messages.

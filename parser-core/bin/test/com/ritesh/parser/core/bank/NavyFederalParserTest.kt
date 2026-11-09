@@ -1,10 +1,10 @@
-package com.ritesh.parser.core.bank
+package com.prarambha.parser.core.bank
 
-import com.ritesh.parser.core.TransactionType
-import com.ritesh.parser.core.bank.NavyFederalParser
-import com.ritesh.parser.core.test.ExpectedTransaction
-import com.ritesh.parser.core.test.ParserTestCase
-import com.ritesh.parser.core.test.ParserTestUtils
+import com.prarambha.parser.core.TransactionType
+import com.prarambha.parser.core.bank.NavyFederalParser
+import com.prarambha.parser.core.test.ExpectedTransaction
+import com.prarambha.parser.core.test.ParserTestCase
+import com.prarambha.parser.core.test.ParserTestUtils
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 
@@ -177,7 +177,7 @@ class NavyFederalParserTest {
     @Test
     fun `factory resolves navy federal`() {
         val cases = listOf(
-            com.ritesh.parser.core.test.SimpleTestCase(
+            com.prarambha.parser.core.test.SimpleTestCase(
                 bankName = "Navy Federal Credit Union",
                 sender = "NFCU",
                 currency = "USD",
@@ -192,7 +192,7 @@ class NavyFederalParserTest {
                 ),
                 shouldHandle = true
             ),
-            com.ritesh.parser.core.test.SimpleTestCase(
+            com.prarambha.parser.core.test.SimpleTestCase(
                 bankName = "Navy Federal Credit Union",
                 sender = "NAVYFED",
                 currency = "USD",

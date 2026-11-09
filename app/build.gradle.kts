@@ -12,14 +12,14 @@ plugins {
 }
 
 android {
-    namespace = "com.ritesh.cashiro"
+    namespace = "com.prarambha.cashiro"
     compileSdk = 36
     
     buildFeatures {
         buildConfig = true
     }
     defaultConfig {
-        applicationId = "com.ritesh.cashiro"
+        applicationId = "com.prarambha.cashiro"
         minSdk = 26
         targetSdk = 36
         versionCode = 94

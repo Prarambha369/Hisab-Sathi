@@ -1,6 +1,6 @@
-package com.ritesh.parser.core.bank
+package com.prarambha.parser.core.bank
 
-import com.ritesh.parser.core.TransactionType
+import com.prarambha.parser.core.TransactionType
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull

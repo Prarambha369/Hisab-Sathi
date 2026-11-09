@@ -1,8 +1,8 @@
-package com.ritesh.parser.core.bank
+package com.prarambha.parser.core.bank
 
-import com.ritesh.parser.core.CompiledPatterns
-import com.ritesh.parser.core.ParsedTransaction
-import com.ritesh.parser.core.TransactionType
+import com.prarambha.parser.core.CompiledPatterns
+import com.prarambha.parser.core.ParsedTransaction
+import com.prarambha.parser.core.TransactionType
 import java.math.BigDecimal
 
 /**

@@ -1,8 +1,8 @@
-package com.ritesh.parser.core.bank
+package com.prarambha.parser.core.bank
 
-import com.ritesh.parser.core.test.ExpectedTransaction
-import com.ritesh.parser.core.test.ParserTestCase
-import com.ritesh.parser.core.test.ParserTestUtils
+import com.prarambha.parser.core.test.ExpectedTransaction
+import com.prarambha.parser.core.test.ParserTestCase
+import com.prarambha.parser.core.test.ParserTestUtils
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 
@@ -36,7 +36,7 @@ T&C. Ignore if paid""",
                 expected = ExpectedTransaction(
                     amount = BigDecimal("500.00"),
                     currency = "INR",
-                    type = com.ritesh.parser.core.TransactionType.EXPENSE,
+                    type = com.prarambha.parser.core.TransactionType.EXPENSE,
                     accountLast4 = "1234",
                     reference = "123456789012"
                 )

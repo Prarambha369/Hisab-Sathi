@@ -1,6 +1,6 @@
-package com.ritesh.parser.core.bank
+package com.prarambha.parser.core.bank
 
-import com.ritesh.parser.core.TransactionType
+import com.prarambha.parser.core.TransactionType
 
 /**
  * Parser for Utkarsh Small Finance Bank (SFBL) SuperCard credit card transactions.
