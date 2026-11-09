@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 47,
-    "identityHash": "9f7fa3ea0037554390eb94b7e0147581",
+    "identityHash": "056b46a81f8e65b82e55cfd7bf41694f",
     "entities": [
       {
         "tableName": "transactions",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `amount` TEXT NOT NULL, `merchant_name` TEXT NOT NULL, `category` TEXT NOT NULL, `subcategory` TEXT, `transaction_type` TEXT NOT NULL, `date_time` TEXT NOT NULL, `description` TEXT, `sms_body` TEXT, `bank_name` TEXT, `sms_sender` TEXT, `account_number` TEXT, `balance_after` TEXT, `transaction_hash` TEXT NOT NULL DEFAULT '', `is_recurring` INTEGER NOT NULL, `is_deleted` INTEGER NOT NULL DEFAULT 0, `created_at` TEXT NOT NULL, `updated_at` TEXT NOT NULL, `currency` TEXT NOT NULL DEFAULT 'INR', `from_account` TEXT, `to_account` TEXT, `billing_cycle` TEXT, `attachments` TEXT NOT NULL DEFAULT '', `is_sample` INTEGER NOT NULL DEFAULT 0)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `amount` TEXT NOT NULL, `merchant_name` TEXT NOT NULL, `category` TEXT NOT NULL, `subcategory` TEXT, `transaction_type` TEXT NOT NULL, `date_time` TEXT NOT NULL, `description` TEXT, `sms_body` TEXT, `bank_name` TEXT, `sms_sender` TEXT, `account_number` TEXT, `balance_after` TEXT, `transaction_hash` TEXT NOT NULL DEFAULT '', `is_recurring` INTEGER NOT NULL, `is_deleted` INTEGER NOT NULL DEFAULT 0, `created_at` TEXT NOT NULL, `updated_at` TEXT NOT NULL, `currency` TEXT NOT NULL DEFAULT 'NPR', `from_account` TEXT, `to_account` TEXT, `billing_cycle` TEXT, `attachments` TEXT NOT NULL DEFAULT '', `is_sample` INTEGER NOT NULL DEFAULT 0, `card_type` TEXT, `due_date` INTEGER, `min_due` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -116,7 +116,7 @@
             "columnName": "currency",
             "affinity": "TEXT",
             "notNull": true,
-            "defaultValue": "'INR'"
+            "defaultValue": "'NPR'"
           },
           {
             "fieldPath": "fromAccount",
@@ -146,6 +146,21 @@
             "affinity": "INTEGER",
             "notNull": true,
             "defaultValue": "0"
+          },
+          {
+            "fieldPath": "cardType",
+            "columnName": "card_type",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "dueDate",
+            "columnName": "due_date",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "minDue",
+            "columnName": "min_due",
+            "affinity": "TEXT"
           }
         ],
         "primaryKey": {
@@ -1426,7 +1441,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9f7fa3ea0037554390eb94b7e0147581')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '056b46a81f8e65b82e55cfd7bf41694f')"
     ]
   }
 }

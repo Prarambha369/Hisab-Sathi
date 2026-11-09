@@ -1,7 +1,7 @@
-# Cashiro Project Context
+# Hisab Sathi Project Context
 
 ## Project Overview
-Cashiro is a minimalist, AI-powered expense tracker for Android that automatically extracts transaction data from SMS messages using on-device processing.
+Hisab Sathi is a minimalist, AI-powered expense tracker for Android that automatically extracts transaction data from SMS messages using on-device processing.
 
 ## Important Documents
 Please reference these documents when working on this project:

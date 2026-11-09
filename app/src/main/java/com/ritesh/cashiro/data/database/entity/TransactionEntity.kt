@@ -27,12 +27,15 @@ data class TransactionEntity(
         @ColumnInfo(name = "is_deleted", defaultValue = "0") val isDeleted: Boolean = false,
         @ColumnInfo(name = "created_at") val createdAt: LocalDateTime = LocalDateTime.now(),
         @ColumnInfo(name = "updated_at") val updatedAt: LocalDateTime = LocalDateTime.now(),
-        @ColumnInfo(name = "currency", defaultValue = "INR") val currency: String = "INR",
+        @ColumnInfo(name = "currency", defaultValue = "NPR") val currency: String = "NPR",
         @ColumnInfo(name = "from_account") val fromAccount: String? = null,
         @ColumnInfo(name = "to_account") val toAccount: String? = null,
         @ColumnInfo(name = "billing_cycle") val billingCycle: String? = null,
         @ColumnInfo(name = "attachments", defaultValue = "") val attachments: String = "",
-        @ColumnInfo(name = "is_sample", defaultValue = "0") val isSample: Boolean = false
+        @ColumnInfo(name = "is_sample", defaultValue = "0") val isSample: Boolean = false,
+        @ColumnInfo(name = "card_type") val cardType: String? = null,
+        @ColumnInfo(name = "due_date") val dueDate: Long? = null,
+        @ColumnInfo(name = "min_due") val minDue: BigDecimal? = null
 )
 
 enum class TransactionType {

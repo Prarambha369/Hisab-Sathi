@@ -1,6 +1,6 @@
-# Contributing to Cashiro
+# Contributing to Hisab Sathi
 
-Thank you for your interest in contributing to Cashiro! We welcome contributions from the community.
+Thank you for your interest in contributing to Hisab Sathi! We welcome contributions from the community.
 
 ## How to Contribute
 
@@ -112,7 +112,7 @@ app/
 ## Community
 
 [//]: # (- Join our [Discord]&#40;https://discord.gg/H3xWeMWjKQ&#41; for discussions)
-- Follow development updates on [GitHub](https://github.com/ritesh-kanwar/Cashiro)
+- Follow development updates on [GitHub](https://github.com/ritesh-kanwar/Hisab Sathi)
 
 ## Code of Conduct
 
@@ -134,4 +134,4 @@ Feel free to:
 [//]: # (- Ask in our [Discord]&#40;https://discord.gg/H3xWeMWjKQ&#41;)
 - Reach out to maintainers
 
-Thank you for helping make Cashiro better! 🚀
+Thank you for helping make Hisab Sathi better! 🚀

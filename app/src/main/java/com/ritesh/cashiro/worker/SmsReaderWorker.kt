@@ -8,10 +8,6 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.ritesh.parser.core.bank.BankParserFactory
-import com.ritesh.parser.core.bank.HDFCBankParser
-import com.ritesh.parser.core.bank.IndianBankParser
-import com.ritesh.parser.core.bank.IndusIndBankParser
-import com.ritesh.parser.core.bank.SBIBankParser
 import com.ritesh.parser.core.SmsFilter
 import com.ritesh.cashiro.data.mapper.toEntity
 import com.ritesh.cashiro.data.mapper.toEntityType
@@ -62,6 +58,16 @@ class SmsReaderWorker @AssistedInject constructor(
     companion object {
         const val TAG = "SmsReaderWorker"
         const val WORK_NAME = "sms_reader_work"
+        const val PROGRESS_TOTAL = "total"
+        const val PROGRESS_PROCESSED = "processed"
+        const val PROGRESS_PARSED = "parsed"
+        const val PROGRESS_SAVED = "saved"
+        const val PROGRESS_TIME_ELAPSED = "time_elapsed"
+        const val PROGRESS_ESTIMATED_TIME_REMAINING = "estimated_time_remaining"
+        const val PROGRESS_CURRENT_BATCH = "current_batch"
+        const val PROGRESS_TOTAL_BATCHES = "total_batches"
+        const val INPUT_FORCE_RESYNC = "force_resync"
+
         
         // SMS Content Provider columns
         private val SMS_PROJECTION = arrayOf(
@@ -113,149 +119,7 @@ class SmsReaderWorker @AssistedInject constructor(
                     val thirtyDaysAgo = LocalDateTime.now().minusDays(30)
                     val isRecentMessage = smsDateTime.isAfter(thirtyDaysAgo)
                     
-                    // Check if it's a mandate/subscription notification
-                    // Only process subscription messages from the last 30 days
-                    when (parser) {
-                        is SBIBankParser -> {
-                            // Check for UPI-Mandate notifications
-                            if (parser.isUPIMandateNotification(sms.body)) {
-                                if (!isRecentMessage) {
-                                    Log.d(TAG, "Skipping old SBI UPI-Mandate from ${smsDateTime.toLocalDate()}")
-                                    continue
-                                }
-                                val upiMandateInfo = parser.parseUPIMandateSubscription(sms.body)
-                                if (upiMandateInfo != null) {
-                                    try {
-                                        val subscriptionId = subscriptionRepository.createOrUpdateFromSBIMandate(
-                                            upiMandateInfo,
-                                            parser.getBankName(),
-                                            sms.body
-                                        )
-                                        subscriptionCount++
-                                        Log.d(TAG, "Created/Updated SBI UPI-Mandate subscription: $subscriptionId for ${upiMandateInfo.merchant}")
-                                    } catch (e: Exception) {
-                                        Log.e(TAG, "Error saving SBI UPI-Mandate subscription: ${e.message}")
-                                    }
-                                }
-                                continue // Skip transaction parsing for UPI-Mandate
-                            }
-                        }
-                        is HDFCBankParser -> {
-                            // Check for E-Mandate notifications
-                            if (parser.isEMandateNotification(sms.body)) {
-                                if (!isRecentMessage) {
-                                    Log.d(TAG, "Skipping old HDFC E-Mandate from ${smsDateTime.toLocalDate()}")
-                                    continue
-                                }
-                                val eMandateInfo = parser.parseEMandateSubscription(sms.body)
-                                if (eMandateInfo != null) {
-                                    try {
-                                        val subscriptionId = subscriptionRepository.createOrUpdateFromEMandate(
-                                            eMandateInfo,
-                                            parser.getBankName(),
-                                            sms.body
-                                        )
-                                        subscriptionCount++
-                                        Log.d(TAG, "Created/Updated HDFC E-Mandate subscription: $subscriptionId for ${eMandateInfo.merchant}")
-                                    } catch (e: Exception) {
-                                        Log.e(TAG, "Error saving HDFC E-Mandate subscription: ${e.message}")
-                                    }
-                                }
-                                continue // Skip transaction parsing for E-Mandate
-                            }
-                            
-                            // Check for Future Debit notifications (like Twitter subscription)
-                            if (parser.isFutureDebitNotification(sms.body)) {
-                                if (!isRecentMessage) {
-                                    Log.d(TAG, "Skipping old HDFC Future Debit from ${smsDateTime.toLocalDate()}")
-                                    continue
-                                }
-                                val futureDebitInfo = parser.parseFutureDebit(sms.body)
-                                if (futureDebitInfo != null) {
-                                    try {
-                                        // Use the same EMandateInfo structure for subscription creation
-                                        val subscriptionId = subscriptionRepository.createOrUpdateFromEMandate(
-                                            futureDebitInfo,
-                                            parser.getBankName(),
-                                            sms.body
-                                        )
-                                        subscriptionCount++
-                                        Log.d(TAG, "Created/Updated HDFC future debit subscription: $subscriptionId for ${futureDebitInfo.merchant}")
-                                    } catch (e: Exception) {
-                                        Log.e(TAG, "Error saving HDFC future debit subscription: ${e.message}")
-                                    }
-                                }
-                                continue // Skip transaction parsing for future debit
-                            }
-                            
-                            // Check for Balance Update notifications
-                            if (parser.isBalanceUpdateNotification(sms.body)) {
-                                val balanceUpdateInfo = parser.parseBalanceUpdate(sms.body)
-                                if (balanceUpdateInfo != null) {
-                                    try {
-                                        // Save to account_balances table
-                                        accountBalanceRepository.insertBalanceUpdate(
-                                            bankName = balanceUpdateInfo.bankName,
-                                            accountLast4 = balanceUpdateInfo.accountLast4,
-                                            balance = balanceUpdateInfo.balance,
-                                            timestamp = balanceUpdateInfo.asOfDate ?: smsDateTime,
-                                            currency = parser.getCurrency()
-                                        )
-                                        Log.d(TAG, "Saved balance update for ${balanceUpdateInfo.bankName}")
-                                    } catch (e: Exception) {
-                                        Log.e(TAG, "Error saving balance update: ${e.message}")
-                                    }
-                                }
-                                continue // Skip transaction parsing
-                            }
-                        }
-                        is IndusIndBankParser -> {
-                            // Balance-only updates for IndusInd (same flow as HDFC)
-                            if (parser.isBalanceUpdateNotification(sms.body)) {
-                                val balanceUpdateInfo = parser.parseBalanceUpdate(sms.body)
-                                if (balanceUpdateInfo != null) {
-                                    try {
-                                        accountBalanceRepository.insertBalanceUpdate(
-                                            bankName = balanceUpdateInfo.bankName,
-                                            accountLast4 = balanceUpdateInfo.accountLast4,
-                                            balance = balanceUpdateInfo.balance,
-                                            timestamp = balanceUpdateInfo.asOfDate ?: smsDateTime,
-                                            currency = parser.getCurrency()
-                                        )
-                                        Log.d(TAG, "Saved balance update for ${balanceUpdateInfo.bankName}")
-                                    } catch (e: Exception) {
-                                        Log.e(TAG, "Error saving IndusInd balance update: ${e.message}")
-                                    }
-                                }
-                                continue // Skip transaction parsing
-                            }
-                        }
-                        is IndianBankParser -> {
-                            if (parser.isMandateNotification(sms.body)) {
-                                if (!isRecentMessage) {
-                                    Log.d(TAG, "Skipping old Indian Bank Mandate from ${smsDateTime.toLocalDate()}")
-                                    continue
-                                }
-                                val mandateInfo = parser.parseMandateSubscription(sms.body)
-                                if (mandateInfo != null) {
-                                    try {
-                                        val subscriptionId = subscriptionRepository.createOrUpdateFromIndianBankMandate(
-                                            mandateInfo,
-                                            parser.getBankName(),
-                                            sms.body
-                                        )
-                                        subscriptionCount++
-                                        Log.d(TAG, "Created/Updated Indian Bank subscription: $subscriptionId for ${mandateInfo.merchant}")
-                                    } catch (e: Exception) {
-                                        Log.e(TAG, "Error saving Indian Bank subscription: ${e.message}")
-                                    }
-                                }
-                                continue // Skip transaction parsing for mandate
-                            }
-                        }
-                    }
-                    
-                    // Parse the transaction
+                            // Parse the transaction
                     val parsedTransaction = parser.parse(sms.body, sms.sender, sms.timestamp)
                     
                     if (parsedTransaction != null) {

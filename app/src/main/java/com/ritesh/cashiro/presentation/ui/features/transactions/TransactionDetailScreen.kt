@@ -1995,10 +1995,21 @@ private fun TransactionReceipt(
                         }
                     }
 
-                    ReceiptInfoRow(
-                        label = "Type",
-                        value = transaction.transactionType.name.lowercase().replaceFirstChar { it.uppercase() }
-                    )
+
+                    if (transaction.cardType != null) {
+                        ReceiptInfoRow(
+                            label = "Card Type",
+                            value = transaction.cardType ?: "",
+                            icon = null
+                        )
+                    }
+                    if (transaction.minDue != null) {
+                        ReceiptInfoRow(
+                            label = "Min Due",
+                            value = CurrencyFormatter.formatCurrency(transaction.minDue!!, transaction.currency),
+                            icon = null
+                        )
+                    }
 
                     val subcategoryValue = transaction.subcategory
                     ReceiptInfoRow(

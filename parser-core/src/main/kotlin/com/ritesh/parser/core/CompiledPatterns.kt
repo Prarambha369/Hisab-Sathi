@@ -50,57 +50,69 @@ object CompiledPatterns {
         val ALL_PATTERNS = listOf(TO_PATTERN, FROM_PATTERN, AT_PATTERN, FOR_PATTERN)
     }
 
-    object HDFC {
+    /**
+     * Nepali bank-specific patterns
+     */
+    object Nabil {
         val DLT_PATTERNS = listOf(
-            Regex("^[A-Z]{2}-HDFCBK.*$"),
-            Regex("^[A-Z]{2}-HDFC.*$"),
-            Regex("^HDFC-[A-Z]+$"),
-            Regex("^[A-Z]{2}-HDFCB.*$")
+            Regex("^[A-Z]{2}-NABIL.*$"),
+            Regex("^NABIL-[A-Z]+$"),
+            Regex("^NABILBANK$")
         )
-
-        val SALARY_PATTERN = Regex(
-            """for\s+[^-]+-[^-]+-[^-]+\s+[A-Z]+\s+SALARY-([^\.\n]+)""",
-            RegexOption.IGNORE_CASE
+    }
+    
+    object NMB {
+        val DLT_PATTERNS = listOf(
+            Regex("^[A-Z]{2}-NMB.*$"),
+            Regex("^NMB-[A-Z]+$"),
+            Regex("^NMBBANK$")
         )
-        val SIMPLE_SALARY_PATTERN =
-            Regex("""SALARY[- ]([^\.\n]+?)(?:\s+Info|$)""", RegexOption.IGNORE_CASE)
-        val INFO_PATTERN =
-            Regex("""Info:\s*(?:UPI/)?([^/\.\n]+?)(?:/|$)""", RegexOption.IGNORE_CASE)
-        val VPA_WITH_NAME = Regex("""VPA\s+[^@\s]+@[^\s]+\s*\(([^)]+)\)""", RegexOption.IGNORE_CASE)
-        val VPA_PATTERN = Regex("""VPA\s+([^@\s]+)@""", RegexOption.IGNORE_CASE)
-        val SPENT_PATTERN = Regex("""at\s+([^\.\n]+?)\s+on\s+\d{2}""", RegexOption.IGNORE_CASE)
-        val DEBIT_FOR_PATTERN =
-            Regex("""debited\s+for\s+([^\.\n]+?)\s+on\s+\d{2}""", RegexOption.IGNORE_CASE)
-        val MANDATE_PATTERN =
-            Regex("""To\s+([^\n]+?)\s*(?:\n|\d{2}/\d{2})""", RegexOption.IGNORE_CASE)
-
-        val REF_SIMPLE = Regex("""Ref\s+(\d{9,12})""", RegexOption.IGNORE_CASE)
-        val UPI_REF_NO = Regex("""UPI\s+Ref\s+No\s+(\d{12})""", RegexOption.IGNORE_CASE)
-        val REF_NO = Regex("""Ref\s+No\.?\s+([A-Z0-9]+)""", RegexOption.IGNORE_CASE)
-        val REF_END = Regex(
-            """(?:Ref|Reference)[:.\s]+([A-Z0-9]{6,})(?:\s*$|\s*Not\s+You)""",
-            RegexOption.IGNORE_CASE
+    }
+    
+    object Everest {
+        val DLT_PATTERNS = listOf(
+            Regex("^[A-Z]{2}-EVEREST.*$"),
+            Regex("^EVEREST-[A-Z]+$"),
+            Regex("^EVERESTBANK$")
         )
-
-        val ACCOUNT_DEPOSITED = Regex(
-            """deposited\s+in\s+(?:HDFC\s+Bank\s+)?A/c\s+(?:XX+)?(\d+)""",
-            RegexOption.IGNORE_CASE
+    }
+    
+    object Laxmi {
+        val DLT_PATTERNS = listOf(
+            Regex("^[A-Z]{2}-LAXMI.*$"),
+            Regex("^LAXMI-[A-Z]+$"),
+            Regex("^LAXMIBANK$")
         )
-        val ACCOUNT_FROM =
-            Regex("""from\s+(?:HDFC\s+Bank\s+)?A/c\s+(?:XX+)?(\d+)""", RegexOption.IGNORE_CASE)
-        val ACCOUNT_SIMPLE = Regex("""HDFC\s+Bank\s+A/c\s+(\d+)""", RegexOption.IGNORE_CASE)
-        val ACCOUNT_GENERIC = Regex("""A/c\s+(?:XX+)?(\d+)""", RegexOption.IGNORE_CASE)
-
-        val AMOUNT_WILL_DEDUCT = Regex(
-            """Rs\.?\s*([0-9,]+(?:\.\d{2})?)\s+will\s+be\s+deducted""",
-            RegexOption.IGNORE_CASE
+    }
+    
+    object Siddhartha {
+        val DLT_PATTERNS = listOf(
+            Regex("^[A-Z]{2}-SIDDHARTHA.*$"),
+            Regex("^SIDDHARTHA-[A-Z]+$"),
+            Regex("^SBL$")
         )
-        val DEDUCTION_DATE = Regex(
-            """deducted\s+on\s+(\d{2}/\d{2}/\d{2}),?\s*\d{2}:\d{2}:\d{2}""",
-            RegexOption.IGNORE_CASE
+    }
+    
+    object Himalayan {
+        val DLT_PATTERNS = listOf(
+            Regex("^[A-Z]{2}-HIMALAYAN.*$"),
+            Regex("^HIMALAYAN-[A-Z]+$"),
+            Regex("^HIMALAYANBANK$")
         )
-        val MANDATE_MERCHANT = Regex("""For\s+([^\n]+?)\s+mandate""", RegexOption.IGNORE_CASE)
-        val UMN_PATTERN = Regex("""UMN\s+([a-zA-Z0-9@]+)""", RegexOption.IGNORE_CASE)
+    }
+    
+    object Esewa {
+        val DLT_PATTERNS = listOf(
+            Regex("^ESEWA$"),
+            Regex("^ESEWAPAYMENT$")
+        )
+    }
+    
+    object Khalti {
+        val DLT_PATTERNS = listOf(
+            Regex("^KHALTI$"),
+            Regex("^KHALTIDIGITAL$")
+        )
     }
 
     object Cleaning {
