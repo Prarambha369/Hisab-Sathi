@@ -363,7 +363,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
         echo -e "${GREEN}✅ GitHub release created${NC}"
     else
         echo -e "${YELLOW}gh CLI not found. Create release manually at:${NC}"
-        echo "https://github.com/sarim2000/pennywiseai-tracker/releases/new?tag=v$NEXT_VERSION"
+        echo "https://github.com/Prarambha369/pennywiseai-tracker/releases/new?tag=v$NEXT_VERSION"
     fi
 fi
 

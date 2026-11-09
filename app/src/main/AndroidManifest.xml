@@ -26,7 +26,7 @@
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:node="remove" />
 
     <application
-        android:name=".CashiroApplication"
+        android:name=".HisabSathiApplication"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -35,11 +35,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.CashiroCompose">
+        android:theme="@style/Theme.HisabSathiCompose">
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.Cashiro.SplashScreen"
+            android:theme="@style/Theme.HisabSathi.SplashScreen"
             android:windowSoftInputMode="adjustResize">
         </activity>
 
@@ -51,7 +51,7 @@
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_original_round"
             android:targetActivity=".MainActivity"
-            android:theme="@style/Theme.Cashiro.SplashScreen.Original">
+            android:theme="@style/Theme.HisabSathi.SplashScreen.Original">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -69,7 +69,7 @@
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_anarchy_round"
             android:targetActivity=".MainActivity"
-            android:theme="@style/Theme.Cashiro.SplashScreen.Anarchy">
+            android:theme="@style/Theme.HisabSathi.SplashScreen.Anarchy">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -87,7 +87,7 @@
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_zenith_round"
             android:targetActivity=".MainActivity"
-            android:theme="@style/Theme.Cashiro.SplashScreen.Zenith">
+            android:theme="@style/Theme.HisabSathi.SplashScreen.Zenith">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -135,8 +135,8 @@
             android:name=".receiver.NotificationActionReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.prarambha.cashiro.ACTION_DELETE_TRANSACTION" />
-                <action android:name="com.prarambha.cashiro.ACTION_CONFIRM_TRANSACTION" />
+                <action android:name="com.prarambha.hisabsathi.ACTION_DELETE_TRANSACTION" />
+                <action android:name="com.prarambha.hisabsathi.ACTION_CONFIRM_TRANSACTION" />
             </intent-filter>
         </receiver>
 

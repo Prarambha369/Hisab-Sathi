@@ -1,18 +1,18 @@
 <a name="top"></a>
-[![Hisab Sathi Banner](banner.png)](https://github.com/sarim2000/pennywiseai-tracker)
+[![Hisab Sathi Banner](banner.png)](https://github.com/Prarambha369/Hisab-Sathi)
 
-[//]: # ([![GitHub stars]&#40;https://img.shields.io/github/stars/sarim2000/pennywiseai-tracker?style=social&#41;]&#40;https://github.com/sarim2000/pennywiseai-tracker&#41;)
+[//]: # ([![GitHub stars]&#40;https://img.shields.io/github/stars/sarim2000/pennywiseai-tracker?style=social&#41;]&#40;https://github.com/Prarambha369/Hisab-Sathi&#41;)
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
 [![Android](https://img.shields.io/badge/Android-8.0+-3DDC84)](https://developer.android.com/about/versions/oreo)
-[![Kotlin](https://img.shields.io/badge/Kotlin-2.0.21-7F52FF)](https://kotlinlang.org/)
+[![Kotlin](https://img.shields.io/badge/Kotlin-2.3.0-7F52FF)](https://kotlinlang.org/)
 [![Privacy](https://img.shields.io/badge/AI-100%25_On--Device-FF6B6B)](https://developers.google.com/mediapipe)
 
 [//]: # ([![Downloads]&#40;https://img.shields.io/badge/Downloads-100+-green&#41;]&#40;https://play.google.com/store/apps/details?id=com.pennywiseai.tracker&#41;)
 
 [//]: # ([![F-Droid]&#40;https://img.shields.io/f-droid/v/com.pennywiseai.tracker?color=1976d2&#41;]&#40;https://f-droid.org/packages/com.pennywiseai.tracker/&#41;)
-[//]: # ([![GitHub release]&#40;https://img.shields.io/github/v/release/sarim2000/pennywiseai-tracker&#41;]&#40;https://github.com/sarim2000/pennywiseai-tracker/releases&#41;)
+[//]: # ([![GitHub release]&#40;https://img.shields.io/github/v/release/sarim2000/pennywiseai-tracker&#41;]&#40;https://github.com/Prarambha369/Hisab-Sathi/releases&#41;)
 
-[//]: # ([![GitHub last commit]&#40;https://img.shields.io/github/last-commit/sarim2000/pennywiseai-tracker&#41;]&#40;https://github.com/sarim2000/pennywiseai-tracker/commits&#41;)
+[//]: # ([![GitHub last commit]&#40;https://img.shields.io/github/last-commit/sarim2000/pennywiseai-tracker&#41;]&#40;https://github.com/Prarambha369/Hisab-Sathi/commits&#41;)
 
 [//]: # ([![Discord]&#40;https://img.shields.io/badge/Discord-Join_Community-5865F2&#41;]&#40;https://discord.gg/H3xWeMWjKQ&#41;)
 
@@ -25,13 +25,13 @@ Hisab Sathi is a comprehensive financial tracking manager designed for Nepal. It
 [//]: # (⭐ **Star us on GitHub — join 100+ supporters!**)
 
 [//]: # ()
-[//]: # ([![Share]&#40;https://img.shields.io/badge/share-000000?logo=x&logoColor=white&#41;]&#40;https://x.com/intent/tweet?text=Check%20out%20PennyWise%20AI%20-%20Privacy-first%20expense%20tracker%20with%20on-device%20AI:%20https://github.com/sarim2000/pennywiseai-tracker%20%23Android%20%23PrivacyFirst%20%23OnDeviceAI&#41;)
+[//]: # ([![Share]&#40;https://img.shields.io/badge/share-000000?logo=x&logoColor=white&#41;]&#40;https://x.com/intent/tweet?text=Check%20out%20PennyWise%20AI%20-%20Privacy-first%20expense%20tracker%20with%20on-device%20AI:%20https://github.com/Prarambha369/Hisab-Sathi%20%23Android%20%23PrivacyFirst%20%23OnDeviceAI&#41;)
 
-[//]: # ([![Share]&#40;https://img.shields.io/badge/share-0A66C2?logo=linkedin&logoColor=white&#41;]&#40;https://www.linkedin.com/sharing/share-offsite/?url=https://github.com/sarim2000/pennywiseai-tracker&#41;)
+[//]: # ([![Share]&#40;https://img.shields.io/badge/share-0A66C2?logo=linkedin&logoColor=white&#41;]&#40;https://www.linkedin.com/sharing/share-offsite/?url=https://github.com/Prarambha369/Hisab-Sathi&#41;)
 
-[//]: # ([![Share]&#40;https://img.shields.io/badge/share-FF4500?logo=reddit&logoColor=white&#41;]&#40;https://www.reddit.com/submit?title=PennyWise%20AI%20-%20Privacy-first%20expense%20tracker&url=https://github.com/sarim2000/pennywiseai-tracker&#41;)
+[//]: # ([![Share]&#40;https://img.shields.io/badge/share-FF4500?logo=reddit&logoColor=white&#41;]&#40;https://www.reddit.com/submit?title=PennyWise%20AI%20-%20Privacy-first%20expense%20tracker&url=https://github.com/Prarambha369/Hisab-Sathi&#41;)
 
-[//]: # ([![Share]&#40;https://img.shields.io/badge/share-0088CC?logo=telegram&logoColor=white&#41;]&#40;https://t.me/share/url?url=https://github.com/sarim2000/pennywiseai-tracker&text=Check%20out%20PennyWise%20AI&#41;)
+[//]: # ([![Share]&#40;https://img.shields.io/badge/share-0088CC?logo=telegram&logoColor=white&#41;]&#40;https://t.me/share/url?url=https://github.com/Prarambha369/Hisab-Sathi&text=Check%20out%20PennyWise%20AI&#41;)
 
 ## Overview
 
@@ -87,7 +87,7 @@ Supporting **8 Nepali financial institutions** with **NPR currency**:
 - **Siddhartha Bank** - Siddhartha Bank Limited
 - **Himalayan Bank** - Himalayan Bank Limited
 
-More Nepali banks coming soon! [Request your bank →](https://github.com/ritesh-kanwar/Hisab%20Sathi/issues/new?template=bank_support_request.md)
+More Nepali banks coming soon! [Request your bank →](https://github.com/Prarambha369/Hisab-Sathi/issues/new?template=bank_support_request.md)
 
 ## Privacy First
 
@@ -138,8 +138,8 @@ All processing happens on your device using MediaPipe's LLM. Your financial data
 
 ```bash
 # Clone repository
-git clone https://github.com/ritesh-kanwar/Hisab Sathi.git
-cd Hisab Sathi
+git clone https://github.com/Prarambha369/Hisab-Sathi.git
+cd Hisab-Sathi
 
 # Build APK
 ./gradlew assembleDebug
@@ -216,14 +216,14 @@ val testRegistry = BankParserRegistry(listOf(NabilBankParser()))
 
 ### Adding a new bank parser
 
-1. Create `parser-core/src/main/kotlin/com/ritesh/parser/core/bank/MyBankParser.kt` extending `BankParser`.
+1. Create `parser-core/src/main/kotlin/com/prarambha/parser/core/bank/MyBankParser.kt` extending `BankParser`.
 2. Register the parser in the `parsers` list inside `BankParserFactory`.
-3. Add tests in `parser-core/src/test/kotlin/com/ritesh/parser/core/bank/MyBankParserTest.kt` using `ParserTestUtils`.
+3. Add tests in `parser-core/src/test/kotlin/com/prarambha/parser/core/bank/MyBankParserTest.kt` using `ParserTestUtils`.
 
 ## Community & Support
 
 [//]: # (- **Discord**: Join the community, share feedback, and get help — [Join Discord]&#40;https://discord.gg/H3xWeMWjKQ&#41;)
-- **Issues**: Report bugs or request features — [Open an issue](https://github.com/ritesh-kanwar/Hisab Sathi/issues)
+- **Issues**: Report bugs or request features — [Open an issue](https://github.com/Prarambha369/Hisab-Sathi/issues)
 
 ## Contributing
 
@@ -257,9 +257,9 @@ Please review our [Security Policy](SECURITY.md) for how to report vulnerabiliti
 
 [//]: # (    <tr>)
 
-[//]: # (      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Lucifer1590"><img src="https://avatars.githubusercontent.com/Lucifer1590?v=4&s=100" width="100px;" alt="Lucifer1590"/><br /><sub><b>Lucifer1590</b></sub></a><br /><a href="#community-Lucifer1590" title="Community Management">👥</a> <a href="https://github.com/sarim2000/pennywiseai-tracker/issues?q=author%3ALucifer1590" title="Bug reports">🐛</a> <a href="#userTesting-Lucifer1590" title="User Testing">📓</a></td>)
+[//]: # (      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Lucifer1590"><img src="https://avatars.githubusercontent.com/Lucifer1590?v=4&s=100" width="100px;" alt="Lucifer1590"/><br /><sub><b>Lucifer1590</b></sub></a><br /><a href="#community-Lucifer1590" title="Community Management">👥</a> <a href="https://github.com/Prarambha369/Hisab-Sathi/issues?q=author%3ALucifer1590" title="Bug reports">🐛</a> <a href="#userTesting-Lucifer1590" title="User Testing">📓</a></td>)
 
-[//]: # (      <td align="center" valign="top" width="14.28%"><a href="https://github.com/akshaynexus"><img src="https://avatars.githubusercontent.com/akshaynexus?v=4&s=100" width="100px;" alt="akshaynexus"/><br /><sub><b>akshaynexus</b></sub></a><br /><a href="https://github.com/sarim2000/pennywiseai-tracker/commits?author=akshaynexus" title="Code">💻</a></td>)
+[//]: # (      <td align="center" valign="top" width="14.28%"><a href="https://github.com/akshaynexus"><img src="https://avatars.githubusercontent.com/akshaynexus?v=4&s=100" width="100px;" alt="akshaynexus"/><br /><sub><b>akshaynexus</b></sub></a><br /><a href="https://github.com/Prarambha369/Hisab-Sathi/commits?author=akshaynexus" title="Code">💻</a></td>)
 
 [//]: # (    </tr>)
 
@@ -285,7 +285,7 @@ This project follows the [all-contributors](https://github.com/all-contributors/
 
 Special thanks to the following projects and resources:
 
-- **[PennyWise AI](https://github.com/sarim2000/pennywiseai-tracker)** - The base and inspiration of this project.
+- **[PennyWise AI](https://github.com/Prarambha369/Hisab-Sathi)** - The base and inspiration of this project.
 - **[Microsoft Fluent Emojis](https://github.com/microsoft/fluentui-emoji)** - Beautiful emojis used for category icons.
 - **[Haze](https://chrisbanes.github.io/haze/latest/)** - Applied for stunning blur effects.
 - **[Compose Charts](https://github.com/ehsannarmani/ComposeCharts)** - Used for creating animated charts and graphs.
@@ -300,7 +300,7 @@ GNU General Public License v3.0 - see [LICENSE](LICENSE)
 ---
 
 <p align="center">
-<a href="https://github.com/ritesh-kanwar/Hisab Sathi/releases">Download</a> •
-<a href="https://github.com/ritesh-kanwar/Hisab Sathi/issues">Report Bug</a> •
-<a href="https://github.com/ritesh-kanwar/Hisab Sathi/issues">Request Feature</a>
+<a href="https://github.com/Prarambha369/Hisab-Sathi/releases">Download</a> •
+<a href="https://github.com/Prarambha369/Hisab-Sathi/issues">Report Bug</a> •
+<a href="https://github.com/Prarambha369/Hisab-Sathi/issues">Request Feature</a>
 </p>

@@ -22,10 +22,9 @@ class NMBBankParser : BankParser() {
 
     override fun canHandle(sender: String): Boolean {
         val normalizedSender = sender.uppercase()
-        return normalizedSender.contains("NMB") ||
-                normalizedSender == "NMB_ALERT" ||
+        return normalizedSender == "NMB_ALERT" ||
                 normalizedSender == "NMBBANK" ||
-                normalizedSender.contains("NABIL")
+                (normalizedSender.contains("NMB") && !normalizedSender.contains("NIMB"))
     }
 
     override fun extractAmount(message: String): BigDecimal? {

@@ -1,0 +1,57 @@
+package com.prarambha.hisabsathi.domain.usecase
+
+import com.prarambha.hisabsathi.BuildConfig
+
+import android.util.Log
+import com.prarambha.hisabsathi.data.database.entity.SubscriptionEntity
+import com.prarambha.hisabsathi.data.database.entity.SubscriptionState
+import com.prarambha.hisabsathi.data.repository.SubscriptionRepository
+import java.math.BigDecimal
+import java.time.LocalDate
+import java.time.LocalDateTime
+import javax.inject.Inject
+
+class AddSubscriptionUseCase
+@Inject
+constructor(private val subscriptionRepository: SubscriptionRepository) {
+    suspend fun execute(
+        merchantName: String,
+        amount: BigDecimal,
+        nextPaymentDate: LocalDate,
+        billingCycle: String,
+        category: String,
+        subcategory: String? = null,
+        bankName: String? = null,
+        autoRenewal: Boolean = true,
+        paymentReminder: Boolean = true,
+        currency: String = "NPR",
+        notes: String? = null,
+        lastPaidDate: LocalDate? = null
+    ): Long {
+        if (BuildConfig.DEBUG) Log.d("AddSubscriptionUseCase", "Creating subscription entity...")
+
+        val subscription = SubscriptionEntity(
+            merchantName = merchantName,
+            amount = amount,
+            nextPaymentDate = nextPaymentDate,
+            state = SubscriptionState.ACTIVE, // Always active for manually added subscriptions
+            bankName = bankName ?: "Manual Entry",
+            category = category,
+            subcategory = subcategory,
+            smsBody = notes, // Store user notes in smsBody field
+            createdAt = LocalDateTime.now(),
+            updatedAt = LocalDateTime.now(),
+            currency = currency,
+            billingCycle = billingCycle,
+            lastPaidDate = lastPaidDate
+        )
+
+        if (BuildConfig.DEBUG) Log.d("AddSubscriptionUseCase", "Subscription entity created: $subscription")
+        if (BuildConfig.DEBUG) Log.d("AddSubscriptionUseCase", "Calling repository.insertSubscription...")
+
+        val id = subscriptionRepository.insertSubscription(subscription)
+        if (BuildConfig.DEBUG) Log.d("AddSubscriptionUseCase", "Subscription inserted with ID: $id")
+
+        return id
+    }
+}
