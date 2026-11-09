@@ -30,6 +30,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -95,7 +98,8 @@ fun SharedTransitionScope.BudgetsScreen(
     
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
-    
+    val snackbarHostState = remember { SnackbarHostState() }
+
     // Edit budget sheet
     if (showEditSheet) {
         ModalBottomSheet(
@@ -131,7 +135,9 @@ fun SharedTransitionScope.BudgetsScreen(
                             editingBudgetId = null
                             budgetViewModel.clearEditState()
                         },
-                        onError = { /* TODO: Show error */ }
+                        onError = { message ->
+                            scope.launch { snackbarHostState.showSnackbar(message) }
+                        }
                     )
                 },
                 onDelete = if (editingBudgetId != null) {
@@ -143,7 +149,9 @@ fun SharedTransitionScope.BudgetsScreen(
                                 editingBudgetId = null
                                 budgetViewModel.clearEditState()
                             },
-                            onError = { /* TODO: Show error */ }
+                            onError = { message ->
+                                scope.launch { snackbarHostState.showSnackbar(message) }
+                            }
                         )
                     }
                 } else null,
@@ -241,6 +249,19 @@ fun SharedTransitionScope.BudgetsScreen(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .then(sharedModifier),
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState,
+                snackbar = {
+                    Snackbar(
+                        snackbarData = it,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        shape = MaterialTheme.shapes.large,
+                    )
+                }
+            )
+        },
         topBar = {
             CustomTitleTopAppBar(
                 title = "Budgets",

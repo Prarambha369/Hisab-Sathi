@@ -29,6 +29,9 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -38,7 +41,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -100,6 +105,8 @@ fun SharedTransitionScope.BudgetDetailScreen(
 
     var showEditSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     // Load budget data
     LaunchedEffect(budgetId, startDate, endDate) {
@@ -148,7 +155,9 @@ fun SharedTransitionScope.BudgetDetailScreen(
                             showEditSheet = false
                             budgetViewModel.clearEditState()
                         },
-                        onError = { /* TODO: Show error */ }
+                        onError = { message ->
+                            scope.launch { snackbarHostState.showSnackbar(message) }
+                        }
                     )
                 },
                 onDelete = {
@@ -161,7 +170,9 @@ fun SharedTransitionScope.BudgetDetailScreen(
                                 budgetViewModel.clearEditState()
                                 onNavigateBack()
                             },
-                            onError = { /* TODO: Show error */ }
+                            onError = { message ->
+                                scope.launch { snackbarHostState.showSnackbar(message) }
+                            }
                         )
                     }
                 },
@@ -181,6 +192,19 @@ fun SharedTransitionScope.BudgetDetailScreen(
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState,
+                snackbar = {
+                    Snackbar(
+                        snackbarData = it,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        shape = MaterialTheme.shapes.large,
+                    )
+                }
+            )
+        },
         topBar = {
             CustomTitleTopAppBar(
                 title = budgetWithSpending?.budget?.name ?: "Budget Details",
