@@ -1,178 +1,223 @@
 package com.prarambha.parser.core
 
-import com.prarambha.parser.core.bank.BankParser
 import java.math.BigDecimal
-import java.util.Currency
 
 /**
- * Reads a likely transaction out of an SMS that no bank parser claims, so the app can
- * SUGGEST it. Not a bank parser: never registered in [com.prarambha.parser.core.bank.BankParserFactory],
- * and nothing it returns is saved until the user confirms it.
+ * A cautious first reading of an SMS that no bank parser claims.
  *
- * Confidence (0–100): a currency-tagged amount plus a debit/credit verb is the base,
- * [BASE]; an account/card last-4 adds 20, a merchant 20, a balance or available limit 10.
- * Without both an amount and a direction there is no result.
+ * This is deliberately not a bank parser and is never registered in
+ * [com.prarambha.parser.core.bank.BankParserFactory]: its output is offered to the user as a
+ * suggestion, and only a confirmed entry is stored.
  *
- * Nepali SMS write the rupee as "Rs.", "Rs" or "रू", which reads as [NPR]; "₹" stays INR.
+ * A reading needs a currency-tagged sum and a word saying which way the money went. Extra
+ * corroboration raises [Estimate.score] by 20 for an account/card number, 20 for a merchant
+ * and 10 for a running balance or available limit, so [WORTH_SUGGESTING] means "the base
+ * plus at least one other fact" — a bare "debited 500" is reported at 50 but not offered.
  *
- * Limitations: naive regex heuristics, English wording and "1,234.56" numbers only
- * ("1.234,56" reads wrong). Per-sender learning ([MessageTemplates]) is the upgrade path.
+ * Money is read only in the simple "1,234.56" form. Nepali rupee wording (`Rs.`, `Rs`, `रू`)
+ * reads as NPR. Messages that are OTPs, promos, requests, due notices, declined attempts or
+ * person-to-person numbers never produce a reading at all.
  */
 object GenericTransactionExtractor {
-    /** The confidence worth showing as a suggestion: the base plus one corroborating field. */
-    const val SUGGEST_AT = 60
-    private const val BASE = 50
 
-    data class Suggestion(val transaction: ParsedTransaction, val confidence: Int)
+    /** The score at which a reading has enough corroboration to be shown as a suggestion. */
+    const val WORTH_SUGGESTING = 60
 
-    fun extract(sender: String, body: String, timestamp: Long = 0L): Suggestion? {
-        if (PERSONAL_NUMBER.matches(sender.replace(" ", "")) || Base.isNonTransaction(body)) return null
-        // A declined or failed attempt moved no money, so it must never become a suggestion.
-        // ("Reversed" is not in the list: a reversal credit returns real money.)
-        if (FAILED.containsMatchIn(body)) return null
+    private const val BASE_SCORE = 50
+    private const val ACCOUNT_BONUS = 20
+    private const val MERCHANT_BONUS = 20
+    private const val BALANCE_BONUS = 10
 
-        val money = MONEY.findAll(body).mapNotNull { printed(it, body) }.toList()
-        val main = money.firstOrNull { it.figure == null } ?: return null
-        // A completed reversal/refund returns money, whatever the original purchase wording says.
-        val type = if (REFUND.containsMatchIn(body)) TransactionType.INCOME
-        else DIRECTION.find(body)
-            ?.let { if (it.groups[1] != null) TransactionType.EXPENSE else TransactionType.INCOME }
-            ?: return null
+    data class Estimate(val transaction: ParsedTransaction, val score: Int)
 
-        // Only figures in the transaction's own currency: a balance is never mixed with another currency.
-        fun figure(kind: String) = money.firstOrNull { it.figure == kind && it.currency == main.currency }?.amount
-        val balance = figure(BAL)
-        val limit = figure(LIMIT)
-        val last4 = Base.last4(body) ?: MASKED_LAST4.find(body)?.groupValues?.get(1)
-        val merchant = merchant(body)
+    fun estimate(sender: String, message: String, timestamp: Long = 0L): Estimate? {
+        if (neverTransaction(sender, message)) return null
 
-        val confidence = BASE +
-            (if (last4 != null) 20 else 0) +
-            (if (merchant != null) 20 else 0) +
-            (if (balance != null || limit != null) 10 else 0)
+        val mentions = amountsIn(message)
+        val moved = mentions.firstOrNull { it.role == Role.MOVED } ?: return null
+        val direction = directionOf(message) ?: return null
 
-        return Suggestion(
+        // A balance is only trusted when it is written in the same currency as the movement.
+        val balance = mentions.firstOrNull { it.role == Role.BALANCE && it.currency == moved.currency }?.value
+        val limit = mentions.firstOrNull { it.role == Role.LIMIT && it.currency == moved.currency }?.value
+        val account = accountLast4(message)
+        val merchant = merchantOf(message)
+
+        val score = BASE_SCORE +
+            (if (account != null) ACCOUNT_BONUS else 0) +
+            (if (merchant != null) MERCHANT_BONUS else 0) +
+            (if (balance != null || limit != null) BALANCE_BONUS else 0)
+
+        return Estimate(
             ParsedTransaction(
-                amount = main.amount,
-                type = type,
+                amount = moved.value,
+                type = direction,
                 merchant = merchant,
                 reference = null,
-                accountLast4 = last4,
+                accountLast4 = account,
                 balance = balance,
                 creditLimit = limit,
-                smsBody = body,
+                smsBody = message,
                 sender = sender,
                 timestamp = timestamp,
                 bankName = sender,
-                currency = main.currency
+                currency = moved.currency
             ),
-            confidence
+            score
         )
     }
 
-    private data class Printed(val amount: BigDecimal, val currency: String, val figure: String?)
+    /**
+     * Money out or in, by the first direction word in [message]. A reversal or refund that has
+     * already happened is money back in, whatever the original purchase wording says; one that
+     * may happen later ("will be reversed if…") is still the original movement.
+     */
+    fun directionOf(message: String): TransactionType? {
+        if (REFUND_COMPLETED.containsMatchIn(message)) return TransactionType.INCOME
 
-    private const val BAL = "balance"
-    private const val LIMIT = "limit"
-
-    private fun printed(m: MatchResult, body: String): Printed? {
-        val tag = (m.groups[1] ?: m.groups[2] ?: m.groups[5])?.value ?: return null
-        val number = (m.groups[3] ?: m.groups[4])?.value?.replace(",", "") ?: return null
-        val amount = try { BigDecimal(number) } catch (e: NumberFormatException) { return null }
-        if (amount.signum() <= 0) return null
-        val currency = currencyOf(tag) ?: return null
-        val before = body.substring(maxOf(0, m.range.first - 30), m.range.first)
-        val figure = when {
-            BALANCE_BEFORE.containsMatchIn(before) -> BAL
-            LIMIT_BEFORE.containsMatchIn(before) -> LIMIT
-            else -> null
-        }
-        return Printed(amount, currency, figure)
-    }
-
-    private fun currencyOf(tag: String): String? {
-        SYMBOLS[tag]?.let { return it }
-        // Nepal's banks write the rupee as "Rs."/"Rs"; the symbol "₹" is the Indian one.
-        if (tag.equals("rs", ignoreCase = true)) return "NPR"
-        if (tag == "XXX") return null // ISO's "no currency", and the usual account mask
-        return try {
-            Currency.getInstance(tag).currencyCode
-        } catch (e: IllegalArgumentException) {
-            null
+        val out = OUTBOUND.find(message)?.range?.first
+        val into = INBOUND.find(message)?.range?.first
+        return when {
+            out == null && into == null -> null
+            into == null -> TransactionType.EXPENSE
+            out == null -> TransactionType.INCOME
+            out < into -> TransactionType.EXPENSE
+            else -> TransactionType.INCOME
         }
     }
 
-    /** Money out or in, by the first direction word; null if the message has none. */
-    internal fun directionOf(body: String): TransactionType? = DIRECTION.find(body)
-        ?.let { if (it.groups[1] != null) TransactionType.EXPENSE else TransactionType.INCOME }
+    /** True when the message can never describe money moving, whoever sent it. */
+    fun neverTransaction(sender: String, message: String): Boolean =
+        isPersonalNumber(sender) || SmsFilter.isNonTransactionMessage(message) || FAILED.containsMatchIn(message)
 
-    /** A person's number, an OTP, a promo or a failed attempt: never a transaction, whatever else it says. */
-    internal fun isNeverTransaction(sender: String, body: String): Boolean =
-        PERSONAL_NUMBER.matches(sender.replace(" ", "")) ||
-            Base.isNonTransaction(body) ||
-            FAILED.containsMatchIn(body)
+    /** True when [text] says a payment did not go through or was undone. */
+    internal fun saysFailure(text: String): Boolean =
+        FAILED.containsMatchIn(text) || UNDONE.containsMatchIn(text)
 
-    /** Says the payment didn't go through or was undone, so a taught shape must not read it as normal. */
-    internal fun saysItFailed(text: String): Boolean = FAILED.containsMatchIn(text) || UNDONE.containsMatchIn(text)
+    // ─── Money ────────────────────────────────────────────────────────────────
 
-    /** "your a/c", "the card": words that name an account, not who the money went to. */
-    internal fun namesAnAccount(text: String): Boolean = NOT_MERCHANT.containsMatchIn(text)
+    private enum class Role { MOVED, BALANCE, LIMIT }
 
-    private fun merchant(body: String): String? = MERCHANT.findAll(body)
-        .map { Base.clean(it.groupValues[1].trim()) }
-        .firstOrNull { !NOT_MERCHANT.containsMatchIn(it) && Base.isValidMerchant(it) }
+    private data class Mention(val value: BigDecimal, val currency: String, val role: Role)
 
-    /** BankParser's shared checks, reused rather than copied. */
-    private object Base : BankParser() {
-        override fun getBankName() = ""
-        override fun canHandle(sender: String) = false
-        fun isNonTransaction(body: String) = !SmsFilter.isTransactionMessage(body)
-        fun last4(body: String) = extractAccountLast4(body)
-        fun clean(name: String) = cleanMerchantName(name)
-        fun isValidMerchant(name: String) = isValidMerchantName(name)
+    /** Every currency-tagged sum in [message], in the order written, each with what it is. */
+    private fun amountsIn(message: String): List<Mention> {
+        val mentions = ArrayList<Mention>()
+        for (match in MONEY.findAll(message)) {
+            val tag = match.groups[1]?.value ?: match.groups[2]?.value ?: match.groups[5]?.value ?: continue
+            val written = match.groups[3]?.value ?: match.groups[4]?.value ?: continue
+            val value = written.replace(",", "").toBigDecimalOrNull() ?: continue
+            if (value.signum() <= 0) continue
+            val currency = CurrencyText.tagOf(tag) ?: continue
+            mentions += Mention(value, currency, roleAt(message, match.range.first))
+        }
+        return mentions
     }
 
-    // "₹" alone is INR; "रू" and "रु" are Nepal's rupee; "$" is read as USD, the most common dollar in SMS.
-    private val SYMBOLS = mapOf("₹" to "INR", "रू" to "NPR", "रु" to "NPR", "$" to "USD", "€" to "EUR", "£" to "GBP")
+    /**
+     * What the sum starting at [at] stands for, decided by the words just before it: a
+     * balance or limit word with no other number in between, otherwise money that moved.
+     */
+    private fun roleAt(message: String, at: Int): Role {
+        val before = message.substring((at - 30).coerceAtLeast(0), at)
+        val words = before.takeLastWhile { !it.isDigit() }.lowercase()
+        return when {
+            LIMIT_WORDS.any { it in words } -> Role.LIMIT
+            BALANCE_WORDS.any { it in words } -> Role.BALANCE
+            else -> Role.MOVED
+        }
+    }
 
-    private const val NUMBER = """(\d[\d,]{0,15}(?:\.\d{1,2})?)(?!\.?\d)"""
+    // ─── Account ──────────────────────────────────────────────────────────────
 
-    // A code (1) or symbol (2) before the number (3), or a code (5) after it (4).
-    // Codes stay upper case so "try 2 times" never reads as TRY 2.
-    private val MONEY = Regex("""(?:\b([Rr][Ss]|[A-Z]{3})\.?|([₹$€£रूरु]))\s*$NUMBER|(?<![\w.,])$NUMBER\s*([A-Z]{3})\b""")
+    private fun accountLast4(message: String): String? =
+        MASKED_DIGITS.find(message)?.groupValues?.get(1)
+            ?: ENDING_DIGITS.find(message)?.groupValues?.get(1)
+            ?: NAMED_ACCOUNT_DIGITS.find(message)?.groupValues?.get(1)?.takeLast(4)
 
-    // The figure is a balance / limit when that word is just before it, with no other number between.
-    private val BALANCE_BEFORE = Regex("""\b(?:bal|balance)\b[^\d]*$""", RegexOption.IGNORE_CASE)
-    private val LIMIT_BEFORE = Regex("""\b(?:limit|lmt)\b[^\d]*$""", RegexOption.IGNORE_CASE)
+    // ─── Merchant ─────────────────────────────────────────────────────────────
 
-    // The first direction word wins: group 1 is money out, group 2 money in.
-    private val DIRECTION = Regex(
-        """\b(?:(debited|spent|purchased?|paid|withdrawn|charged|deducted|sent|used|transferred to)|""" +
-            """(credited|received|deposited|refunded|refund|reversed))\b""",
-        RegexOption.IGNORE_CASE
+    private fun merchantOf(message: String): String? {
+        for (match in MERCHANT.findAll(message)) {
+            val name = tidy(match.groupValues[1])
+            if (usable(name)) return name
+        }
+        return null
+    }
+
+    private fun tidy(raw: String): String =
+        raw.trim().replace(RUN_OF_SPACES, " ").trim(' ', '.', ',', ';', ':', '-')
+
+    /**
+     * A suggestion has to be about to be confirmed by a person, so only a name that reads like
+     * a name is offered: no account phrase, article, stop word, price or currency tag.
+     */
+    private fun usable(name: String): Boolean {
+        if (name.length < 3 || name.none { it.isLetter() }) return false
+        if (name.contains('@')) return false
+        if (ACCOUNT_PHRASE.containsMatchIn(name)) return false
+        if (name.substringBefore(' ').uppercase() in STOP_WORDS) return false
+        if (DECIMAL_NUMBER.containsMatchIn(name)) return false
+        if (name.split(' ').any { CurrencyText.tagOf(it.trim('.', ',', ':', ';')) != null }) return false
+        return true
+    }
+
+    private fun isPersonalNumber(sender: String): Boolean =
+        PERSONAL_NUMBER.matches(sender.replace(" ", ""))
+
+    // ─── Patterns ─────────────────────────────────────────────────────────────
+
+    private const val NUMBER = """(\d[\d,]*(?:\.\d{1,2})?)"""
+
+    // A code or symbol before the sum, or the code after it. Codes stay upper case, so
+    // "try 2 times" never reads as TRY 2.
+    private val MONEY = Regex(
+        """(?:\b([A-Z]{3}|[Rr][Ss])\.?|([₹$€£रूरु]))\s*$NUMBER(?![\d.])""" +
+            """|(?<![\w.,])$NUMBER\s*([A-Z]{3})\b"""
     )
 
-    private val MASKED_LAST4 = Regex("""(?:[Xx*•]{2,}|\.{2,})(\d{4})\b""")
-
-    private val MERCHANT = Regex(
-        """\b(?:at|to|from|towards)\s+([A-Za-z0-9&'][^,;:\n]*?)""" +
-            """(?=\s+(?:on|at|via|using|with|ref|for|dated|avl|avail|available|bal|balance|txn|from|to)\b|\.(?:\s|$)|[,;:\n]|$)""",
+    private val OUTBOUND = Regex(
+        """\b(?:debited|spent|purchased?|paid|withdrawn|charged|deducted|sent|used|transferred to)\b""",
         RegexOption.IGNORE_CASE
     )
-
-    // "credited to your a/c XX1234" names an account, not a counterparty.
-    private val NOT_MERCHANT = Regex("""^(?:your|you|a/c|ac|acct|account|card|the)\b|\d{3,}""", RegexOption.IGNORE_CASE)
-
-    // A phone number sender is a person, not a bank.
-    // Only wording that says the reversal already happened: "will be reversed if…" is a warning, not a refund.
-    private val REFUND = Regex(
+    private val INBOUND = Regex(
+        """\b(?:credited|received|deposited|refunded|refund|reversed)\b""",
+        RegexOption.IGNORE_CASE
+    )
+    private val REFUND_COMPLETED = Regex(
         """\b(?:has been|have been|was|were|is|got)\s+(?:reversed|refunded)\b|\bcredited back\b|\brefunded to\b""",
         RegexOption.IGNORE_CASE
     )
     private val FAILED = Regex(
-        """\b(declined|failed|unsuccessful|rejected|could not be processed|was not processed)\b""",
+        """\b(?:declined|failed|unsuccessful|rejected|could not be processed|was not processed)\b""",
         RegexOption.IGNORE_CASE
     )
-    private val UNDONE = Regex("""\b(reversed|reversal|refund|refunded|cancelled|canceled|voided)\b""", RegexOption.IGNORE_CASE)
+    private val UNDONE = Regex(
+        """\b(?:reversed|reversal|refund|refunded|cancelled|canceled|voided)\b""",
+        RegexOption.IGNORE_CASE
+    )
+
+    private val MASKED_DIGITS = Regex("""(?:[Xx*•]{2,}|\.{2,})(\d{4})\b""")
+    private val ENDING_DIGITS = Regex("""\bending\s+(\d{4})\b""", RegexOption.IGNORE_CASE)
+    private val NAMED_ACCOUNT_DIGITS = Regex("""\b(?:a/c|acct|account)\b[^\d]{0,8}(\d{6,})\b""", RegexOption.IGNORE_CASE)
+
+    // The merchant starts after at/to/from/towards and stops at the next piece of bank wording.
+    private val MERCHANT = Regex(
+        """\b(?:at|to|from|towards)\s+([A-Za-z0-9&' .-]{2,60}?)""" +
+            """(?=\s+(?:on|at|via|using|with|ref|for|dated|avl|avail|available|bal|balance|txn|from|to|card|ending|a/c|acct|account)\b|[.,;:\n]|$)""",
+        RegexOption.IGNORE_CASE
+    )
+
     private val PERSONAL_NUMBER = Regex("""\+?\d{10,}""")
+    private val RUN_OF_SPACES = Regex("""\s{2,}""")
+    private val DECIMAL_NUMBER = Regex("""\d[\d,]*[.,]\d+|\d,\d""")
+    private val ACCOUNT_PHRASE = Regex("""^(?:your|you|a/c|ac|acct|account|card|the)\b""", RegexOption.IGNORE_CASE)
+
+    private val STOP_WORDS = setOf(
+        "YOUR", "THE", "A/C", "AC", "ACCT", "ACCOUNT", "CARD",
+        "USING", "VIA", "BY", "WITH", "FOR", "TO", "FROM", "AT"
+    )
+
+    private val LIMIT_WORDS = listOf("limit", "lmt", "सीमा")
+    private val BALANCE_WORDS = listOf("bal", "balance", "available", "avl", "बाँकी", "बाकी", "मौज्दात")
 }
