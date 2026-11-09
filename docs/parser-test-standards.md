@@ -7,13 +7,13 @@ the guidelines below.
 ## 1. Organise tests with JUnit 5
 
 * Each parser must expose a dedicated JUnit 5 test class (e.g.
-  `class FabParserTest`).
+  `class NabilBankParserTest`).
 * Avoid `fun main` entry points; every scenario should be expressed through
   standard JUnit test methods annotated with `@Test`.
 
 ## 2. Leverage `ParserTestUtils`
 
-* Import utilities from `com.pennywiseai.parser.core.test`:
+* Import utilities from `com.prarambha.parser.core.test`:
   * `ExpectedTransaction`
   * `ParserTestCase`
   * `SimpleTestCase`
@@ -26,33 +26,31 @@ the guidelines below.
 
 ```kotlin
 @Test
-fun `fab parser handles key paths`() {
-    val parser = FABParser()
+fun `nabil bank parser handles key paths`() {
+    val parser = NabilBankParser()
 
     ParserTestUtils.printTestHeader(
-        parserName = "First Abu Dhabi Bank",
+        parserName = "Nabil Bank",
         bankName = parser.getBankName(),
         currency = parser.getCurrency()
     )
 
     val cases = listOf(
         ParserTestCase(
-            name = "Card purchase",
-            message = "...",
-            sender = "FAB",
+            name = "Debit transaction",
+            message = "Your A/C ...0123 has been debited by NPR 1,500.00 on 12-JAN-2026. Avail Bal NPR 25,000.00.",
+            sender = "NABIL_ALERT",
             expected = ExpectedTransaction(
-                amount = BigDecimal("123.45"),
-                currency = "AED",
+                amount = BigDecimal("1500.00"),
+                currency = "NPR",
                 type = TransactionType.EXPENSE,
-                merchant = "Merchant",
-                accountLast4 = "1234",
-                isFromCard = true
+                accountLast4 = "0123",
+                balance = BigDecimal("25000.00")
             )
         )
     )
 
    ParserTestUtils.runTestSuite(parser, cases)
-
 }
 ```
 
@@ -60,17 +58,17 @@ fun `fab parser handles key paths`() {
 
 ```kotlin
 @Test
-fun `factory resolves fab`() {
+fun `factory resolves nabil bank`() {
     val cases = listOf(
         SimpleTestCase(
-            bankName = "First Abu Dhabi Bank",
-            sender = "FAB",
-            currency = "AED",
+            bankName = "Nabil Bank",
+            sender = "NABIL_ALERT",
+            currency = "NPR",
             message = "...",
             expected = ExpectedTransaction(
-                amount = BigDecimal("8.00"),
-                currency = "AED",
-                type = TransactionType.CREDIT
+                amount = BigDecimal("1500.00"),
+                currency = "NPR",
+                type = TransactionType.EXPENSE
             ),
             shouldHandle = true
         )

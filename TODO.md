@@ -19,7 +19,7 @@ Nepal-first backlog. Upstream PennyWise leftovers (Indian banks, merchant logos)
 - [ ] Add chart for existing bank support and templates
 
 ## Parsing & Data Integrity
-- [ ] Fix transaction hash collision issue (add more unique data)
+- [x] Fix transaction hash collision issue (add more unique data) — incorporated reference, account, balance, merchant, and type, with backward-compatible legacy hash lookup
 - [ ] Cleanup deleted hashes older than 6 months
 - [ ] Bulk delete feature
 - [ ] Full rescan option in settings

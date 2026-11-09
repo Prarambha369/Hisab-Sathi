@@ -89,7 +89,7 @@ Cashiro follows modern Android architecture guidelines with MVVM pattern, Clean 
 ## Module Structure
 ```
 app/
-├── src/main/java/com/pennywise/
+├── src/main/java/com/prarambha/cashiro/
 │   ├── ui/                    # UI Layer
 │   │   ├── screens/
 │   │   ├── components/
