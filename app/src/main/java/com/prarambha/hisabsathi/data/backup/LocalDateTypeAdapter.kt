@@ -1,5 +1,7 @@
 package com.prarambha.hisabsathi.data.backup
 
+import com.prarambha.hisabsathi.BuildConfig
+
 import com.google.gson.*
 import java.lang.reflect.Type
 import java.time.LocalDate
@@ -38,7 +40,7 @@ class LocalDateTypeAdapter : JsonSerializer<LocalDate>, JsonDeserializer<LocalDa
                         LocalDate.parse(dateString, formatter)
                     } catch (e: DateTimeParseException) {
                         // Log the error and return null for invalid dates
-                        android.util.Log.w("LocalDateTypeAdapter", "Invalid date format: $dateString", e)
+                        android.util.if (BuildConfig.DEBUG) Log.w("LocalDateTypeAdapter", "Invalid date format: $dateString", e)
                         null
                     }
                 }

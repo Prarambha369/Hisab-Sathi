@@ -1,5 +1,7 @@
 package com.prarambha.hisabsathi.presentation.ui.features.transactions
 
+import com.prarambha.hisabsathi.BuildConfig
+
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
@@ -712,7 +714,7 @@ class TransactionsViewModel @Inject constructor(
                 // Guard against invalid state: CUSTOM period must have a date range
                 // This should never happen due to clearCustomDateRange() logic, but be defensive
                 if (customRange == null) {
-                    Log.e("TransactionsViewModel",
+                    if (BuildConfig.DEBUG) Log.e("TransactionsViewModel",
                         "CUSTOM period selected but no date range set - falling back to THIS_MONTH")
                     // Auto-correct the invalid state
                     _selectedPeriod.value = TimePeriod.THIS_MONTH

@@ -1,5 +1,7 @@
 package com.prarambha.hisabsathi.presentation.ui.features.analytics
 
+import com.prarambha.hisabsathi.BuildConfig
+
 
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
@@ -112,7 +114,7 @@ class AnalyticsViewModel @Inject constructor(
         val dateRange = if (filterState.period == TimePeriod.CUSTOM) {
             val customRange = filterState.customRange
             if (customRange == null) {
-                Log.e("AnalyticsViewModel",
+                if (BuildConfig.DEBUG) Log.e("AnalyticsViewModel",
                     "CUSTOM period selected but no date range set - falling back to THIS_MONTH")
                 // Auto-correct the invalid state
                 _selectedPeriod.value = TimePeriod.THIS_MONTH

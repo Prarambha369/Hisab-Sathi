@@ -1,5 +1,7 @@
 package com.prarambha.hisabsathi.data.repository
 
+import com.prarambha.hisabsathi.BuildConfig
+
 import com.prarambha.hisabsathi.data.database.dao.CardDao
 import com.prarambha.hisabsathi.data.database.entity.CardEntity
 import com.prarambha.hisabsathi.data.database.entity.CardType
@@ -143,7 +145,7 @@ class CardRepository @Inject constructor(
         date: LocalDateTime = LocalDateTime.now()
     ) {
         val card = cardDao.getCardById(cardId)
-        android.util.Log.d("CardRepository", """
+        android.util.if (BuildConfig.DEBUG) Log.d("CardRepository", """
             Updating balance for card $cardId:
             - Card found: ${card != null}
             - New balance: $balance
@@ -158,9 +160,9 @@ class CardRepository @Inject constructor(
                 updatedAt = LocalDateTime.now()
             )
             cardDao.updateCard(updatedCard)
-            android.util.Log.d("CardRepository", "Card balance updated successfully")
+            android.util.if (BuildConfig.DEBUG) Log.d("CardRepository", "Card balance updated successfully")
         } else {
-            android.util.Log.e("CardRepository", "Card not found for ID: $cardId")
+            android.util.if (BuildConfig.DEBUG) Log.e("CardRepository", "Card not found for ID: $cardId")
         }
     }
 

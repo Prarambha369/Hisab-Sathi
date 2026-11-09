@@ -1,5 +1,7 @@
 package com.prarambha.hisabsathi.receiver
 
+import com.prarambha.hisabsathi.BuildConfig
+
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -82,7 +84,7 @@ class SmsBroadcastReceiver : BroadcastReceiver() {
         for ((sender, smsData) in smsMap) {
             val body = smsData.body.toString()
             val timestamp = smsData.timestamp
-            Log.d(TAG, "Received SMS from: $sender at timestamp: $timestamp")
+            if (BuildConfig.DEBUG) Log.d(TAG, "Received SMS from: $sender at timestamp: $timestamp")
 
             processIncomingSms(context, processor, sender, body, timestamp)
         }
@@ -101,7 +103,7 @@ class SmsBroadcastReceiver : BroadcastReceiver() {
                 val result = processor.processAndSaveTransaction(sender, body, timestamp)
 
                 if (result.success && result.transactionId != null) {
-                    Log.d(TAG, "Transaction saved with ID: ${result.transactionId}")
+                    if (BuildConfig.DEBUG) Log.d(TAG, "Transaction saved with ID: ${result.transactionId}")
 
                     // Show notification if app is not in foreground
                     if (!isAppInForeground(context)) {
@@ -133,10 +135,10 @@ class SmsBroadcastReceiver : BroadcastReceiver() {
                         }
                     }
                 } else {
-                    Log.d(TAG, "Transaction not saved: ${result.reason}")
+                    if (BuildConfig.DEBUG) Log.d(TAG, "Transaction not saved: ${result.reason}")
                 }
             } catch (e: Exception) {
-                Log.e(TAG, "Error processing SMS", e)
+                if (BuildConfig.DEBUG) Log.e(TAG, "Error processing SMS", e)
             }
         }
     }
@@ -205,7 +207,7 @@ class SmsBroadcastReceiver : BroadcastReceiver() {
                 val topCategories = try {
                     repository.getTopCategoriesByUsage(3)
                 } catch (e: Exception) {
-                    Log.e(TAG, "Error fetching top categories", e)
+                    if (BuildConfig.DEBUG) Log.e(TAG, "Error fetching top categories", e)
                     // Fallback to common categories
                     listOf("Food & Drinks", "Shopping", "Transport")
                 }
@@ -246,7 +248,7 @@ class SmsBroadcastReceiver : BroadcastReceiver() {
                 val notification = notificationBuilder.build()
                 notificationManager.notify(notificationId, notification)
             } catch (e: Exception) {
-                Log.e(TAG, "Error showing notification", e)
+                if (BuildConfig.DEBUG) Log.e(TAG, "Error showing notification", e)
             }
         }
     }

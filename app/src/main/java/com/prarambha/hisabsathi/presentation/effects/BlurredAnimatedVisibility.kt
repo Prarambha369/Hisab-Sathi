@@ -1,5 +1,7 @@
 package com.prarambha.hisabsathi.presentation.effects
 
+import com.prarambha.hisabsathi.BuildConfig
+
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Build
@@ -141,7 +143,7 @@ fun CustomBlurEffect(
                             output.destroy()
                         } catch (e: Exception) {
                             // Just proceed without blur if there's an error
-                            Log.e("CustomBlurEffect", "Error applying blur", e)
+                            if (BuildConfig.DEBUG) Log.e("CustomBlurEffect", "Error applying blur", e)
                         }
                     }
                 }

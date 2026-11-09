@@ -1,5 +1,7 @@
 package com.prarambha.hisabsathi.data.repository
 
+import com.prarambha.hisabsathi.BuildConfig
+
 import com.prarambha.hisabsathi.data.database.dao.SubscriptionDao
 import com.prarambha.hisabsathi.data.database.entity.SubscriptionEntity
 import com.prarambha.hisabsathi.data.database.entity.SubscriptionState
@@ -46,7 +48,7 @@ class SubscriptionRepository @Inject constructor(
         subscriptionDao.updateSubscriptionState(id, state)
     
     suspend fun hideSubscription(id: Long) {
-        Log.d(TAG, "Hiding subscription with ID: $id")
+        if (BuildConfig.DEBUG) Log.d(TAG, "Hiding subscription with ID: $id")
         updateSubscriptionState(id, SubscriptionState.HIDDEN)
     }
     
@@ -96,7 +98,7 @@ class SubscriptionRepository @Inject constructor(
             )
         }
 
-        Log.d(TAG, "Unified Mandate lookup - Bank: $bankName, Merchant: ${mandateInfo.merchant}, " +
+        if (BuildConfig.DEBUG) Log.d(TAG, "Unified Mandate lookup - Bank: $bankName, Merchant: ${mandateInfo.merchant}, " +
                   "Amount: ${mandateInfo.amount}, UMN: ${mandateInfo.umn}, " +
                   "Next Date: $nextPaymentDate, Existing: ${existing?.let { "ID=${it.id}, State=${it.state}, " +
                   "StoredDate=${it.nextPaymentDate}" } ?: "NOT FOUND"}")
@@ -108,7 +110,7 @@ class SubscriptionRepository @Inject constructor(
                                   nextPaymentDate.isAfter(existing.nextPaymentDate) &&
                                   nextPaymentDate.isAfter(LocalDate.now())
 
-            Log.d(TAG, "Subscription state check - Hidden: ${existing.state == SubscriptionState.HIDDEN}, " +
+            if (BuildConfig.DEBUG) Log.d(TAG, "Subscription state check - Hidden: ${existing.state == SubscriptionState.HIDDEN}, " +
                       "New date after stored: ${nextPaymentDate.isAfter(existing.nextPaymentDate)}, " +
                       "New date is future: ${nextPaymentDate.isAfter(LocalDate.now())}, " +
                       "Should reactivate: $shouldReactivate")
@@ -116,14 +118,14 @@ class SubscriptionRepository @Inject constructor(
             // If hidden and payment date hasn't changed, don't update
             if (existing.state == SubscriptionState.HIDDEN && !shouldReactivate) {
                 // Return the existing ID without any updates
-                Log.d(TAG, "Subscription ${existing.id} is HIDDEN and won't be reactivated " +
+                if (BuildConfig.DEBUG) Log.d(TAG, "Subscription ${existing.id} is HIDDEN and won't be reactivated " +
                           "(payment date not newer). Skipping update.")
                 return existing.id
             }
 
             // Update existing subscription (reactivate if needed)
             if (shouldReactivate) {
-                Log.i(TAG, "REACTIVATING subscription ${existing.id} - ${existing.merchantName} " +
+                if (BuildConfig.DEBUG) Log.i(TAG, "REACTIVATING subscription ${existing.id} - ${existing.merchantName} " +
                           "(old date: ${existing.nextPaymentDate}, new date: $nextPaymentDate)")
             }
             existing.copy(
@@ -137,7 +139,7 @@ class SubscriptionRepository @Inject constructor(
             )
         } else {
             // Create new subscription
-            Log.d(TAG, "Creating NEW subscription - Bank: $bankName, Merchant: ${mandateInfo.merchant}, " +
+            if (BuildConfig.DEBUG) Log.d(TAG, "Creating NEW subscription - Bank: $bankName, Merchant: ${mandateInfo.merchant}, " +
                       "Amount: ${mandateInfo.amount}, Date: $nextPaymentDate")
             SubscriptionEntity(
                 merchantName = mandateInfo.merchant,

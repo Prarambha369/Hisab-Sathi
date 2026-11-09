@@ -1,5 +1,7 @@
 package com.prarambha.hisabsathi.utils
 
+import com.prarambha.hisabsathi.BuildConfig
+
 import android.content.Context
 import android.net.Uri
 import java.io.File
@@ -39,7 +41,7 @@ object ImageUtils {
 
             Uri.fromFile(file)
         } catch (e: Exception) {
-            e.printStackTrace()
+            if (BuildConfig.DEBUG) e.printStackTrace()
             null
         }
     }

@@ -1,5 +1,7 @@
 package com.prarambha.hisabsathi.presentation.ui.features.transactions
 
+import com.prarambha.hisabsathi.BuildConfig
+
 import android.content.Intent
 import android.util.Log
 import androidx.compose.animation.AnimatedContentScope
@@ -334,13 +336,13 @@ fun SharedTransitionScope.TransactionDetailScreen(
                     FloatingActionButton(
                         onClick = {
                             val reportUrl = transactionDetailViewModel.getReportUrl()
-                            Log.d("TransactionDetail", "Report FAB clicked, opening URL: ${reportUrl.take(200)}...")
+                            if (BuildConfig.DEBUG) Log.d("TransactionDetail", "Report FAB clicked, opening URL: ${reportUrl.take(200)}...")
                             val intent = Intent(Intent.ACTION_VIEW, reportUrl.toUri())
                             try {
                                 context.startActivity(intent)
-                                Log.d("TransactionDetail", "Successfully launched browser intent")
+                                if (BuildConfig.DEBUG) Log.d("TransactionDetail", "Successfully launched browser intent")
                             } catch (e: Exception) {
-                                Log.e("TransactionDetail", "Error launching browser", e)
+                                if (BuildConfig.DEBUG) Log.e("TransactionDetail", "Error launching browser", e)
                             }
                         },
                         containerColor = MaterialTheme.colorScheme.secondaryContainer,

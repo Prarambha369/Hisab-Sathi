@@ -1,5 +1,7 @@
 package com.prarambha.hisabsathi.data.backup
 
+import com.prarambha.hisabsathi.BuildConfig
+
 import android.content.Context
 import android.net.Uri
 import android.util.Log
@@ -65,7 +67,7 @@ class BackupImporter @Inject constructor(
                 ImportStrategy.SELECTIVE -> mergeData(backup) // For now, same as merge
             }
         } catch (e: Exception) {
-            Log.e("BackupImporter", "Import failed", e)
+            if (BuildConfig.DEBUG) Log.e("BackupImporter", "Import failed", e)
             ImportResult.Error("Import failed: ${e.message}")
         }
     }
@@ -123,7 +125,7 @@ class BackupImporter @Inject constructor(
                 }
             } catch (e: Exception) {
                 // Not a ZIP or failed, fall back to legacy JSON
-                Log.d("BackupImporter", "Failed to read as ZIP, trying legacy JSON: ${e.message}")
+                if (BuildConfig.DEBUG) Log.d("BackupImporter", "Failed to read as ZIP, trying legacy JSON: ${e.message}")
             }
 
             // Legacy JSON handling

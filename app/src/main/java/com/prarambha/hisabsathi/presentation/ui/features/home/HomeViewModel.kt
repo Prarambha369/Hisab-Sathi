@@ -1,5 +1,7 @@
 package com.prarambha.hisabsathi.presentation.ui.features.home
 
+import com.prarambha.hisabsathi.BuildConfig
+
 import android.content.Context
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -206,7 +208,7 @@ class HomeViewModel @Inject constructor(
                 val creditCards = balances.filter { it.isCreditCard }
 
                 // Account loading completed
-                Log.d("HomeViewModel", "Loaded ${balances.size} account(s)")
+                if (BuildConfig.DEBUG) Log.d("HomeViewModel", "Loaded ${balances.size} account(s)")
 
                 // Check if we have multiple currencies and refresh exchange rates if needed
                 val accountCurrencies = regularAccounts.map { it.currency }.distinct()
@@ -592,7 +594,7 @@ class HomeViewModel @Inject constructor(
                 val creditCards = balances.filter { it.isCreditCard }
 
                 // Account loading completed
-                Log.d("HomeViewModel", "Refreshed ${balances.size} account(s)")
+                if (BuildConfig.DEBUG) Log.d("HomeViewModel", "Refreshed ${balances.size} account(s)")
 
                 // Check if we have multiple currencies and refresh exchange rates if needed
                 val accountCurrencies = regularAccounts.map { it.currency }.distinct()

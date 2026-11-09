@@ -266,7 +266,7 @@ class BackupExporter @Inject constructor(
             }
         } catch (e: Exception) {
             // Log or ignore image copy failure to avoid failing entire backup
-            e.printStackTrace()
+            if (BuildConfig.DEBUG) e.printStackTrace()
         }
     }
 }

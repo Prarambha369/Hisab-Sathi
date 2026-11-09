@@ -1,5 +1,7 @@
 package com.prarambha.hisabsathi.data.manager
 
+import com.prarambha.hisabsathi.BuildConfig
+
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
@@ -39,7 +41,7 @@ class NotificationScheduler @Inject constructor(
         val alertTimeMinutes = userPreferencesRepository.scanNewTransactionsAlertTime.first()
 
         if (!scanEnabled && !upcomingEnabled) {
-            Log.d(TAG, "Notifications disabled, cancelling alarm")
+            if (BuildConfig.DEBUG) Log.d(TAG, "Notifications disabled, cancelling alarm")
             cancelDailyReminder()
             return
         }
@@ -61,7 +63,7 @@ class NotificationScheduler @Inject constructor(
 
         val triggerAtMillis = scheduledTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
 
-        Log.d(TAG, "Scheduling daily reminder at $scheduledTime ($triggerAtMillis ms)")
+        if (BuildConfig.DEBUG) Log.d(TAG, "Scheduling daily reminder at $scheduledTime ($triggerAtMillis ms)")
 
         val intent = Intent(context, ReminderReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
@@ -79,7 +81,7 @@ class NotificationScheduler @Inject constructor(
                 pendingIntent
             )
         } catch (e: SecurityException) {
-            Log.e(TAG, "SecurityException: SCHEDULE_EXACT_ALARM permission not granted, falling back to setAndAllowWhileIdle", e)
+            if (BuildConfig.DEBUG) Log.e(TAG, "SecurityException: SCHEDULE_EXACT_ALARM permission not granted, falling back to setAndAllowWhileIdle", e)
             alarmManager.setAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,
                 triggerAtMillis,
@@ -92,7 +94,7 @@ class NotificationScheduler @Inject constructor(
      * Cancels the scheduled daily reminder.
      */
     fun cancelDailyReminder() {
-        Log.d(TAG, "Cancelling daily reminder alarm")
+        if (BuildConfig.DEBUG) Log.d(TAG, "Cancelling daily reminder alarm")
         val intent = Intent(context, ReminderReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
             context,

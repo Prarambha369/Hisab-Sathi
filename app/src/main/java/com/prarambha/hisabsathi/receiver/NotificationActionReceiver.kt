@@ -1,5 +1,7 @@
 package com.prarambha.hisabsathi.receiver
 
+import com.prarambha.hisabsathi.BuildConfig
+
 import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -35,7 +37,7 @@ class NotificationActionReceiver : BroadcastReceiver() {
         val notificationId = intent.getIntExtra(EXTRA_NOTIFICATION_ID, -1)
 
         if (transactionId == -1L) {
-            Log.e(TAG, "No transaction ID provided")
+            if (BuildConfig.DEBUG) Log.e(TAG, "No transaction ID provided")
             return
         }
 
@@ -51,11 +53,11 @@ class NotificationActionReceiver : BroadcastReceiver() {
                 if (newCategory != null) {
                     changeCategory(context, transactionId, newCategory, notificationId)
                 } else {
-                    Log.e(TAG, "No category provided")
+                    if (BuildConfig.DEBUG) Log.e(TAG, "No category provided")
                 }
             }
             else -> {
-                Log.w(TAG, "Unknown action: ${intent.action}")
+                if (BuildConfig.DEBUG) Log.w(TAG, "Unknown action: ${intent.action}")
             }
         }
     }
@@ -68,12 +70,12 @@ class NotificationActionReceiver : BroadcastReceiver() {
 
                 // Soft delete the transaction
                 transactionDao.softDeleteTransaction(transactionId)
-                Log.d(TAG, "Deleted transaction: $transactionId")
+                if (BuildConfig.DEBUG) Log.d(TAG, "Deleted transaction: $transactionId")
 
                 // Dismiss the notification
                 dismissNotification(context, notificationId)
             } catch (e: Exception) {
-                Log.e(TAG, "Error deleting transaction", e)
+                if (BuildConfig.DEBUG) Log.e(TAG, "Error deleting transaction", e)
             }
         }
     }
@@ -81,7 +83,7 @@ class NotificationActionReceiver : BroadcastReceiver() {
     private fun confirmTransaction(context: Context, notificationId: Int) {
         // Simply dismiss the notification - transaction is already saved
         dismissNotification(context, notificationId)
-        Log.d(TAG, "Transaction confirmed, notification dismissed")
+        if (BuildConfig.DEBUG) Log.d(TAG, "Transaction confirmed, notification dismissed")
     }
 
     private fun changeCategory(context: Context, transactionId: Long, newCategory: String, notificationId: Int) {
@@ -99,15 +101,15 @@ class NotificationActionReceiver : BroadcastReceiver() {
                         updatedAt = java.time.LocalDateTime.now()
                     )
                     transactionDao.updateTransaction(updated)
-                    Log.d(TAG, "Updated transaction $transactionId category to: $newCategory")
+                    if (BuildConfig.DEBUG) Log.d(TAG, "Updated transaction $transactionId category to: $newCategory")
 
                     // Dismiss the notification
                     dismissNotification(context, notificationId)
                 } else {
-                    Log.e(TAG, "Transaction not found: $transactionId")
+                    if (BuildConfig.DEBUG) Log.e(TAG, "Transaction not found: $transactionId")
                 }
             } catch (e: Exception) {
-                Log.e(TAG, "Error changing category", e)
+                if (BuildConfig.DEBUG) Log.e(TAG, "Error changing category", e)
             }
         }
     }
