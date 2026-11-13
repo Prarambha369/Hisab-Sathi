@@ -23,34 +23,34 @@ object DeviceEncryption {
                 context.contentResolver,
                 Settings.Secure.ANDROID_ID
             ) ?: "unknown"
-            android.util.if (BuildConfig.DEBUG) Log.d("DeviceEncryption", "Device ID: $deviceId")
+            if (BuildConfig.DEBUG) android.util.Log.d("DeviceEncryption", "Device ID: $deviceId")
             
             // Add timestamp for replay protection
             val timestamp = System.currentTimeMillis()
             val dataToEncrypt = "$deviceId|$timestamp"
-            android.util.if (BuildConfig.DEBUG) Log.d("DeviceEncryption", "Data to encrypt: $dataToEncrypt")
+            if (BuildConfig.DEBUG) android.util.Log.d("DeviceEncryption", "Data to encrypt: $dataToEncrypt")
             
             // Load public key
             val publicKey = loadPublicKey()
             if (publicKey == null) {
-                android.util.if (BuildConfig.DEBUG) Log.e("DeviceEncryption", "Failed to load public key")
+                if (BuildConfig.DEBUG) android.util.Log.e("DeviceEncryption", "Failed to load public key")
                 return null
             }
-            android.util.if (BuildConfig.DEBUG) Log.d("DeviceEncryption", "Public key loaded successfully")
+            if (BuildConfig.DEBUG) android.util.Log.d("DeviceEncryption", "Public key loaded successfully")
             
             // Encrypt with RSA-OAEP
             val cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding")
             cipher.init(Cipher.ENCRYPT_MODE, publicKey)
             val encryptedBytes = cipher.doFinal(dataToEncrypt.toByteArray())
-            android.util.if (BuildConfig.DEBUG) Log.d("DeviceEncryption", "Encrypted bytes length: ${encryptedBytes.size}")
+            if (BuildConfig.DEBUG) android.util.Log.d("DeviceEncryption", "Encrypted bytes length: ${encryptedBytes.size}")
             
             // Return as Base64
             val result = Base64.encodeToString(encryptedBytes, Base64.NO_WRAP)
-            android.util.if (BuildConfig.DEBUG) Log.d("DeviceEncryption", "Base64 result length: ${result.length}")
-            android.util.if (BuildConfig.DEBUG) Log.d("DeviceEncryption", "Base64 first 50 chars: ${result.take(50)}")
+            if (BuildConfig.DEBUG) android.util.Log.d("DeviceEncryption", "Base64 result length: ${result.length}")
+            if (BuildConfig.DEBUG) android.util.Log.d("DeviceEncryption", "Base64 first 50 chars: ${result.take(50)}")
             result
         } catch (e: Exception) {
-            android.util.if (BuildConfig.DEBUG) Log.e("DeviceEncryption", "Encryption failed", e)
+            if (BuildConfig.DEBUG) android.util.Log.e("DeviceEncryption", "Encryption failed", e)
             if (BuildConfig.DEBUG) e.printStackTrace()
             null
         }
@@ -65,7 +65,7 @@ object DeviceEncryption {
         
         // Check if key is available
         if (publicKeyBase64.isEmpty()) {
-            android.util.if (BuildConfig.DEBUG) Log.e("DeviceEncryption", "RSA public key not configured in BuildConfig")
+            if (BuildConfig.DEBUG) android.util.Log.e("DeviceEncryption", "RSA public key not configured in BuildConfig")
             return null
         }
         
@@ -78,7 +78,7 @@ object DeviceEncryption {
             val keyFactory = KeyFactory.getInstance("RSA")
             keyFactory.generatePublic(keySpec)
         } catch (e: Exception) {
-            android.util.if (BuildConfig.DEBUG) Log.e("DeviceEncryption", "Failed to load public key", e)
+            if (BuildConfig.DEBUG) android.util.Log.e("DeviceEncryption", "Failed to load public key", e)
             null
         }
     }

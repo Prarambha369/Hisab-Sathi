@@ -145,7 +145,7 @@ class CardRepository @Inject constructor(
         date: LocalDateTime = LocalDateTime.now()
     ) {
         val card = cardDao.getCardById(cardId)
-        android.util.if (BuildConfig.DEBUG) Log.d("CardRepository", """
+        if (BuildConfig.DEBUG) android.util.Log.d("CardRepository", """
             Updating balance for card $cardId:
             - Card found: ${card != null}
             - New balance: $balance
@@ -160,9 +160,9 @@ class CardRepository @Inject constructor(
                 updatedAt = LocalDateTime.now()
             )
             cardDao.updateCard(updatedCard)
-            android.util.if (BuildConfig.DEBUG) Log.d("CardRepository", "Card balance updated successfully")
+            if (BuildConfig.DEBUG) android.util.Log.d("CardRepository", "Card balance updated successfully")
         } else {
-            android.util.if (BuildConfig.DEBUG) Log.e("CardRepository", "Card not found for ID: $cardId")
+            if (BuildConfig.DEBUG) android.util.Log.e("CardRepository", "Card not found for ID: $cardId")
         }
     }
 

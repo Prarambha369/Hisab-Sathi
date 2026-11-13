@@ -2,6 +2,9 @@
 <project version="4">
   <component name="GradleMigrationSettings" migrationVersion="1" />
   <component name="GradleSettings">
+    <!-- Gradle 8.13 does not support JDK 25 (class file major version 69).
+         Android Studio's bundled JBR is 25, so pin the Gradle daemon to JDK 17. -->
+    <option name="gradleJvm" value="17" />
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
         <option name="testRunner" value="CHOOSE_PER_TEST" />

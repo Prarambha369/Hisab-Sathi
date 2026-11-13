@@ -40,7 +40,7 @@ class LocalDateTypeAdapter : JsonSerializer<LocalDate>, JsonDeserializer<LocalDa
                         LocalDate.parse(dateString, formatter)
                     } catch (e: DateTimeParseException) {
                         // Log the error and return null for invalid dates
-                        android.util.if (BuildConfig.DEBUG) Log.w("LocalDateTypeAdapter", "Invalid date format: $dateString", e)
+                        if (BuildConfig.DEBUG) android.util.Log.w("LocalDateTypeAdapter", "Invalid date format: $dateString", e)
                         null
                     }
                 }

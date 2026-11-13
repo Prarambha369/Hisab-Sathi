@@ -62,7 +62,7 @@ class Converters {
             try {
                 LocalDate.parse(dateString, dateFormatter)
             } catch (e: Exception) {
-                android.util.if (BuildConfig.DEBUG) Log.w("Converters", "Invalid date format: $dateString", e)
+                if (BuildConfig.DEBUG) android.util.Log.w("Converters", "Invalid date format: $dateString", e)
                 null
             }
         }
