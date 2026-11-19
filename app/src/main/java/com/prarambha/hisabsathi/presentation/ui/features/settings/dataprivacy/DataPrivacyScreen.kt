@@ -333,7 +333,7 @@ fun DataPrivacyScreen(
                     // Import PDF Statement
                     ListItem(
                         headline = { Text("Import PDF Statement") },
-                        supporting = { Text("Scan GPay or PhonePe PDF statements") },
+                        supporting = { Text("Scan GPay PDF statements") },
                         leading = {
                             Box(
                                 modifier = Modifier
@@ -383,7 +383,7 @@ fun DataPrivacyScreen(
                                 verticalArrangement = Arrangement.spacedBy(Spacing.xs)
                             ) {
                                 Text(
-                                    text = "Only PDFs from GPay and PhonePe are currently supported.",
+                                    text = "Only GPay PDF statements are currently supported.",
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onErrorContainer,
                                     fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold

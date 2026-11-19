@@ -131,6 +131,12 @@ android {
         compose = true
     }
 
+    testOptions {
+        // JVM unit tests run against a stub android.jar; without this, the
+        // BuildConfig.DEBUG-guarded android.util.Log calls throw "not mocked".
+        unitTests.isReturnDefaultValues = true
+    }
+
     dependenciesInfo {
         // Disables dependency metadata when building APKs.
         includeInApk = false

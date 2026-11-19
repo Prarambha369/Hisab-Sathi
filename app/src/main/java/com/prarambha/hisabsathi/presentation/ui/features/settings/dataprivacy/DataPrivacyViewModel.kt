@@ -19,7 +19,6 @@ import com.prarambha.hisabsathi.data.database.entity.AccountBalanceEntity
 import com.prarambha.hisabsathi.data.database.entity.TransactionEntity
 import com.prarambha.hisabsathi.data.database.entity.TransactionType
 import com.prarambha.hisabsathi.data.parser.pdf.GPayPdfParser
-import com.prarambha.hisabsathi.data.parser.pdf.PhonePePdfParser
 import com.prarambha.hisabsathi.data.repository.AccountBalanceRepository
 import com.prarambha.hisabsathi.data.repository.TransactionRepository
 import com.prarambha.hisabsathi.domain.repository.RuleRepository
@@ -160,7 +159,7 @@ class DataPrivacyViewModel @Inject constructor(
 
                 if (BuildConfig.DEBUG) Log.d("DataPrivacyViewModel", "Extracted Text (first 500 chars): ${text.take(500)}")
 
-                val parsers = listOf(GPayPdfParser(), PhonePePdfParser())
+                val parsers = listOf(GPayPdfParser())
                 var parsedTransactions = emptyList<com.prarambha.parser.core.ParsedTransaction>()
 
                 for (parser in parsers) {
@@ -174,7 +173,7 @@ class DataPrivacyViewModel @Inject constructor(
                 }
 
                 if (parsedTransactions.isEmpty()) {
-                    throw Exception("No transactions found in this PDF. Please ensure you are importing a supported GPay or PhonePe statement.")
+                    throw Exception("No transactions found in this PDF. Please ensure you are importing a supported GPay statement.")
                 }
 
                 // Collect distinct account last-4 values from all transactions.
@@ -185,7 +184,7 @@ class DataPrivacyViewModel @Inject constructor(
                     val existing = accountBalanceRepository.getAccountByLast4(last4)
                     PdfAccountMatch(
                         last4 = last4,
-                        bankNameInPdf = parsedTransactions.firstOrNull { it.accountLast4 == last4 }?.bankName ?: "PhonePe",
+                        bankNameInPdf = parsedTransactions.firstOrNull { it.accountLast4 == last4 }?.bankName ?: "GPay",
                         existingAccount = existing
                     )
                 }
@@ -270,7 +269,7 @@ class DataPrivacyViewModel @Inject constructor(
                     val accountPair: Pair<String, String> = if (decision == AccountImportDecision.MERGE_WITH_EXISTING && match.existingAccount != null) {
                         match.existingAccount.bankName to match.last4
                     } else {
-                        // Create a new "PhonePe" account for this last4.
+                        // Create a new account for this last4.
                         val newAccount = AccountBalanceEntity(
                             bankName = match.bankNameInPdf,
                             accountLast4 = match.last4,
