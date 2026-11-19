@@ -130,8 +130,6 @@ import com.prarambha.hisabsathi.presentation.ui.components.TiledScrollingIconBac
 import com.prarambha.hisabsathi.presentation.ui.features.profile.EditProfileState
 import com.prarambha.hisabsathi.presentation.ui.features.profile.PresetAvatarSelection
 import com.prarambha.hisabsathi.presentation.ui.features.profile.ProfileCardPreview
-import com.prarambha.hisabsathi.presentation.ui.icons.HisabSathi
-import com.prarambha.hisabsathi.presentation.ui.icons.HisabSathiOutline
 import com.prarambha.hisabsathi.presentation.ui.icons.Edit2
 import com.prarambha.hisabsathi.presentation.ui.icons.HierarchySquare3
 import com.prarambha.hisabsathi.presentation.ui.icons.Iconax
@@ -453,8 +451,8 @@ fun WelcomeStep() {
                     val tertiary = MaterialTheme.colorScheme.tertiary
                     val alternatingIcons = remember {
                         listOf(
-                            IconResource.VectorIcon(Iconax.HisabSathi, primary),
-                            IconResource.VectorIcon(Iconax.HisabSathiOutline, tertiary)
+                            IconResource.TintedResIcon(R.drawable.hisabsathi, primary),
+                            IconResource.TintedResIcon(R.drawable.hisabsathi_outline, tertiary)
                         )
                     }
 

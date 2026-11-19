@@ -101,8 +101,8 @@ fun AboutScreen(
                 val tertiary = MaterialTheme.colorScheme.tertiary
                 val alternatingIcons = remember {
                     listOf(
-                        IconResource.VectorIcon(Iconax.HisabSathi, primary),
-                        IconResource.VectorIcon(Iconax.HisabSathiOutline, tertiary)
+                        IconResource.TintedResIcon(R.drawable.hisabsathi, primary),
+                        IconResource.TintedResIcon(R.drawable.hisabsathi_outline, tertiary)
                     )
                 }
 

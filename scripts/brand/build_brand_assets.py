@@ -65,7 +65,10 @@ def place(out, canvas, radius_frac, colour, bg=None, shape="square"):
                 f"roundrectangle 0,0 {canvas-1},{canvas-1} {r},{r}"]
     else:
         base = ["-size", f"{canvas}x{canvas}", f"xc:{bg}"]
-    extra = ["-define", "webp:lossless=true"] if out.endswith(".webp") else []
+    # Strip timestamps/metadata so re-running the script only changes files whose pixels changed.
+    extra = ["-strip", "-define", "png:exclude-chunks=date,time"]
+    if out.endswith(".webp"):
+        extra += ["-define", "webp:lossless=true"]
     magick(*base, coloured, "-gravity", "center", "-compose", "over", "-composite", *extra, out)
 
 def remove(path):
@@ -82,6 +85,18 @@ remove(os.path.join(RES, "drawable/ic_launcher_foreground.xml"))
 # Tinted in-app logo / notification small icon: white silhouette, nearly full canvas.
 place(os.path.join(NODPI, "hisabsathi.png"), 512, 0.97, "#FFFFFF")
 remove(os.path.join(RES, "drawable/hisabsathi.xml"))
+
+# Outline version of the mark (used with the filled one in the scrolling logo pattern
+# behind onboarding and the About header): a ring traced around the silhouette's edge.
+OUTLINE = os.path.join(TMP, "outline.png")
+magick(MARK, "-alpha", "extract", "-morphology", "EdgeOut", "Disk:10", "-threshold", "50%",
+       "-blur", "0x1", OUTLINE)
+magick("-size", f"{mw}x{mh}", "xc:white", OUTLINE, "-alpha", "off", "-compose", "CopyOpacity",
+       "-composite", OUTLINE)
+_mark_backup = MARK
+MARK = OUTLINE
+place(os.path.join(NODPI, "hisabsathi_outline.png"), 512, 0.97, "#FFFFFF")
+MARK = _mark_backup
 
 for name, (fg, bg) in VARIANTS.items():
     place(os.path.join(NODPI, f"ic_logo_{name}_fg.png"), 432, FG, fg)
