@@ -184,14 +184,12 @@ fun AboutScreen(
                 )
 
                 AboutDeveloperItem(
-                    title = "Developed By Ritesh",
-                    subtitle = "modestcat0309@gmail.com",
+                    title = "Developed By Prarambha369",
+                    subtitle = "github.com/Prarambha369",
                     onClick = {
-                        val intent = Intent(Intent.ACTION_SENDTO).apply {
-                            data = "mailto:modestcat0309@gmail.com".toUri()
-                            putExtra(Intent.EXTRA_SUBJECT, "Feedback for HisabSathi")
-                        }
-                        context.startActivity(Intent.createChooser(intent, "Send Email"))
+                        context.startActivity(
+                            Intent(Intent.ACTION_VIEW, "https://github.com/Prarambha369".toUri())
+                        )
                     },
                     position = ListItemPosition.Single,
                     leading = {
@@ -392,102 +390,6 @@ fun AboutScreen(
                     )
                 }
 
-                /*
-                Need to check Google play policy for donation. for now, I'll comment out these sections
-                 */
-
-//                HisabSathiCard(
-//                    modifier = Modifier.fillMaxWidth(),
-//                ){
-//                    Row(
-//                        horizontalArrangement = Arrangement.spacedBy(Spacing.sm),
-//                        verticalAlignment = Alignment.CenterVertically
-//                    ){
-//                        Box(
-//                            modifier = Modifier
-//                                .size(24.dp)
-//                                .background(
-//                                    color = yellow_light,
-//                                    shape = CircleShape
-//                                ),
-//                            contentAlignment = Alignment.Center
-//                        ) {
-//                            Icon(
-//                                imageVector = Icons.Rounded.Favorite,
-//                                contentDescription = null,
-//                                tint = yellow_dark,
-//                                modifier = Modifier.size(14.dp)
-//                            )
-//                        }
-//                        Text(
-//                            text = "Support Development",
-//                            style = MaterialTheme.typography.titleMedium,
-//                            fontWeight = FontWeight.Bold,
-//                            color = MaterialTheme.colorScheme.error
-//                        )
-//                    }
-//                    Spacer(modifier = Modifier.height(Spacing.md))
-//                    Text(
-//                        text = "HisabSathi is developed and maintained with passion. If you find the app helpful, consider supporting the development.",
-//                        style = MaterialTheme.typography.bodySmall,
-//                        color = MaterialTheme.colorScheme.onSurface.copy(0.5f)
-//                    )
-//                }
-//
-//                // Support Section
-//                Column(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(listItemPadding)
-//                        .padding(Dimensions.Padding.card),
-//                    horizontalAlignment = Alignment.CenterHorizontally,
-//                    verticalArrangement = Arrangement.spacedBy(Spacing.md)
-//                ) {
-//                    Row(
-//                        modifier = Modifier.fillMaxWidth(),
-//                        horizontalArrangement = Arrangement.SpaceEvenly,
-//                        verticalAlignment = Alignment.CenterVertically
-//                    ) {
-//                        SupportIcon(
-//                            icon = Iconax.BuyMeCoffeeIcon,
-//                            iconBackground = yellow_light,
-//                            onClick = {
-//                                val intent = Intent(
-//                                    Intent.ACTION_VIEW,
-//                                    "https://buymeacoffee.com/modestcat0a".toUri()
-//                                )
-//                                context.startActivity(intent)
-//                            }
-//                        )
-//
-//                        SupportIcon(
-//                            icon = Iconax.KoFiIcon,
-//                            iconBackground = cyan_light,
-//                            onClick = {
-//                                val intent = Intent(
-//                                    Intent.ACTION_VIEW,
-//                                    "https://ko-fi.com/modestcat03".toUri()
-//                                )
-//                                context.startActivity(intent)
-//                            }
-//                        )
-//
-//                        SupportIcon(
-//                            icon = Iconax.BhimUpiIcon,
-//                            iconBackground = orange_light,
-//                            onClick = {
-//                                val upiUri =
-//                                    "upi://pay?pa=riteshkanwar0309@axl&pn=Ritesh%20Kanwar&cu=INR".toUri()
-//                                val intent = Intent(Intent.ACTION_VIEW, upiUri)
-//                                try {
-//                                    context.startActivity(intent)
-//                                } catch (e: Exception) {
-//                                    // Handle no UPI app case or show message
-//                                }
-//                            }
-//                        )
-//                    }
-//                }
 
                 Spacer(modifier = Modifier.height(Dimensions.Padding.card))
 

@@ -15,7 +15,7 @@ This document guides AI agents in maintaining, building, and extending **Hisab-S
 | Field | Value |
 |---|---|
 | **Version** | `2.1.61` (versionCode: `94`) |
-| **Package** | `com.prarambha.cashiro` |
+| **Package** | `com.prarambha.hisabsathi` |
 | **Min SDK** | 26 (Android 8.0) |
 | **Target SDK** | 36 |
 | **Build System** | Gradle 8.13.2 + Kotlin DSL |
@@ -159,7 +159,7 @@ import androidx.room.*
 5. Add tests using `ParserTestUtils` in `parser-core/src/test/`
 
 ### `:app` (Android Application)
-- **Package**: `com.prarambha.cashiro`
+- **Package**: `com.prarambha.hisabsathi`
 - **Flavors**:
   - `standard`: Includes Google Play Services (in-app updates, reviews)
   - `fdroid`: Stripped of proprietary dependencies, ARM-only ABI
@@ -243,7 +243,7 @@ Hisab-Sathi/
 ├── app/
 │   ├── build.gradle.kts               # App module config
 │   ├── src/main/AndroidManifest.xml   # Permissions, components
-│   └── src/main/java/com/prarambha/cashiro/
+│   └── src/main/java/com/prarambha/hisabsathi/
 ├── parser-core/
 │   ├── build.gradle.kts               # Pure Kotlin/JVM config
 │   └── src/main/kotlin/com/prarambha/parser/core/bank/

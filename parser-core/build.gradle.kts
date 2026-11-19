@@ -3,8 +3,7 @@ plugins {
     `maven-publish`
 }
 
-// Group id renamed from com.prarambha.cashiro to com.prarambha.cashiro as part of project-wide namespace change
-group = "com.prarambha.cashiro"
+group = "com.prarambha.hisabsathi"
 version = "0.1.0-SNAPSHOT"
 
 // Use root project's Java toolchain; avoid forcing downloads here

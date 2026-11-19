@@ -1,16 +1,16 @@
 # Contributing New Bank Parsers
 
-This guide explains the process for adding support for a new bank or financial service to **Cashiro**.
+This guide explains the process for adding support for a new bank or financial service to **Hisab Sathi**.
 
 ## Overview
-Cashiro uses a modular parser system to extract transaction data from SMS messages. All parsing logic is centralized in the `:parser-core` module, while UI branding (icons and colors) is handled in the `:app` module.
+Hisab Sathi uses a modular parser system to extract transaction data from SMS messages. All parsing logic is centralized in the `:parser-core` module, while UI branding (icons and colors) is handled in the `:app` module.
 
 ---
 
 ## Step 1: Create the Parser Class
 The parser class defines how to identify the bank's SMS and how to extract data (amount, type, account, etc.).
 
-1.  **File Location**: `parser-core/src/main/kotlin/com/ritesh/parser/core/bank/`
+1.  **File Location**: `parser-core/src/main/kotlin/com/prarambha/parser/core/bank/`
 2.  **Implementation**: Your class must extend `BankParser`. 
 
 ### Key Methods to Implement:
@@ -51,7 +51,7 @@ class ExampleBankParser : BankParser() {
 ## Step 2: Register the Parser
 Your parser will not be used until it is registered in the factory.
 
-1.  **File**: `parser-core/src/main/kotlin/com/ritesh/parser/core/bank/BankParserFactory.kt`
+1.  **File**: `parser-core/src/main/kotlin/com/prarambha/parser/core/bank/BankParserFactory.kt`
 2.  **Action**: Add `YourNewBankParser()` to the `parsers` list.
 
 > [!NOTE]
@@ -64,7 +64,7 @@ To ensure the bank logo appears in the transaction list:
 
 1.  **Icon Resource**: Add a logo file (PNG/WebP) to `app/src/main/res/drawable-nodpi/`.
     *   **Naming Convention**: `ic_brand_new_bank.png`
-2.  **Icon Mapping**: Update `app/src/main/java/com/ritesh/cashiro/presentation/common/icons/BrandIcons.kt`.
+2.  **Icon Mapping**: Update `app/src/main/java/com/prarambha/hisabsathi/presentation/common/icons/BrandIcons.kt`.
     *   Add entry to `brandMappings`: `"new bank" to R.drawable.ic_brand_new_bank`
 3.  **Brand Color**: In the same file, add the bank's primary color to the `getBrandColor` function.
 
@@ -73,7 +73,7 @@ To ensure the bank logo appears in the transaction list:
 ## Step 4: Create Unit Tests
 Unit tests are mandatory for all parsers to ensure accuracy across different SMS templates.
 
-1.  **File Location**: `parser-core/src/test/kotlin/com/ritesh/parser/core/bank/`
+1.  **File Location**: `parser-core/src/test/kotlin/com/prarambha/parser/core/bank/`
 2.  **Implementation**: Create a test class using the `ParserTestUtils` helper.
 3.  **Verification**: Run the test using Gradle:
     ```bash

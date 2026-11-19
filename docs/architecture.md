@@ -1,7 +1,7 @@
-# Cashiro Architecture Guide
+# Hisab Sathi Architecture Guide
 
 ## Overview
-Cashiro follows modern Android architecture guidelines with MVVM pattern, Clean Architecture principles, and Unidirectional Data Flow (UDF).
+Hisab Sathi follows modern Android architecture guidelines with MVVM pattern, Clean Architecture principles, and Unidirectional Data Flow (UDF).
 
 ## Core Architectural Principles
 
