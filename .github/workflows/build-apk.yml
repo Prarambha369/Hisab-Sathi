@@ -1,7 +1,8 @@
 name: Build APK
 
 # Builds installable debug APKs on every push to main, on pull requests and on demand.
-# Download them from the run's "Artifacts" section. These are debug-signed (no keystore
+# Download them from the run's "Artifacts" section; pushes to main also refresh the
+# "prebeta-latest" pre-release on the Releases page. These are debug-signed (no keystore
 # needed); signed release builds go through release.yml, which needs the KEYSTORE_BASE64,
 # KEYSTORE_PASSWORD and KEY_ALIAS repository secrets.
 
@@ -21,6 +22,8 @@ jobs:
     name: Build debug APKs
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    permissions:
+      contents: write   # needed to publish the rolling pre-release on main
 
     steps:
       - name: Checkout code
@@ -71,3 +74,29 @@ jobs:
           path: dist/*.apk
           if-no-files-found: error
           retention-days: 30
+
+      # On every push to main, replace the rolling "prebeta-latest" pre-release on the
+      # Releases page with this commit's APKs, so there is always one public download link.
+      # The tag does not start with "v", so it never triggers release.yml.
+      - name: Publish rolling pre-release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION=$(grep -oP 'versionName = "\K[^"]+' app/build.gradle.kts)
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          (cd dist && sha256sum *.apk > SHA256SUMS.txt)
+          cat > notes.md <<NOTES
+          Latest Hisab Sathi (हिसाब साथी) pre-beta, built automatically from \`main\` at ${SHORT_SHA} (version ${VERSION}).
+
+          - **…-standard-debug.apk**: use this one on your phone.
+          - **…-fdroid-debug.apk**: ARM-only, no Google Play services.
+          - \`SHA256SUMS.txt\`: checksums.
+
+          Debug-signed test builds: Android will ask you to allow installing from this source.
+          This release is replaced on every merge to \`main\`.
+          NOTES
+          gh release delete prebeta-latest --yes --cleanup-tag 2>/dev/null || true
+          gh release create prebeta-latest dist/*.apk dist/SHA256SUMS.txt \
+            --target "$GITHUB_SHA" --prerelease \
+            --title "Latest pre-beta (${VERSION}, ${SHORT_SHA})" --notes-file notes.md
