@@ -305,6 +305,15 @@ fun LicensesScreen(
                     "   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n" +
                     "   See the License for the specific language governing permissions and\n" +
                     "   limitations under the License."),
+            Library("Gson", 1, apache2License("Copyright 2008 Google Inc.")),
+            Library("ColorPicker Compose", 1, apache2License("Copyright 2022 skydoves (Jaewoong Eum)")),
+            Library("On-device AI models", 1, "" +
+                    "Downloaded separately from Hugging Face (litert-community) only when you choose one; " +
+                    "not bundled with the app.\n\n" +
+                    "- Qwen 2.5 0.5B / 1.5B Instruct: Apache License 2.0, Copyright Alibaba Cloud (Qwen team)\n" +
+                    "- DeepSeek R1 Distill Qwen 1.5B: MIT License, Copyright DeepSeek\n" +
+                    "- Phi-4 mini instruct: MIT License, Copyright Microsoft Corporation\n" +
+                    "- SmolLM 135M Instruct: Apache License 2.0, Copyright Hugging Face\n"),
         )
     }
 
@@ -462,3 +471,14 @@ data class Library(
     val licenseText: String
 )
 
+private fun apache2License(copyright: String): String =
+    "Apache License 2.0\n$copyright\n\n" +
+        "   Licensed under the Apache License, Version 2.0 (the \"License\");\n" +
+        "   you may not use this file except in compliance with the License.\n" +
+        "   You may obtain a copy of the License at\n\n" +
+        "       http://www.apache.org/licenses/LICENSE-2.0\n\n" +
+        "   Unless required by applicable law or agreed to in writing, software\n" +
+        "   distributed under the License is distributed on an \"AS IS\" BASIS,\n" +
+        "   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n" +
+        "   See the License for the specific language governing permissions and\n" +
+        "   limitations under the License."

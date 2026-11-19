@@ -1,120 +1,86 @@
 # Privacy Policy
 
-**Last Updated: August 2025**
+**Hisab Sathi (हिसाब साथी)** · Last updated: 20 November 2026
 
-## Our Commitment to Privacy
+Hisab Sathi is an open-source expense tracker for Nepal. It reads your bank and wallet SMS and keeps your money records **on your phone**. There is no Hisab Sathi server, no account to create, and nothing about you is sent to us.
 
-Hisab Sathi is built with privacy as the core principle. We believe your financial data should remain yours alone.
+## In short
 
-## 100% On-Device Processing
+- Your transactions, SMS, chats and settings are stored **only on your phone**.
+- The app has **no analytics, no ads, no crash reporting and no tracking**.
+- The app only goes online to (1) download an AI model you choose, (2) fetch currency exchange rates, and (3) in the Play Store/standard build, check Google Play for updates. **None of these requests contain your financial data.**
+- You can export, back up or delete everything at any time.
 
-**All data processing happens locally on your device.** We use MediaPipe's on-device LLM (Qwen 2.5) for AI features, ensuring:
+## What is stored on your phone
 
-- ✅ **No cloud servers** - Your data never leaves your phone
-- ✅ **No data collection** - We don't collect, store, or transmit any user data
-- ✅ **No tracking** - No analytics, no telemetry, no user tracking
-- ✅ **No ads** - No advertising networks or tracking pixels
-- ✅ **Offline AI** - Once downloaded, AI works completely offline
+Everything below lives in the app's private storage (a Room/SQLite database and app files), protected by Android's app sandbox. Other apps can't read it.
 
-## Data Storage
+| Data | Why |
+|---|---|
+| Transactions: amount, merchant, date, category, account, notes, tags | The core of the app |
+| **The original SMS text** of each detected transaction or subscription | Lets you check what was detected and report a wrong one |
+| **Unrecognized SMS** from banks and wallets (Settings → SMS → Unrecognized Messages) | So you can teach the app new formats or report them |
+| Accounts and cards (bank name, last 4 digits, balances you enter) | Balances and filters |
+| Categories, rules, budgets, subscriptions, merchant mappings | Your organisation of the data |
+| AI chat messages, and the summary of your recent spending given to the AI | So the assistant can answer about your money |
+| Attachments, profile picture and banner you add | Shown in the app |
+| Downloaded exchange rates and AI model files | Offline use |
+| Preferences (theme, app lock, scan period, selected AI model…) | Settings |
 
-### What We Store (Locally Only)
-- Transaction details extracted from SMS (amount, merchant, date, category)
-- Your custom categories and notes
-- App preferences and settings
-
-### Where It's Stored
-- All data is stored in a local SQLite database on your device
-- Database is protected by Android's app sandboxing
-- Data is only accessible to Hisab Sathi app
-
-### Data Deletion
-- Uninstalling the app completely removes all data
-- You can delete individual transactions at any time
-- Export your data before uninstalling if you want to keep records
+Full account numbers are not needed. The app keeps the last 4 digits that banks put in their SMS.
 
 ## Permissions
 
-### SMS Permission (Read-Only)
-- **Purpose**: To read bank transaction SMS messages
-- **Scope**: Read-only access, we cannot send or modify messages
-- **Processing**: SMS parsing happens entirely on-device
-- **Storage**: Only transaction data is extracted and stored, not full messages
+| Permission | Used for |
+|---|---|
+| **Read SMS / Receive SMS** | Find bank and wallet transaction messages, both existing ones (for the scan period you choose) and new ones as they arrive. All parsing happens on the phone. The app can't send or change messages. |
+| **Notifications** | Payment and scan reminders, and new-transaction alerts |
+| **Exact alarms, run at startup** | Deliver those reminders on time, including after a restart |
+| **Biometrics** | Optional App Lock |
+| **Internet** | Only the three uses listed in the next section |
 
-### Internet Permission
-- **Primary Purpose**: To download the AI model (Qwen 2.5) on first use
-- **Model Download**: One-time download of ~1.5GB model file from CloudFront CDN
-- **App Updates**: Google Play Store variant uses Play Services for app updates (F-Droid variant does not)
-- **After Model Download**: AI works completely offline, no internet required for core features
-- **Your Data**: Never transmitted over the internet, all processing remains on-device
+Hisab Sathi does **not** ask for location, contacts, camera, microphone or phone-call access. The advertising ID permission is removed from the app.
 
-### No Other Permissions Required
-- No location tracking
-- No contact access
-- No camera or microphone access
+## When the app uses the internet
 
-## Third-Party Services
+1. **AI model download (only if you choose one).** Settings → AI Chat Assistant → AI Models downloads a model file from Hugging Face (`huggingface.co/litert-community`) through Android's Download Manager. Hugging Face sees a normal file download (your IP address and the file requested), as with any website. After that, the AI runs **completely offline** on your phone.
+2. **Exchange rates.** To convert foreign-currency transactions to NPR, the app downloads public rate tables from `cdn.jsdelivr.net` (fallback `currency-api.pages.dev`). The request only names a currency code, such as `npr.json`.
+3. **Google Play (standard build only).** The standard build uses Google Play's in-app update and review services. The F-Droid build contains no Google services.
 
-Hisab Sathi does **NOT** use:
-- ❌ Cloud services or APIs (except CDN for model download)
-- ❌ Analytics services (Google Analytics, Firebase, etc.)
-- ❌ Crash reporting services
-- ❌ Advertising networks
-- ❌ Social media SDKs
-- ❌ Payment processors
+The app makes no other network requests. You can check this yourself in the source code.
 
-**Note**: The Google Play Store variant includes Play Services for app updates only. The F-Droid variant has no Google services.
+## AI assistant
 
-## AI Features
+- Runs on your phone with Google's MediaPipe LLM Inference. Your questions and your spending summary are **never sent anywhere**.
+- Models come from their publishers under open licences (Qwen: Apache 2.0, DeepSeek R1 Distill: MIT, Phi-4 mini: MIT, SmolLM: Apache 2.0). See About → Licenses.
+- Delete a model or clear the chat at any time.
 
-### On-Device AI Assistant
-- Uses MediaPipe's Qwen 2.5 model (1.5GB download)
-- Model runs entirely on your device using MediaPipe LLM Inference
-- After initial download, no internet connection required
-- Conversations are not stored or transmitted
-- AI insights are generated locally from your local transaction data
-- Model file stored in app's private storage
+## Things only you can share
 
-## Data Export
+The app never shares anything on its own. These leave your phone only when you do them:
 
-When you export your data:
-- CSV/PDF files are created locally on your device
-- You control where to share or save them
-- No automatic uploads or backups
+- **Backups** (Settings → Data Privacy → export): a `.zip` with your data as JSON plus attachments and profile images. **The backup is not encrypted**, so store it somewhere private.
+- **CSV export** of transactions, saved or shared wherever you pick.
+- **Report buttons** (wrong transaction, unrecognized SMS, bug report, feedback) open a **public** GitHub issue form in your browser, already filled in. Long numbers (account, card, phone) are masked first, and nothing is posted until you review it and press Submit on GitHub.
 
-## Open Source Transparency
+## Deleting your data
 
-Hisab Sathi is fully open source:
-- Review our code at [GitHub](https://github.com/Prarambha369/Hisab Sathi)
-- Verify our privacy claims yourself
-- Contribute to make it even better
+- Delete single transactions, accounts, chats or AI models in the app.
+- About → **Delete All Data** permanently clears everything.
+- Uninstalling the app removes all of its data from the phone. Export a backup first if you want to keep it.
 
-## Children's Privacy
+## Children
 
-Hisab Sathi is not directed at children under 13. We do not knowingly collect information from children.
+Hisab Sathi is not directed at children under 13 and collects no information from anyone.
 
-## Changes to Privacy Policy
+## Open source
 
-Any changes to this privacy policy will be:
-- Updated in the app repository
-- Reflected in the "Last Updated" date
-- Communicated through release notes
+The full source is at [github.com/Prarambha369/Hisab-Sathi](https://github.com/Prarambha369/Hisab-Sathi) under the GPL-3.0 licence. Anyone can check these claims.
+
+## Changes
+
+Changes to this policy are made in the repository, dated above, and mentioned in the release notes.
 
 ## Contact
 
-For privacy concerns or questions:
-- Open an issue on [GitHub](https://github.com/Prarambha369/Hisab Sathi/issues)
-
-## Summary
-
-**Your financial data stays on your phone. Period.**
-
-- No servers
-- No uploads
-- No tracking
-- No ads
-- Complete privacy
-
----
-
-*Hisab Sathi - Privacy-first expense tracking with on-device AI*
+Questions or concerns: [open an issue](https://github.com/Prarambha369/Hisab-Sathi/issues/new/choose). For security problems, use a [private security report](https://github.com/Prarambha369/Hisab-Sathi/security/advisories/new).

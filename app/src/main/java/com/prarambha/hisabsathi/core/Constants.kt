@@ -78,11 +78,11 @@ object Constants {
      */
     object Links {
         const val GITHUB_URL = "https://github.com/Prarambha369/Hisab-Sathi"
-        const val WEBSITE_URL = GITHUB_URL
+        const val WEBSITE_URL = "$GITHUB_URL/releases"
         const val PRIVACY_POLICY_URL = "$GITHUB_URL/blob/main/PRIVACY.md"
-        const val TERMS_OF_SERVICE_URL = "$GITHUB_URL/blob/main/LICENSE"
-        const val FAQ_URL = "$GITHUB_URL#readme"
-        const val GUIDE_URL = "$GITHUB_URL/blob/main/README.md"
+        const val TERMS_OF_SERVICE_URL = "$GITHUB_URL/blob/main/TERMS.md"
+        const val FAQ_URL = "$GITHUB_URL/blob/main/docs/FAQ.md"
+        const val GUIDE_URL = "$GITHUB_URL/blob/main/docs/USER_GUIDE.md"
         const val REPORT_BUG_URL = "https://github.com/Prarambha369/Hisab-Sathi/issues/new/choose"
     }
 }

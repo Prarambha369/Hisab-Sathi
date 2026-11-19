@@ -225,6 +225,14 @@ val testRegistry = BankParserRegistry(listOf(NabilBankParser()))
 [//]: # (- **Discord**: Join the community, share feedback, and get help — [Join Discord]&#40;https://discord.gg/H3xWeMWjKQ&#41;)
 - **Issues**: [Report a bug](https://github.com/Prarambha369/Hisab-Sathi/issues/new?template=1-bug_report.yml), [a wrongly read SMS](https://github.com/Prarambha369/Hisab-Sathi/issues/new?template=2-sms_parsing.yml), [request your bank](https://github.com/Prarambha369/Hisab-Sathi/issues/new?template=3-bank_support_request.yml), [suggest a feature](https://github.com/Prarambha369/Hisab-Sathi/issues/new?template=4-feature_request.yml) or [send feedback](https://github.com/Prarambha369/Hisab-Sathi/issues/new?template=5-feedback.yml)
 
+## Documentation
+
+- [User Guide](docs/USER_GUIDE.md): install, set up and everyday use
+- [FAQ](docs/FAQ.md): banks, SMS, AI models, backups
+- [Supported banks and roadmap](docs/BANK_SUPPORT.md)
+- [Privacy Policy](PRIVACY.md) · [Terms of Use](TERMS.md)
+- [Verifying release APKs](docs/RELEASE.md)
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
