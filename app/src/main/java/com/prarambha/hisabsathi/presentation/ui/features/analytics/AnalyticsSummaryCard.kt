@@ -1,5 +1,6 @@
 package com.prarambha.hisabsathi.presentation.ui.features.analytics
 
+import com.prarambha.hisabsathi.core.Constants
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -244,7 +245,7 @@ fun AnalyticsSummaryCardPreview() {
                 averageAmount = BigDecimal("1946"),
                 topCategory = "Miscellaneous",
                 topCategoryPercentage = 92f,
-                currency = "INR"
+                currency = Constants.DEFAULT_CURRENCY
             )
         }
     }

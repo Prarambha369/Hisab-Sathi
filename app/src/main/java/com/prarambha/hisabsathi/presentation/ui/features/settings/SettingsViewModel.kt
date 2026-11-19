@@ -662,13 +662,13 @@ class SettingsViewModel @Inject constructor(
 
                 val now = LocalDateTime.now()
 
-                // HDFC Bank (Savings) with History
-                val hdfcLast4 = "1234"
+                // Nabil Bank (Savings) with History
+                val nabilLast4 = "1234"
                 for (i in 4 downTo 0) {
                     accountBalanceRepository.insertBalance(
                         AccountBalanceEntity(
-                            bankName = "HDFC Bank",
-                            accountLast4 = hdfcLast4,
+                            bankName = "Nabil Bank",
+                            accountLast4 = nabilLast4,
                             balance = BigDecimal(50000 - (i * 1000)),
                             timestamp = now.minusDays(i.toLong()),
                             sourceType = "MANUAL",
@@ -680,10 +680,10 @@ class SettingsViewModel @Inject constructor(
                     )
                 }
 
-                // ICICI Bank (Credit Card)
+                // NMB Bank (Credit Card)
                 accountBalanceRepository.insertBalance(
                     AccountBalanceEntity(
-                        bankName = "ICICI Bank",
+                        bankName = "NMB Bank",
                         accountLast4 = "5678",
                         balance = BigDecimal(25000),
                         creditLimit = BigDecimal(100000),
@@ -697,10 +697,10 @@ class SettingsViewModel @Inject constructor(
                     )
                 )
 
-                // SBI Bank (Current)
+                // Himalayan Bank (Current)
                 accountBalanceRepository.insertBalance(
                     AccountBalanceEntity(
-                        bankName = "SBI Bank",
+                        bankName = "Himalayan Bank",
                         accountLast4 = "9012",
                         balance = BigDecimal(75000),
                         timestamp = now,
@@ -726,16 +726,16 @@ class SettingsViewModel @Inject constructor(
                     )
                 )
 
-                // Linked Card for HDFC
+                // Linked Card for Nabil
                 cardRepository.insertCard(
                     CardEntity(
                         cardLast4 = "4321",
                         cardType = CardType.DEBIT,
-                        bankName = "HDFC Bank",
-                        accountLast4 = hdfcLast4,
+                        bankName = "Nabil Bank",
+                        accountLast4 = nabilLast4,
                         nickname = "Salary Card",
                         lastBalance = BigDecimal(48000),
-                        lastBalanceSource = "Your HDFC Bank account ending in 1234 has been credited with INR 50,000.00. Avl bal: INR 48,000.00",
+                        lastBalanceSource = "Dear Customer, your A/C XXXX1234 has been credited by NPR 50,000.00. Available Bal: NPR 48,000.00.",
                         lastBalanceDate = now,
                         isSample = true
                     )
@@ -746,10 +746,10 @@ class SettingsViewModel @Inject constructor(
                     CardEntity(
                         cardLast4 = "8765",
                         cardType = CardType.DEBIT,
-                        bankName = "Axis Bank",
+                        bankName = "Siddhartha Bank",
                         nickname = "Travel Card",
                         lastBalance = BigDecimal(15420),
-                        lastBalanceSource = "Bank Alert: Your Axis Bank Card XX8765 was used for a transaction of INR 500 at STARBUCKS. Avl Bal: INR 15,420.75",
+                        lastBalanceSource = "Dear Customer, your Siddhartha Bank card XX8765 was used for NPR 500.00 at BHATBHATENI. Avl Bal: NPR 15,420.75",
                         lastBalanceDate = now,
                         isSample = true
                     )
@@ -790,7 +790,7 @@ class SettingsViewModel @Inject constructor(
                     }
                     
                     // Split into few transactions per month
-                    val foodMerchants = listOf("Swiggy", "Zomato", "Blinkit", "Zepto")
+                    val foodMerchants = listOf("Foodmandu", "Pathao Food", "Bhatbhateni", "Big Mart")
                     for (i in 1..4) {
                         transactionRepository.insertTransaction(
                             TransactionEntity(
@@ -798,16 +798,16 @@ class SettingsViewModel @Inject constructor(
                                 merchantName = foodMerchants[i-1],
                                 category = foodCategory,
                                 subcategory = when(foodMerchants[i-1]) {
-                                    "Swiggy", "Zomato" -> "Eating out"
-                                    "Blinkit", "Zepto" -> "Groceries"
+                                    "Foodmandu", "Pathao Food" -> "Eating out"
+                                    "Bhatbhateni", "Big Mart" -> "Groceries"
                                     else -> "Eating out"
                                 },
                                 transactionType = TransactionType.EXPENSE,
                                 dateTime = monthDate.withDayOfMonth(i * 5).withHour(12),
                                 transactionHash = UUID.randomUUID().toString(),
-                                currency = "INR",
-                                bankName = "HDFC Bank",
-                                accountNumber = hdfcLast4,
+                                currency = Constants.DEFAULT_CURRENCY,
+                                bankName = "Nabil Bank",
+                                accountNumber = nabilLast4,
                                 isSample = true
                             )
                         )
@@ -834,7 +834,7 @@ class SettingsViewModel @Inject constructor(
                 )
 
                 // Seed transactions for Weekly Fun (Last 5 weeks inclusive)
-                val entertainmentMerchants = listOf("Netflix", "Spotify", "BookMyShow", "PVR", "Youtube")
+                val entertainmentMerchants = listOf("Netflix", "Spotify", "QFX Cinemas", "Big Movies", "Youtube")
                 for (weekOffset in 0..4) {
                     val weekDate = now.minusWeeks(weekOffset.toLong())
                     val amount = when(weekOffset) {
@@ -859,7 +859,7 @@ class SettingsViewModel @Inject constructor(
                             dateTime = weekDate.withHour(20),
                             transactionHash = UUID.randomUUID().toString(),
                             isSample = true,
-                            currency = "INR"
+                            currency = Constants.DEFAULT_CURRENCY
                         )
                     )
                 }
@@ -886,14 +886,14 @@ class SettingsViewModel @Inject constructor(
                  // --- SEED SUBSCRIPTIONS & THEIR TRANSACTIONS ---
                  val today = LocalDate.now()
                  
-                 // 1. Weekly Subscription: Fruits & Vegetables
+                 // 1. Weekly Subscription: Groceries
                  val weeklyFruits = SubscriptionEntity(
-                     merchantName = "BigBasket",
+                     merchantName = "Bhatbhateni",
                      amount = BigDecimal(500),
                      nextPaymentDate = today.plusDays(3),
                      billingCycle = "WEEKLY",
                      category = "Groceries",
-                     bankName = "HDFC Bank",
+                     bankName = "Nabil Bank",
                      isSample = true
                  )
                  val weeklyFruitsId = subscriptionRepository.insertSubscription(weeklyFruits)
@@ -903,13 +903,13 @@ class SettingsViewModel @Inject constructor(
                      transactionRepository.insertTransaction(
                          TransactionEntity(
                              amount = BigDecimal(500),
-                             merchantName = "BigBasket",
+                             merchantName = "Bhatbhateni",
                              category = "Groceries",
                              transactionType = TransactionType.EXPENSE,
                              dateTime = now.minusWeeks(i.toLong()).withHour(10),
                              transactionHash = UUID.randomUUID().toString(),
-                             bankName = "HDFC Bank",
-                             accountNumber = hdfcLast4,
+                             bankName = "Nabil Bank",
+                             accountNumber = nabilLast4,
                              isSample = true,
                              billingCycle = "WEEKLY"
                          )
@@ -923,7 +923,7 @@ class SettingsViewModel @Inject constructor(
                      nextPaymentDate = today.withDayOfMonth(15),
                      billingCycle = "MONTHLY",
                      category = "Entertainment",
-                     bankName = "ICICI Bank",
+                     bankName = "NMB Bank",
                      isSample = true
                  )
                  val netflixId = subscriptionRepository.insertSubscription(netflix)
@@ -938,7 +938,7 @@ class SettingsViewModel @Inject constructor(
                              transactionType = TransactionType.EXPENSE,
                              dateTime = now.minusMonths(i.toLong()).withDayOfMonth(15).withHour(0),
                              transactionHash = UUID.randomUUID().toString(),
-                             bankName = "ICICI Bank",
+                             bankName = "NMB Bank",
                              accountNumber = "5678",
                              isSample = true,
                              billingCycle = "MONTHLY"
@@ -948,12 +948,12 @@ class SettingsViewModel @Inject constructor(
 
                  // 3. Monthly Subscription: Rent
                  val rent = SubscriptionEntity(
-                     merchantName = "NoBroker Rent",
+                     merchantName = "House Rent",
                      amount = BigDecimal(25000),
                      nextPaymentDate = today.plusMonths(1).withDayOfMonth(1),
                      billingCycle = "MONTHLY",
                      category = "Bill",
-                     bankName = "HDFC Bank",
+                     bankName = "Nabil Bank",
                      isSample = true
                  )
                  val rentId = subscriptionRepository.insertSubscription(rent)
@@ -963,41 +963,41 @@ class SettingsViewModel @Inject constructor(
                      transactionRepository.insertTransaction(
                          TransactionEntity(
                              amount = BigDecimal(25000),
-                             merchantName = "NoBroker Rent",
+                             merchantName = "House Rent",
                              category = "Bill",
                              transactionType = TransactionType.EXPENSE,
                              dateTime = now.minusMonths(i.toLong()).withDayOfMonth(1).withHour(9),
                              transactionHash = UUID.randomUUID().toString(),
-                             bankName = "HDFC Bank",
-                             accountNumber = hdfcLast4,
+                             bankName = "Nabil Bank",
+                             accountNumber = nabilLast4,
                              isSample = true,
                              billingCycle = "MONTHLY"
                          )
                      )
                  }
 
-                 // 4. Yearly Subscription: Amazon Prime
-                 val prime = SubscriptionEntity(
-                     merchantName = "Amazon Prime",
-                     amount = BigDecimal(1499),
+                 // 4. Yearly Subscription: Internet
+                 val internet = SubscriptionEntity(
+                     merchantName = "WorldLink Internet",
+                     amount = BigDecimal(13500),
                      nextPaymentDate = today.minusMonths(2).plusYears(1),
                      billingCycle = "YEARLY",
-                     category = "Shopping",
-                     bankName = "SBI Bank",
+                     category = "Bill",
+                     bankName = "Himalayan Bank",
                      isSample = true
                  )
-                 val primeId = subscriptionRepository.insertSubscription(prime)
+                 val internetId = subscriptionRepository.insertSubscription(internet)
                  
-                 // Transaction for Prime (10 months ago)
+                 // Transaction for Internet (10 months ago)
                  transactionRepository.insertTransaction(
                      TransactionEntity(
-                         amount = BigDecimal(1499),
-                         merchantName = "Amazon Prime",
-                         category = "Shopping",
+                         amount = BigDecimal(13500),
+                         merchantName = "WorldLink Internet",
+                         category = "Bill",
                          transactionType = TransactionType.EXPENSE,
                          dateTime = now.minusMonths(10),
                          transactionHash = UUID.randomUUID().toString(),
-                         bankName = "SBI Bank",
+                         bankName = "Himalayan Bank",
                          accountNumber = "9012",
                          isSample = true,
                          billingCycle = "YEARLY"

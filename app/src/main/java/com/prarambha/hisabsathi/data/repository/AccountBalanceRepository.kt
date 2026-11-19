@@ -1,5 +1,6 @@
 package com.prarambha.hisabsathi.data.repository
 
+import com.prarambha.hisabsathi.core.Constants
 import android.content.Context
 import com.prarambha.hisabsathi.data.database.dao.AccountBalanceDao
 import com.prarambha.hisabsathi.data.database.entity.AccountBalanceEntity
@@ -106,7 +107,7 @@ class AccountBalanceRepository @Inject constructor(
         timestamp: LocalDateTime,
         smsSource: String? = null,
         sourceType: String? = null,
-        currency: String = "INR"
+        currency: String = Constants.DEFAULT_CURRENCY
     ): Long {
         val latest = getLatestBalance(bankName, accountLast4)
         val balanceEntity = AccountBalanceEntity(

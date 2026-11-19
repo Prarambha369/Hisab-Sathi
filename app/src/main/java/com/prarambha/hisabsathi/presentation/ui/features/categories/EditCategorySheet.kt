@@ -275,7 +275,7 @@ fun EditCategorySheet(
                         text= "Description",
                         fontWeight = FontWeight.SemiBold
                     ) },
-                    placeholder = { Text("e.g., Eating out, Swiggy, Zomato etc.") },
+                    placeholder = { Text("e.g., Eating out, Foodmandu, Pathao Food etc.") },
                     modifier = Modifier.fillMaxWidth(),
                     textStyle = TextStyle(
                         lineHeight = 18.sp,

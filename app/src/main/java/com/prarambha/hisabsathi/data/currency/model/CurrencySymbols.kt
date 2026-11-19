@@ -40,7 +40,7 @@ object CurrencySymbols {
         "LTC" to "Ł",
         "BCH" to "BCH",
         "XRP" to "XRP",
-        "NPR" to "₨",
+        "NPR" to "रु",
         "ETB" to "ብር",
         "KWD" to "د.ك",
         "COP" to "$",

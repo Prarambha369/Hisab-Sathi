@@ -1,5 +1,6 @@
 package com.prarambha.hisabsathi.data.database.entity
 
+import com.prarambha.hisabsathi.core.Constants
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -21,7 +22,7 @@ data class SubscriptionEntity(
         @ColumnInfo(name = "sms_body") val smsBody: String? = null,
         @ColumnInfo(name = "created_at") val createdAt: LocalDateTime = LocalDateTime.now(),
         @ColumnInfo(name = "updated_at") val updatedAt: LocalDateTime = LocalDateTime.now(),
-        @ColumnInfo(name = "currency", defaultValue = "INR") val currency: String = "INR",
+        @ColumnInfo(name = "currency", defaultValue = Constants.DEFAULT_CURRENCY) val currency: String = Constants.DEFAULT_CURRENCY,
         @ColumnInfo(name = "billing_cycle") val billingCycle: String? = null,
         @ColumnInfo(name = "last_paid_date") val lastPaidDate: LocalDate? = null,
         @ColumnInfo(name = "is_sample", defaultValue = "0") val isSample: Boolean = false

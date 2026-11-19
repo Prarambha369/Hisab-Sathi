@@ -47,43 +47,6 @@ class RuleTemplateService @Inject constructor() {
         )
     }
 
-    private fun createUpiCashbackRule(): TransactionRule {
-        return TransactionRule(
-            id = UUID.randomUUID().toString(),
-            name = "UPI Cashback",
-            description = "Identify small UPI receipts (under 10) from NPCI as cashback",
-            priority = 50,
-            conditions = listOf(
-                RuleCondition(
-                    field = TransactionField.AMOUNT,
-                    operator = ConditionOperator.LESS_THAN,
-                    value = "10",
-                    logicalOperator = LogicalOperator.AND
-                ),
-                RuleCondition(
-                    field = TransactionField.TYPE,
-                    operator = ConditionOperator.EQUALS,
-                    value = "INCOME",
-                    logicalOperator = LogicalOperator.AND
-                ),
-                RuleCondition(
-                    field = TransactionField.SMS_TEXT,
-                    operator = ConditionOperator.CONTAINS,
-                    value = "NPCI",
-                    logicalOperator = LogicalOperator.AND
-                )
-            ),
-            actions = listOf(
-                RuleAction(
-                    field = TransactionField.CATEGORY,
-                    actionType = ActionType.SET,
-                    value = "Cashback"
-                )
-            ),
-            isActive = false
-        )
-    }
-
     private fun createSalaryDetectionRule(): TransactionRule {
         return TransactionRule(
             id = UUID.randomUUID().toString(),
@@ -168,13 +131,13 @@ class RuleTemplateService @Inject constructor() {
                 RuleCondition(
                     field = TransactionField.SMS_TEXT,
                     operator = ConditionOperator.REGEX_MATCHES,
-                    value = "(?i)(mutual fund|mf|sip|zerodha|groww|upstox|paytm money|kuvera|et money|stocks|shares|demat)",
+                    value = "(?i)(mutual fund|sip|share|shares|demat|meroshare|mero share|cdsc|nepse|ipo|fpo|broker|capital)",
                     logicalOperator = LogicalOperator.OR
                 ),
                 RuleCondition(
                     field = TransactionField.MERCHANT,
                     operator = ConditionOperator.REGEX_MATCHES,
-                    value = "(?i)(zerodha|groww|upstox|paytm money|kuvera|et money|hdfc securities|icici direct)",
+                    value = "(?i)(meroshare|cdsc|nepse|nabil invest|nibl ace|laxmi sunrise capital|siddhartha capital|ns capital)",
                     logicalOperator = LogicalOperator.AND
                 )
             ),
@@ -272,7 +235,7 @@ class RuleTemplateService @Inject constructor() {
                 RuleCondition(
                     field = TransactionField.MERCHANT,
                     operator = ConditionOperator.REGEX_MATCHES,
-                    value = "(?i)(netflix|spotify|amazon prime|hotstar|youtube|apple|google|microsoft|adobe)",
+                    value = "(?i)(netflix|spotify|youtube|apple|google|microsoft|adobe|worldlink|vianet|classic tech|dishhome)",
                     logicalOperator = LogicalOperator.OR
                 ),
                 RuleCondition(
@@ -303,7 +266,7 @@ class RuleTemplateService @Inject constructor() {
                 RuleCondition(
                     field = TransactionField.MERCHANT,
                     operator = ConditionOperator.REGEX_MATCHES,
-                    value = "(?i)(indian oil|bharat petroleum|hp|hindustan petroleum|bpcl|iocl|shell|essar|reliance|petrol|diesel|fuel|pump)",
+                    value = "(?i)(nepal oil|noc|petrol|diesel|fuel|pump|filling station|sajha)",
                     logicalOperator = LogicalOperator.OR
                 ),
                 RuleCondition(
@@ -334,7 +297,7 @@ class RuleTemplateService @Inject constructor() {
                 RuleCondition(
                     field = TransactionField.MERCHANT,
                     operator = ConditionOperator.REGEX_MATCHES,
-                    value = "(?i)(apollo|fortis|max|medanta|aiims|hospital|clinic|pharmacy|medical|pharma|netmeds|1mg|pharmeasy)",
+                    value = "(?i)(norvic|grande|mediciti|hams|bir hospital|teaching hospital|b&b|om hospital|hospital|clinic|pharmacy|medical|pharma|aushadhi)",
                     logicalOperator = LogicalOperator.OR
                 ),
                 RuleCondition(

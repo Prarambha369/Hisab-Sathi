@@ -1,5 +1,6 @@
 package com.prarambha.hisabsathi.presentation.ui.features.accounts
 
+import com.prarambha.hisabsathi.core.Constants
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -73,7 +74,7 @@ fun EditAccountSheet(
     var isCreditCard by remember { mutableStateOf(account?.isCreditCard ?: false) }
     var isWallet by remember { mutableStateOf(account?.isWallet ?: false) }
     var accountLast4 by remember { mutableStateOf(account?.accountLast4 ?: "") }
-    var selectedCurrency by remember { mutableStateOf(account?.currency ?: "INR") }
+    var selectedCurrency by remember { mutableStateOf(account?.currency ?: Constants.DEFAULT_CURRENCY) }
     var iconResId by remember {
         mutableStateOf(
             if (account?.iconResId != 0 && account?.iconResId != null) account.iconResId

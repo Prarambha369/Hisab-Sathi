@@ -1,5 +1,6 @@
 package com.prarambha.hisabsathi.presentation.common
 
+import com.prarambha.hisabsathi.core.Constants
 import java.math.BigDecimal
 
 /**
@@ -20,12 +21,12 @@ data class CurrencyGroupedTotals(
         return when {
             // If a preferred currency is given and exists in available currencies, use it
             preferredCurrency != null && availableCurrencies.contains(preferredCurrency) -> preferredCurrency
-            // Otherwise fall back to INR if available
-            availableCurrencies.contains("INR") -> "INR"
+            // Otherwise fall back to the base currency (NPR) if available
+            availableCurrencies.contains(Constants.DEFAULT_CURRENCY) -> Constants.DEFAULT_CURRENCY
             // Then first available currency
             availableCurrencies.isNotEmpty() -> availableCurrencies.first()
             // Final fallback
-            else -> preferredCurrency ?: "INR"
+            else -> preferredCurrency ?: Constants.DEFAULT_CURRENCY
         }
     }
 }

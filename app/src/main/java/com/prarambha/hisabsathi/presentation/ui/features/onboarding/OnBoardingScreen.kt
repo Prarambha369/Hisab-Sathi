@@ -1,5 +1,6 @@
 package com.prarambha.hisabsathi.presentation.ui.features.onboarding
 
+import com.prarambha.hisabsathi.core.Constants
 import android.Manifest
 import android.net.Uri
 import android.os.Build
@@ -1036,7 +1037,7 @@ fun ManualAccountEntryStep(
         TextField(
             value = accountName,
             onValueChange = onUpdateName,
-            label = { Text("Bank Name (e.g., HDFC, SBI)") },
+            label = { Text("Bank Name (e.g., Nabil, eSewa)") },
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(Dimensions.Radius.md),
@@ -1278,10 +1279,10 @@ fun OnBoardingSyncingPreview() {
 @Composable
 fun OnBoardingAccountVerificationPreview() {
     val mockAccount = AccountBalanceEntity(
-        bankName = "HDFC Bank",
+        bankName = "Nabil Bank",
         accountLast4 = "1234",
         balance = BigDecimal("50000.00"),
-        currency = "INR",
+        currency = Constants.DEFAULT_CURRENCY,
         timestamp = LocalDateTime.now(),
     )
     HisabSathiTheme {
@@ -1343,17 +1344,17 @@ fun PermissionsBackgroundAnimation(isNotification: Boolean) {
     val messages = remember(isNotification) {
         if (isNotification) {
             listOf(
-                MessageData("A", "Electric bill due: ₹2,450", true),
-                MessageData("B", "Transaction of ₹500 at Starbucks", false),
+                MessageData("A", "NEA bill due: NPR 2,450", true),
+                MessageData("B", "NPR 500 paid at Bhatbhateni", false),
                 MessageData("A", "Reminder: Credit card due tomorrow", true),
-                MessageData("B", "Cashback of ₹50 credited", false)
+                MessageData("B", "Cashback of NPR 50 credited", false)
             )
         } else {
             listOf(
-                MessageData("A", "HDFC: ₹1,500 spent at Amazon", true),
-                MessageData("B", "SBI: ₹10,000 Salary Credited", false),
-                MessageData("A", "ICICI: Low Balance Alert: ₹450", true),
-                MessageData("B", "Axis: ₹200 spent at Zomato", false)
+                MessageData("A", "Nabil: NPR 1,500 debited at Daraz", true),
+                MessageData("B", "NMB: NPR 10,000 salary credited", false),
+                MessageData("A", "eSewa: Low balance alert NPR 450", true),
+                MessageData("B", "Khalti: NPR 200 paid to Foodmandu", false)
             )
         }
     }

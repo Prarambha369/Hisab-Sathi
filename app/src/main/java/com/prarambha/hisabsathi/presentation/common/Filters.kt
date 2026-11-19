@@ -34,15 +34,7 @@ fun getDateRangeForPeriod(period: TimePeriod): Pair<LocalDate, LocalDate>? {
             start to end
         }
         TimePeriod.CURRENT_FY -> {
-            // Indian Financial Year: April 1 to March 31
-            val currentYear = today.year
-            val currentMonth = today.monthValue
-            val fyStart = if (currentMonth >= 4) {
-                LocalDate.of(currentYear, 4, 1)  // Apr 1 of current year
-            } else {
-                LocalDate.of(currentYear - 1, 4, 1)  // Apr 1 of previous year
-            }
-            fyStart to today
+            nepalFiscalYearStart(today) to today
         }
         TimePeriod.ALL -> {
             // Use a reasonable date range for "All Time" - 10 years back to today
@@ -54,4 +46,16 @@ fun getDateRangeForPeriod(period: TimePeriod): Pair<LocalDate, LocalDate>? {
             null
         }
     }
+}
+
+/**
+ * Start of Nepal's fiscal year (Shrawan 1 BS) containing [date].
+ *
+ * Shrawan 1 falls on 16 or 17 July in the Gregorian calendar depending on the year.
+ * The app has no Bikram Sambat calendar, so this uses 16 July as an approximation;
+ * the only effect is that "Current FY" may include one extra day at its start.
+ */
+internal fun nepalFiscalYearStart(date: LocalDate): LocalDate {
+    val thisYearStart = LocalDate.of(date.year, 7, 16)
+    return if (!date.isBefore(thisYearStart)) thisYearStart else thisYearStart.minusYears(1)
 }

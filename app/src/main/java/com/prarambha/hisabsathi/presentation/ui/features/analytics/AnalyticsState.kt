@@ -1,5 +1,6 @@
 package com.prarambha.hisabsathi.presentation.ui.features.analytics
 
+import com.prarambha.hisabsathi.core.Constants
 import com.prarambha.hisabsathi.presentation.ui.components.BalancePoint
 import com.prarambha.hisabsathi.presentation.common.TimePeriod
 import com.prarambha.hisabsathi.presentation.common.TransactionTypeFilter
@@ -25,8 +26,8 @@ data class AnalyticsUiState(
     val averageAmount: BigDecimal = BigDecimal.ZERO,
     val topCategory: String? = null,
     val topCategoryPercentage: Float = 0f,
-    val currency: String = "INR",
-    val baseCurrency: String = "INR",
+    val currency: String = Constants.DEFAULT_CURRENCY,
+    val baseCurrency: String = Constants.DEFAULT_CURRENCY,
     val isLoading: Boolean = true,
     val spendingTrend: List<BalancePoint> = emptyList(),
     val convertedMerchantAmounts: Map<String, BigDecimal> = emptyMap()

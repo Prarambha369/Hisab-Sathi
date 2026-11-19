@@ -42,7 +42,7 @@ class TransactionRepository @Inject constructor(private val transactionDao: Tran
      *
      * @param startDate Start of the date range (inclusive)
      * @param endDate End of the date range (inclusive)
-     * @param currency Currency code to filter by (e.g., "INR", "USD")
+     * @param currency Currency code to filter by (e.g., "NPR", "USD")
      * @param transactionType Optional transaction type filter (null means all types)
      * @return Flow of filtered transactions
      */

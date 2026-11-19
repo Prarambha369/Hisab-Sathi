@@ -144,7 +144,7 @@ class TransactionDetailViewModel @Inject constructor(
         val primaryCurrency = if (!bankName.isNullOrEmpty()) {
             CurrencyFormatter.getBankBaseCurrency(bankName)
         } else {
-            transaction.currency.takeIf { it.isNotEmpty() } ?: "INR"
+            transaction.currency.takeIf { it.isNotEmpty() } ?: Constants.DEFAULT_CURRENCY
         }
         _uiState.update { it.copy(primaryCurrency = primaryCurrency) }
     }

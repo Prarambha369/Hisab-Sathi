@@ -54,842 +54,159 @@ object CategoryMapping {
     }
 
     // --- keyword sets (single source of truth) ---
+    // Nepal-only: Nepali merchants and services first, plus generic terms and the few
+    // global services commonly paid for from Nepal. Single-word keywords match on word
+    // boundaries; multi-word keywords match as substrings.
     private val FOOD = setOf(
-        "swiggy",
-        "zomato",
-        "dominos",
-        "pizza",
-        "burger",
-        "kfc",
-        "mcdonalds",
-        "restaurant",
-        "cafe",
-        "food",
-        "starbucks",
-        "haldiram",
-        "barbeque",
-
-        //Thailand
-        "foodpanda thailand",
-        "linepay",
-        "arabica",
-        "chatramue",
-        "after you",
-        "kyo roll en",
-        "roast",
-        "al saray",
-        "oh my juice",
-
-        //Careem delivery
-        "careem food",
-        "careem dineout",
-        "deliveroo",
-        "talabat",
-
-        //Dubai / UAE foods
-        "peets",
-        "safadi",
-        "gazebo",
-        "al baik",
-        "jollibee",
-        "raising canes",
-        "chipotle",
-        "kitopi",
-        "sangeetha",
-        "maharaja bhog",
-        "al beiruti",
-        "malabar tiffin house",
-        "calicut paragon",
-        "bikanervala",
-        "karak house",
-        "puranmal",
-        "chicking",
-        "papa johns",
-        "phosphorus",
-        "rang indian",
-
-        // --- Newly Added Merchants ---
-        "moishi",
-        "cravings",
-        "the matcha tokyo",
-        "shawarma emprator",
-        "shawrma alemprator",
-        "tabaq alhejazi",
-        "mehfil biriyani",
-        "desert shawarma",
-        "mr tea",
-        "papparoti",
-        "samak alhejazi",
-        "fresh cookies corner",
-        "trucillo",
-        "p.f. chang's",
-        "neychor kada",
-        "salt",
-        "koob al gahwa",
-        "tanuki",
-        "asiankitchen",
-        "bkry",
-        "nguyen cimit",
-        "miyabi",
-        "tashas",
-        "desi village",
-        "vietnamese",
-        "firas al diyafa",
-        "manooshe",
-        "awani",
-        "sultan saray",
-        "pincode",
-        "commonground",
-        "nala",
-        "bombay bungalow",
-        "punjab by amritsr",
-        "the daily",
-        "subway",
-        "wagamama",
-        "caffe nero",
-        "fresh and tasty",
-        "alkanz lakeshore",
-        "cafe bateel",
-        "bateel",
-        "hutong",
-        "asiakitchen",
-        "asia kitchen",
-        "tbk",
-        "smoked meat world",
-        "nandos",
-        "nando's",
-        "kyochon",
-        "tarbush",
-        "laderach",
-        "chagee",
-        "chica bonita",
-        "saffron & spices",
-        "al amar",
-        "amici",
-        "baan india",
-        "ginger farm kitchen",
-        "bianca",
-        "biancaitalian",
-        "plantiful",
-        "pacamara",
-        "pacamara-qsncc",
-        "pacamara-one bangkok",
-        "dean and deluca",
-        "ohkajhu",
-        "getfresh",
-        "getfresh-exchange tower",
-        "getfresh-samyan mitrtown",
-        "getfresh-empire tower",
-        "bowlito",
-        "james boulangerie",
-        "chester's",
-        "bonchon",
-        "the bibimbab",
-        "guljak topokki",
-        "dough bros",
-        "oakberry acai",
-        "wwa",
-        "w w a",
-        "shaloba",
-        "jharoka",
-        "ghljharoka",
-        "ksher akaraskyroofto",
-        "akaraskyrooftobangkok",
-        "royce",
-        "godiva",
-        "benlai one bangkok", // confectionery/cafe style
-
-        // Must-add from earlier (confirmed)
-        "piri piri flaming grill",
-        "naixue",
-        "bn-icon siam",
-
-        // New adds for the 133 unparsed (grouped)
-        "pf changs",
-        "p f changs",
-        "al shayapf changs",
-        "docg",
-        "dark-emquartier",
-        "chuan kitchen",
-        "heytea",
-        "jasons deli",
-        "paris baguette",
-        "pezzo",
-        "origin+bloom",
-        "origin and bloom",
-        "punjab grill",
-        "shaans north indian",
-        "shaan north indian",
-        "sanchos paragon",
-        "sanchos",
-        "mitsukoshi depachika",
-        "oriental gourmet",
-        "the oriental gourmet",
-        "bosporus",
-        "leto",
-
-        // Google-prefixed eateries
-        "google nomadtable",
-        "google tantan asian",
-        "google viki asian dra",
-        "alsafadi",
-        "alsafadi restaurant",
-        "awfully chocolate",
-        "boon coffee",
-        "cafe bateel",
-        "cafebateel",
-        "cafobateel",
-        "coffee club",
-        "commonground",
-        "cps coffee",
-        "french spirit coffee",
-        "hashmi bhatti",
-        "hili coffee house",
-        "i coffee",
-        "kcal",
-        "line man",
-        "mado",
-        "masala xpress",
-        "mcdonald's",
-        "muin sukhumvit 63",
-        "nua tair",
-        "origin+bloom",
-        "pescado seafood grill",
-        "piri piri flaming gril",
-        "pincode",
-        "roasters coffee house",
-        "salkara",
-        "the coffee lab",
-        "top cafeteria",
-        "bosporus sharjah"
+        // generic
+        "restaurant", "resturant", "cafe", "café", "coffee", "bakery", "food", "momo",
+        "khaja", "bhojanalaya", "sekuwa", "chiya", "tea house", "canteen", "pizza", "burger",
+        "dining", "kitchen", "eatery", "sweets", "mithai",
+        // delivery
+        "foodmandu", "pathao food", "bhoj", "foodpanda",
+        // chains in Nepal
+        "kfc", "pizza hut", "dominos", "domino's", "burger king", "baskin robbins",
+        "himalayan java", "coffee bean", "roadhouse", "bajeko sekuwa", "bota momo",
+        "nanglo", "chikusa", "the burger house", "cinnabon", "bakery cafe", "bakery café",
+        "tukche thakali", "thakali", "newari", "big belly", "subway", "starbucks"
     )
 
     private val GROCERY = setOf(
-        "bigbasket",
-        "blinkit",
-        "zepto",
-        "grofers",
-        "jiomart",
-        "dmart",
-        "reliance fresh",
-        "more",
-        "grocery",
-        "dunzo",
-        "careem groceries",
-        "careem quik",
-        // Dubai / uae grocieries
-        "carrefour",
-        "spinneys",
-        "lulu",
-        "choithrams",
-        "waitrose",
-        "geant",
-        "union coop",
-        "abu dhabi co-op",
-        "emirates cooperative",
-        "nesto",
-        "almaya",
-        "rawabi",
-        "safeer",
-
-        // --- Newly Added Merchants ---
-        "hippo box",
-        "247 corner",
-        "new era super market",
-        "baqala",
-        "lebanese fruit co",
-        "al tayeb meat",
-        "west zone fresh",
-        "majid al futtaim hypermarket",
-        "all day mini",
-        "all day plus",
-        "fresh good day",
-        "al ghabat city",
-        "zoom",
-        "zoom site",
-        "all day",
-        "all day advantage mini",
-        "noon minutes",
-        "crrefour",
-        "maf mkt",
-        "jaya grocer",
-        "jaya grocer-intermark",
-        "villa market",
-        "villa market-gaysorn",
-        "villa market-lang suan",
-        "gourmet market",
-        "gourmet market emporium",
-        "tops",
-        "tops-central world",
-        "mini big c",
-        "mini big c-soi prachum",
-        "7-11",
-        "7-11 sukhumvit22",
-        "7-11 one bangkok",
-        "7-11 icon siam",
-        "7-11 park venture",
-        "7-11 maneeya chitlom",
-        "donki",
-        "donki mall",
-        "donki mall thonglor",
-        // New adds for the 133 unparsed (grouped)
-        "guardian",
-        "guardian paragon",
-        "craft minimart",
-        "foodland",
-        "luluhypermarket",
-        "majid al futtaim hypmk",
-        "majid al futtaim hypm"
-
+        "grocery", "kirana", "supermarket", "super market", "departmental store",
+        "bhatbhateni", "big mart", "bigmart", "salesberry", "saleways", "kk mart",
+        "himalayan supermarket", "civil mall mart", "q mart", "family mart", "daily needs",
+        "fresh mart", "tarkari", "vegetable", "fruits", "dairy", "meat shop", "khasi",
+        "kalimati", "cg mart", "ooji", "sajha pasal"
     )
 
     private val TRANSPORT = setOf(
-        "uber", "ola", "rapido", "metro", "irctc", "redbus", "makemytrip",
-        "goibibo", "petrol", "fuel", "parking", "toll", "fastag",
-        "indigo", "air india", "spicejet", "vistara", "cleartrip",
-        "careem ride", "careem hala ride", "yango",
-        //Thailand
-        "www.grab.com",
-
-        //Malaysia
-        "grab rides",
-        "pyxbolt services",
-        "bolt services",
-
-        //Dubai gas stations
-        "emarat", "adnoc", "enoc", "epc", "dolphin energy",
-
-        // --- Newly Added Merchants ---
-        "careem", // Generic fallback
-        "farid car park",
-        "big boss rent a car",
-        "presidential transport",
-        "q mobility",
-        "valtrans",
-        "eppco", "eppco site", "eppco-site", "tasjeel", "integrated transport",
-        "grab-ec", "grabtaxi", "bolt", "mrt-bem", "airports of thailand",
-        "sri rat expressway", "chalerm maha nakhon expressway", "expressway",
-        "opntrueiservicetopup", "opn true iservice topup",
-        "shell", "shell 0071f", "petaling jaya grab",
-
-        // New adds for the 133 unparsed (grouped)
-        "opvn bike tour",
-        "acv noi bai",
-        "noi bai",
-        "grab a-",
-        "grab 5-",
-        "sats",
-        "sats t1",
-        "sats t1i4",
-        "vnpay",
-        "vnpaytram",
-        "chalerm maha nakhon ex",
-        "expressway",
-        "point sbia",
-        "ptt",
-        "pttst.c",
-        "smart auto"
-
+        "pathao", "indrive", "in drive", "tootle", "uber", "taxi", "tempo", "micro bus",
+        "microbus", "sajha yatayat", "sajha bus", "bus park", "bus ticket", "bus sewa",
+        "yatayat", "petrol", "diesel", "fuel", "petrol pump", "filling station",
+        "nepal oil", "noc", "parking", "toll", "bluebook", "yatayat byawastha",
+        "transport management", "driving license"
     )
 
     private val SHOPPING = setOf(
-        "amazon", "flipkart", "myntra", "ajio", "nykaa", "meesho",
-        "snapdeal", "shopclues", "firstcry", "pepperfry", "urban ladder",
-        "store", "mart"
+        "daraz", "sastodeal", "hamrobazar", "hamro bazar", "thulo", "okdam", "gyapu",
+        "muncha", "smartdoko", "store", "mart", "pasal", "shopping", "mall",
+        "civil mall", "labim mall", "city centre", "kathmandu mall", "chhaya center",
+        "rising mall", "sherpa mall", "ctc mall", "bluebird mall"
     )
-    private val SHOPPING_EXCLUDE = setOf("jiomart", "dmart")
 
-    // --- Newly Added Merchants ---
+    private val SHOPPING_EXCLUDE = setOf("big mart", "bigmart", "kk mart", "q mart", "family mart", "fresh mart", "cg mart")
+
     private val SHOPPING_EXTENDED = setOf(
-        "paypal",
-        "gmg consumer",
-        "bloomingdales",
-        "dubizzle",
-        "veda inc investment",
-        "al futtaim trading",
-        "tipr tech",
-        "jumbo electronics",
-        "shake shack",
-        "home centre",
-        "qissat al oud",
-        "citywalk retail",
-        "ova accessories",
-        "the sport shack",
-        "dubai duty free",
-        "level shoes",
-        "balmain",
-        "zara",
-        "daikan",
-        "king koil",
-        "asas auto accessories",
-        "easy blinds",
-        "dubai furniture",
-        "whsmith",
-        "brands for less",
-        "sharaf dg",
-        "american eagle",
-        "dufry",
-        "a j a international",
-        "aja international",
-        "noon e-commerce",
-        "noon",
-        "m h al shaya",
-        "beside trading",
-        "intelligent oud",
-        "qissat aloud perfumes",
-        "uniqlo",
-        "uniqlo trx",
-        "h&m",
-        "sephora",
-        "louis vuitton",
-        "gucci",
-        "chanel",
-        "prada",
-        "tiffany & co",
-        "burberry",
-        "hermes",
-        "cartier",
-        "dior",
-        "fendi",
-        "versace",
-        "michael kors",
-        "coach",
-        "tory burch",
-        "ralph lauren",
-        "armani",
-        "adidas",
-        "nike",
-        "puma",
-        "reebok",
-        "under armour",
-        "lululemon",
-        "the north face",
-        "godiva pavilion",
-        "skechers",
-        "urban revivo",
-        "owndays",
-        "it city",
-        "it city centralworld",
-        "crc sports",
-        "sony (central world)",
-        "apple central world",
-        "lazada limited",
-        "www.2c2p.comlazada",
-        "2c2p lazada",
-        "www.2c2p.com lazada",
-        "sephora (thailand)",
-        "eveandboy",
-        "eveandboy/gaysorn",
-
-        // New adds for the 133 unparsed (grouped)
-        "istudio",
-        "istudio-siam paragon",
-        "wh smith singapore",
-        "lyn",
-        "fiverr",
-        "select media",
-        "adobe",
-        "adobe.com",
-        "lastpass",
-        "lastpass.com",
-        "openai chatgpt",
-        "openai",
-        "cursor",
-        "cursor usage",
-        "docg pte ltd",
-        "blu intelligent solutions",
-        "gajeto-23",
-        "sukhumvit city mall",
-        "the emsphere",
-        "central world",
-        "emquartier",
-        "iconsiam",
-        "central worl",
-        "angelic aroma",
-        "blu intelligent solut",
-        "lril",
-        "siam paragon dept",
-        "siam paragon sup",
-        "smartordering",
-        "smartordering technolo",
-        "space hub general ware",
-        "virgin megastore",
-        "empire tower",
-        "the empire tower",
-
-        )
+        "goldstar", "caliber shoes", "bata", "baby bazaar", "cg electronics", "cg digital",
+        "hukut", "oliz store", "neostore", "itti", "dealayo", "electronics", "mobile shop",
+        "samsung plaza", "apple store", "nike", "adidas", "puma", "zara", "h&m", "uniqlo",
+        "amazon", "aliexpress", "temu", "shein", "paypal", "adobe", "openai", "chatgpt",
+        "fiverr", "canva"
+    )
 
     private val UTILITIES = setOf(
-        "electricity",
-        "water",
-        "gas",
-        "broadband",
-        "wifi",
-        "internet",
-        "tata sky",
-        "dish",
-        "d2h",
-        "bill",
-        "tata power",
-        "adani",
-        "bses",
-        "act fibernet",
-
-        // --- Newly Added Merchants ---
-        "sdgdubaipay",
-        "careem plus",
-        "noqejari",
-        "saya",
-        "aljada developments",
-        "nshama",
-        "tasleem",
-        "tasleem address harbour",
-        "greenland environment",
-        "noq south energy",
-        "noqsouth energy dwc",
-
-        // New adds for the 133 unparsed (grouped)
-        "tamdeed projects",
-        "smart dubai government",
-        "paysolut",
-
-
+        "electricity", "nea", "nepal electricity", "bijuli", "khanepani", "water supply",
+        "kukl", "water", "gas", "lpg", "cylinder", "internet", "broadband", "wifi",
+        "worldlink", "vianet", "classic tech", "classictech", "subisu", "dishhome",
+        "dish home", "nettv", "net tv", "simtv", "sim tv", "clear tv", "techminds",
+        "websurfer", "bill", "garbage", "fohor", "municipality", "nagarpalika"
     )
 
     private val ENTERTAINMENT = setOf(
-        "netflix", "spotify", "prime", "hotstar", "sony liv", "zee5",
-        "voot", "youtube", "cinema", "pvr", "inox", "bookmyshow",
-        "gaana", "jiosaavn", "apple music", "wynk",
-
-        // --- Newly Added Merchants ---
-        "global village",
-        "major cineplex",
-        "www.majorcineplex.com",
-        "2c2pmajor cineplex",
-        "2c2p major cineplex",
-        "major 1066",
-        "major 1126",
-        "ticketmelon",
-        "www.2c2p ticketmelon",
-        "www.2cticketmelon",
-        "sfcinemacity",
-        "platinumlist.net"
+        "netflix", "spotify", "youtube", "prime video", "disney", "hbo", "apple music",
+        "cinema", "movie", "qfx", "big movies", "fcube", "f-cube", "one cinemas",
+        "movie ticket", "concert", "event", "khalti ticket", "esewa ticket", "game", "steam",
+        "playstation", "xbox", "pubg", "free fire"
     )
 
     private val HEALTHCARE = setOf(
-        "1mg", "pharmeasy", "netmeds", "apollo", "pharmacy", "medical",
-        "hospital", "clinic", "doctor", "practo", "healthkart", "truemeds",
-
-        // --- Newly Added Merchants ---
-        "ascent e n t",
-        "watson",
-        "dr nutrition",
-        "boots",
-        "supercare",
-        "life pharmacy",
-        "life phy",
-        "life pharm",
-        "deira life pharm",
-        "medex",
-        "bumrungrad", // (for getfresh-bumrungrad receipt context)
-        "watsons",
-        "lac nutrition for life",
-        "mediclinic al sufouh",
-        "boots_",
-        "boots_4287 c.world 3 fbangkok th"
+        "pharmacy", "medical", "medicals", "hospital", "clinic", "doctor", "dental",
+        "diagnostic", "lab", "polyclinic", "aushadhi", "pharma", "health",
+        "norvic", "grande", "mediciti", "nepal mediciti", "hams", "bir hospital",
+        "teaching hospital", "tuth", "om hospital", "b&b hospital", "kist", "civil hospital",
+        "patan hospital", "kathmandu model", "star hospital", "alka hospital", "sumeru",
+        "nidan", "tilganga"
     )
 
     private val INVESTMENT = setOf(
-        "groww", "zerodha", "upstox", "kuvera", "paytm money", "coin",
-        "smallcase", "mutual fund", "sip", "angel", "5paisa", "etmoney"
+        "nepse", "meroshare", "mero share", "cdsc", "demat", "ipo", "fpo", "share",
+        "shares", "mutual fund", "sip", "broker", "capital", "securities", "nabil invest",
+        "nibl ace", "siddhartha capital", "laxmi sunrise capital", "nmb capital",
+        "global ime capital", "ns capital", "gold", "silver"
     )
 
     private val BANKING = setOf(
-        "hdfc", "icici", "axis", "sbi", "kotak", "bank", "loan", "emi",
-        "credit card", "yes bank", "idfc", "indusind", "pnb", "canara", "union bank", "rbl", "prime commercial bank",
-
-        // --- Newly Added Merchants ---
-        "atm withdrawal",
-        "bank transfer",
-        "bank account operation",
-        "bank cheque operation",
-        "bank cash operation",
-        "my fatoorah",
-        "cash withdrawal",
-        "cash deposit",
-        "refund",
-        "outward remittance",
-        "inward remittance",
-        "transfer to",
-        "transfer from",
-        "transfer: "
+        "fund transfer", "connectips", "connect ips", "rtgs", "fonepay", "nchl",
+        "atm", "cash deposit", "branch", "remittance", "ime remit", "prabhu money",
+        "city express", "western union", "moneygram", "himal remit", "bank transfer"
     )
 
     private val PERSONAL_CARE = setOf(
-        "urban company", "salon", "spa", "barber", "beauty", "grooming", "housejoy",
-
-        // --- Newly Added Merchants ---
-        "green belt cleaning",
-        "magic washer laundry",
-        "stile di capelli",
-        "q2 general cleaning",
-        "ahmed sammie",
-        "clean car washers",
-        "italiano style men",
-        "high level car wash",
-        "home care",
-        "final touch cleaning",
-        "drip n dry",
-        "careem homeservices",
-        "skin iii",
-        "truefitt and hill",
-
-        // New adds for the 133 unparsed (grouped)
-        "sultans of shave",
-        "mandarin oriental spa",
-        "black amber sathorn",
-        "o.c.c.black amber sathorn",
-        "easy way laundry",
-        "splice barbershop",
-        "mandarin oriental spa",
-        "o.c.c.black amber sath",
-        "o.c.c.public co.,ltd",
-        "phetsathorn"
-
+        "salon", "parlour", "parlor", "beauty", "spa", "barber", "cosmetics", "nykaa",
+        "foreveryng", "sastobazaar beauty", "grooming", "laundry", "dry cleaning",
+        "tailor", "darji"
     )
 
     private val EDUCATION = setOf(
-        "byju", "unacademy", "vedantu", "coursera", "udemy", "upgrade",
-        "school", "college", "university", "toppr", "udacity", "simplilearn",
-        "whitehat", "great learning"
+        "school", "college", "campus", "university", "tuition", "coaching", "institute",
+        "academy", "exam fee", "admission", "tribhuvan university", "kathmandu university", "pokhara university",
+        "purbanchal", "neb", "bridge course", "ielts", "pte", "toefl", "consultancy",
+        "books", "stationery", "stationary"
     )
 
     private val MOBILE = setOf(
-        "airtel", "jio", "vodafone", "idea", "bsnl", "recharge", "prepaid", "postpaid", "mobile",
-
-        // --- Newly Added Merchants ---
-        "etisalat"
+        "ntc", "nepal telecom", "namaste", "ncell", "smart cell", "smartcell", "recharge",
+        "topup", "top up", "top-up", "data pack", "sim card", "esewa load", "khalti load",
+        "wallet load", "load fund"
     )
 
     private val FITNESS = setOf(
-        "cult",
-        "gym",
-        "fitness",
-        "yoga",
-        "healthifyme",
-        "fitternity",
-        "gold's gym",
-        "anytime fitness"
+        "gym", "fitness", "yoga", "zumba", "crossfit", "futsal", "swimming", "pool",
+        "badminton", "sports club", "martial arts", "taekwondo", "karate"
     )
 
     private val INSURANCE = setOf(
-        "insurance", "lic", "policy", "hdfc life", "icici pru", "sbi life",
-        "max life", "bajaj allianz", "policybazaar", "acko", "digit"
+        "insurance", "bima", "life insurance", "nepal life", "national life", "lic nepal",
+        "metlife", "sanima life", "himalayan life", "shikhar insurance", "sagarmatha lumbini",
+        "neco insurance", "insurance premium"
     )
 
     private val TAX = setOf(
-        "tin", "tax information", "income tax", "gst", "tax payment", "challan",
-        "direct tax", "indirect tax", "tax deducted", "tds", "advance tax", "self assessment",
-
-        // --- Newly Added Merchants ---
-        "abu dhabi judicial dept",
-        "sharjah finance dept",
-        "tassheel",
-        "dubai courts",
-        "ministry of interior",
-
-        // Must-add from earlier (confirmed)
-        "abu dhabi judicial dep",
-        "sharjah finance depart",
-        "smartdxbgov-ded"
-
+        "tax", "income tax", "ird", "inland revenue", "vat", "tds", "customs", "malpot",
+        "land revenue", "house tax", "property tax", "vehicle tax", "road tax",
+        "sampati kar"
     )
 
     private val BANK_CHARGE = setOf(
-        "recovery", "charge", "fee", "penalty", "maintenance", "non-maintenance",
-        "minimum balance", "sms charge", "atm recovery", "service charge",
-        "annual fee", "processing fee", "convenience fee", "late payment",
-        "cheque returned"
+        "service charge", "bank charge", "sms charge", "sms alert", "annual fee",
+        "debit card fee", "card fee", "maintenance fee", "penalty", "ats charge",
+        "commission", "processing fee", "stamp duty"
     )
 
     private val CC_PAYMENT = setOf(
-        "bbps", "bill payment", "credit card payment", "cc payment", "card payment"
+        "credit card payment", "card payment received", "credit card bill", "cc payment",
+        "credit card repayment"
     )
 
-    // Travel keywords (grouped for readability)
     private val TRAVEL = setOf(
-        // --- OTAs / Meta / Booking platforms ---
-        "make my trip",
-        "yatra",
-        "ixigo",
-        "booking.com",
-        "expedia",
-        "agoda",
-        "trip.com",
-        "trivago",
-        "hotels.com",
-        "kayak",
-        "travelocity",
-        "airbnb",
-        "vrbo",
-        "skyscanner",
-        "momondo",
-        "tripadvisor",
-
-        //Thailand hotels
-        "w bangkok",
-        "bangkok marriott",
-
-        // --- Generic travel terms ---
-        "flight",
-        "airline",
-        "hotel",
-
-        // --- Hotel chains ---
-        "marriott",
-        "hyatt",
-        "hilton",
-        "accor",
-
-        // --- Indian premium / luxury ---
-        "taj",
-        "oberoi",
-        "itc hotels",
-        "leela",
-
-        // Dubai / UAE Brands
-        "jumeirah",
-        "address hotels",
-        "address grand",
-        "palace downtown",
-        "burj al arab",
-        "one&only",
-        "five luxe",
-        "five palm jumeirah",
-        "atlantis the palm",
-        "atlantis the royal",
-        "anantara the palm",
-        "vida downtown",
-        "vida dubai creek",
-        "vida emirates hills",
-
-
-        //Abu Dhabi Brands
-        "emirates palace",
-
-        // --- Global premium chains ---
-        "radisson",
-        "sheraton",
-        "westin",
-        "ritz carlton",
-        "four seasons",
-        "conrad",
-        "st regis",
-        "jw marriott",
-        "grand hyatt",
-        "le meridien",
-        "waldorf astoria",
-        "intercontinental",
-        "fairfield",
-        "holiday inn express",
-        "hampton by hilton",
-        "doubletree by hilton",
-        "courtyard by marriott",
-        "residence inn",
-        "homewood suites",
-        "aloft",
-        "element by westin",
-        "the edition",
-        "tribe living",
-        "s/o uptown",
-        "moxy",
-        "four points by sherato",
-
-        // --- Mid-range / business / budget brands ---
-        "doubletree",
-        "holiday inn",
-        "novotel",
-        "mercure",
-        "ibis",
-        "fairmont",
-        "sofitel",
-        "pullman",
-        "movenpick",
-        "citadines",
-
-        // --- Budget aggregators (India & Asia) ---
-        "oyo",
-        "treebo",
-        "fabhotels",
-
-        // --- Ultra-luxury / boutique brands ---
-        "signiel",
-        "aman",
-        "aman resorts",
-        "anantara",
-        "banyan tree",
-        "six senses",
-        "rosewood",
-        "capella",
-        "kempinski",
-        "kimpton maa-lai",
-        "the ritz-carlton reserve",
-        // --- International airlines (selected) ---
-        "ryanair",
-        "lufthansa",
-        "emirates",
-        "qatar airways",
-        "british airways",
-        "air france",
-        "klm",
-        "singapore airlines",
-        "etihad airways",
-        "turkish airlines",
-        "cathay pacific",
-        "ana",
-
-        // --- US carriers ---
-        "alaska airlines",
-        "hawaiian airlines",
-        "southwest airlines",
-        "jetblue",
-        "allegiant air",
-        "spirit airlines",
-
-        // --- Newly Added Merchants ---
-        "vfs global",
-        "dubai world trade centre",
-        "dubai world trade cent",
-        "vfs uk",
-        "vfs world trade centre",
-        "vfs wtc",
-        "address downtown",
-        "the address downtown",
-        "the meydan",
-        "crowne plaza",
-        "crowne plaza klcc",
-        "four points by sheraton",
-        "sindhorn kempinski",
-        "st.regis bangkok",
-        "the st.regis bangkok",
-        "dusit thani bangkok",
-
-        // New adds for the 133 unparsed (grouped)
-        "staybridge",
-        "park silom",
-        "the parq",
-        "marina bay sands",
-        "mbs front office",
-        "w singapore",
-        "gardens by the bay",
-        "gardens by the bay-ret",
-        "gardens by the bay-tic",
-        "king power mahanakhon",
-        "al reyadah hospitality",
-        "four points by sheraton",
-        "king group hospitality",
-        "magnolias serviced",
-        "magnoliasservicedrbangkok"
+        // airlines operating in Nepal
+        "buddha air", "yeti airlines", "shree airlines", "nepal airlines", "tara air",
+        "summit air", "sita air", "saurya", "himalaya airlines", "qatar airways",
+        "emirates", "flydubai", "air arabia", "air india", "indigo", "malaysia airlines",
+        "thai airways", "turkish airlines", "korean air", "air china", "cathay",
+        "singapore airlines", "etihad",
+        // booking / travel agents
+        "air ticket", "flight", "airlines", "airways", "travels", "tours", "treks",
+        "trekking", "expedition", "travel agency", "booking.com", "agoda", "airbnb",
+        "makemytrip", "trip.com", "nepal tourism", "ntb", "tims", "trekking permit",
+        "national park", "conservation area", "entry fee",
+        // stays
+        "hotel", "resort", "lodge", "guest house", "guesthouse", "homestay", "hostel",
+        "soaltee", "hyatt", "marriott", "radisson", "yak & yeti", "yak and yeti",
+        "annapurna hotel", "shangri-la", "dwarika", "aloft", "fairfield",
+        "fulbari", "temple tree", "barahi", "chandragiri", "tiger tops",
+        // places
+        "pokhara", "chitwan", "lumbini", "nagarkot", "bandipur", "mustang", "everest"
     )
 
     // --- single ordered rule list (priority preserved) ---

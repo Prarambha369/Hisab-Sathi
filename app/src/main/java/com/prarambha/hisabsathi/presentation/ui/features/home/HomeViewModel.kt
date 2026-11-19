@@ -1,5 +1,6 @@
 package com.prarambha.hisabsathi.presentation.ui.features.home
 
+import com.prarambha.hisabsathi.core.Constants
 import com.prarambha.hisabsathi.BuildConfig
 
 import android.content.Context
@@ -108,7 +109,7 @@ class HomeViewModel @Inject constructor(
         emptyMap()
 
     private val baseCurrency = currencyRepository.baseCurrencyCode
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "INR")
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), Constants.DEFAULT_CURRENCY)
 
     init {
         loadHomeData()
@@ -611,8 +612,8 @@ class HomeViewModel @Inject constructor(
                 val updatedAvailableCurrencies = (currentAvailableCurrencies + allAccountCurrencies)
                     .sortedWith { a, b ->
                         when {
-                            a == "INR" -> -1 // INR first
-                            b == "INR" -> 1
+                            a == Constants.DEFAULT_CURRENCY -> -1 // base currency (NPR) first
+                            b == Constants.DEFAULT_CURRENCY -> 1
                             else -> a.compareTo(b) // Alphabetical for others
                         }
                     }
@@ -808,8 +809,8 @@ class HomeViewModel @Inject constructor(
         val allCurrencies = (currentMonthBreakdownMap.keys + lastMonthBreakdownMap.keys + currentYearBreakdownMap.keys).distinct()
         val availableCurrencies = allCurrencies.sortedWith { a, b ->
             when {
-                a == "INR" -> -1 // INR first
-                b == "INR" -> 1
+                a == Constants.DEFAULT_CURRENCY -> -1 // base currency (NPR) first
+                b == Constants.DEFAULT_CURRENCY -> 1
                 else -> a.compareTo(b) // Alphabetical for others
             }
         }
@@ -818,7 +819,7 @@ class HomeViewModel @Inject constructor(
         val currentSelectedCurrency = _uiState.value.selectedCurrency
         val selectedCurrency = if (!availableCurrencies.contains(currentSelectedCurrency) && availableCurrencies.isNotEmpty()) {
             when {
-                availableCurrencies.contains("INR") -> "INR"
+                availableCurrencies.contains(Constants.DEFAULT_CURRENCY) -> Constants.DEFAULT_CURRENCY
                 else -> availableCurrencies.first()
             }
         } else {

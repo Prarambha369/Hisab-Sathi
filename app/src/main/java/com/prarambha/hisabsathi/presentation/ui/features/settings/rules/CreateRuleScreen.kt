@@ -293,7 +293,7 @@ fun CreateRuleScreen(
                             value = ruleName,
                             onValueChange = { ruleName = it },
                             label = { Text("Rule Name", fontWeight = FontWeight.SemiBold) },
-                            placeholder = { Text("e.g., Food expenses under ₹200") },
+                            placeholder = { Text("e.g., Food expenses under NPR 200") },
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(
@@ -595,11 +595,11 @@ fun CreateRuleScreen(
                                                     Text(
                                                         when (condition.field) {
                                                             TransactionField.AMOUNT -> "e.g., 200"
-                                                            TransactionField.MERCHANT -> "e.g., Swiggy"
+                                                            TransactionField.MERCHANT -> "e.g., Foodmandu"
                                                             TransactionField.SMS_TEXT -> "e.g., salary"
                                                             TransactionField.SUBCATEGORY -> "e.g., Rent"
                                                             TransactionField.CATEGORY -> "e.g., Food"
-                                                            TransactionField.BANK_NAME -> "e.g., HDFC Bank"
+                                                            TransactionField.BANK_NAME -> "e.g., Nabil Bank"
                                                             else -> "Enter value"
                                                         }
                                                     )
@@ -955,8 +955,8 @@ fun CreateRuleScreen(
                                     TransactionField.MERCHANT -> {
                                         // Merchant name input with common suggestions
                                         val commonMerchants = listOf(
-                                            "Amazon", "Swiggy", "Zomato", "Uber",
-                                            "Netflix", "Google", "Flipkart"
+                                            "Daraz", "Foodmandu", "Pathao", "inDrive",
+                                            "Bhatbhateni", "NTC", "Ncell", "NEA"
                                         )
 
                                         FlowRow(

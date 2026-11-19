@@ -1,5 +1,6 @@
 package com.prarambha.hisabsathi.presentation.ui.features.profile
 
+import com.prarambha.hisabsathi.core.Constants
 import android.net.Uri
 import androidx.compose.ui.graphics.Color
 import java.math.BigDecimal
@@ -14,7 +15,7 @@ data class ProfileScreenState(
     val totalIncome: BigDecimal = BigDecimal.ZERO,
     val totalExpense: BigDecimal = BigDecimal.ZERO,
     val activeSubscriptions: Int = 0,
-    val baseCurrency: String = "INR",
+    val baseCurrency: String = Constants.DEFAULT_CURRENCY,
     val isLoading: Boolean = false,
     val isEditSheetOpen: Boolean = false,
     val hasStoragePermission: Boolean = false,

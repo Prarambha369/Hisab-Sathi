@@ -1,5 +1,6 @@
 package com.prarambha.hisabsathi.presentation.ui.features.onboarding
 
+import com.prarambha.hisabsathi.core.Constants
 import androidx.work.WorkInfo
 import com.prarambha.hisabsathi.data.database.entity.AccountBalanceEntity
 import com.prarambha.hisabsathi.presentation.ui.features.profile.EditProfileState
@@ -20,7 +21,7 @@ data class OnBoardingUiState(
     val manualAccountName: String = "",
     val manualAccountBalance: String = "",
     val manualAccountLast4: String = "",
-    val selectedCurrency: String = "INR", // Default currency
+    val selectedCurrency: String = Constants.DEFAULT_CURRENCY, // Default currency
     val showCurrencyBottomSheet: Boolean = false,
     val permissionSubStep: Int = 0 // 0: SMS, 1: Notification
 )

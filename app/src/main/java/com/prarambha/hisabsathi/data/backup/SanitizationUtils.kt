@@ -1,5 +1,6 @@
 package com.prarambha.hisabsathi.data.backup
 
+import com.prarambha.hisabsathi.core.Constants
 import com.prarambha.hisabsathi.data.database.entity.*
 import java.math.BigDecimal
 import java.time.LocalDateTime
@@ -70,7 +71,7 @@ fun TransactionEntity.sanitize(): TransactionEntity {
         isDeleted = isDeleted,
         createdAt = createdAt ?: LocalDateTime.now(),
         updatedAt = updatedAt ?: LocalDateTime.now(),
-        currency = currency ?: "INR",
+        currency = currency ?: Constants.DEFAULT_CURRENCY,
         fromAccount = fromAccount,
         toAccount = toAccount,
         billingCycle = billingCycle,
@@ -93,7 +94,7 @@ fun CardEntity.sanitize(): CardEntity {
         lastBalanceDate = lastBalanceDate,
         createdAt = createdAt ?: LocalDateTime.now(),
         updatedAt = updatedAt ?: LocalDateTime.now(),
-        currency = currency ?: "INR",
+        currency = currency ?: Constants.DEFAULT_CURRENCY,
         isSample = isSample
     )
 }
@@ -112,7 +113,7 @@ fun SubscriptionEntity.sanitize(): SubscriptionEntity {
         smsBody = smsBody,
         createdAt = createdAt ?: LocalDateTime.now(),
         updatedAt = updatedAt ?: LocalDateTime.now(),
-        currency = currency ?: "INR",
+        currency = currency ?: Constants.DEFAULT_CURRENCY,
         billingCycle = billingCycle,
         lastPaidDate = lastPaidDate,
         isSample = isSample
@@ -126,7 +127,7 @@ fun BudgetEntity.sanitize(): BudgetEntity {
         amount = amount ?: BigDecimal.ZERO,
         year = year,
         month = month,
-        currency = currency ?: "INR",
+        currency = currency ?: Constants.DEFAULT_CURRENCY,
         isActive = isActive,
         createdAt = createdAt ?: LocalDateTime.now(),
         updatedAt = updatedAt ?: LocalDateTime.now(),
@@ -156,7 +157,7 @@ fun AccountBalanceEntity.sanitize(): AccountBalanceEntity {
         smsSource = smsSource,
         sourceType = sourceType,
         createdAt = createdAt ?: LocalDateTime.now(),
-        currency = currency ?: "INR",
+        currency = currency ?: Constants.DEFAULT_CURRENCY,
         isWallet = isWallet,
         color = color ?: "#33B5E5",
         isSample = isSample

@@ -1,5 +1,6 @@
 package com.prarambha.hisabsathi.presentation.ui.components
 
+import com.prarambha.hisabsathi.core.Constants
 import androidx.compose.ui.graphics.Path
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
@@ -31,7 +32,7 @@ import java.time.format.DateTimeFormatter
 data class BalancePoint(
     val timestamp: LocalDateTime,
     val balance: BigDecimal,
-    val currency: String = "INR"
+    val currency: String = Constants.DEFAULT_CURRENCY
 )
 
 @Composable

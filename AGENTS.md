@@ -164,6 +164,10 @@ import androidx.room.*
   - `standard`: Includes Google Play Services (in-app updates, reviews)
   - `fdroid`: Stripped of proprietary dependencies, ARM-only ABI
 - **Permissions**: `READ_SMS` (runtime, with clear user justification)
+- **Currency**: NPR is the base currency. Use `Constants.DEFAULT_CURRENCY` for every default or fallback, never a literal code. Format NPR with `CurrencyFormatter.formatNpr` (`रु 1,23,456`). Other currencies stay selectable for foreign-currency transactions only.
+- **Fiscal year**: "Current FY" starts on Shrawan 1, which `nepalFiscalYearStart()` in `presentation/common/Filters.kt` approximates as 16 July.
+- **Nepal-only content**: sample data, seed subcategories, placeholders, rule templates, `CategoryMapping` keywords and `BrandIcons` must use Nepali institutions and merchants. Remove India or other upstream leftovers when you find them; don't flag them as open questions.
+- **Database**: version 48. Changing a `@ColumnInfo(defaultValue = …)` changes the schema, so add an `AutoMigration` and commit the new `app/schemas/.../<n>.json`. Never edit older schema JSONs.
 
 ---
 

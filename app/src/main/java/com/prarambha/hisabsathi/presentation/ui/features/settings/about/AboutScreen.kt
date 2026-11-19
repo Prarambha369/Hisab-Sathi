@@ -236,7 +236,7 @@ fun AboutScreen(
                     )
                     AboutListItem(
                         title = "Github",
-                        subtitle = "Prarambha369/HisabSathi",
+                        subtitle = "Prarambha369/Hisab-Sathi",
                         icon = Iconax.Github,
                         iconColor = green_dark,
                         iconBackground = green_light,
@@ -246,20 +246,6 @@ fun AboutScreen(
                                 Intent.ACTION_VIEW,
                                 Constants.Links.GITHUB_URL.toUri()
                             )
-                            context.startActivity(intent)
-                        },
-                        position = ListItemPosition.Middle
-                    )
-                    AboutListItem(
-                        title = "Discord",
-                        subtitle = "Join our community",
-                        icon = Iconax.Discord,
-                        iconColor = purple_dark,
-                        iconBackground = purple_light,
-                        isLink = true,
-                        onClick = {
-                            val intent =
-                                Intent(Intent.ACTION_VIEW, Constants.Links.DISCORD_URL.toUri())
                             context.startActivity(intent)
                         },
                         position = ListItemPosition.Bottom

@@ -1,8 +1,5 @@
-- Integrated BPCE and Prime Commercial Bank parsers.
-- Stability: Brand icons now persist correctly across app updates.
-- Refreshed UI: New onboarding, filter sheets, and transaction card designs.
-- Features: Unified currency, swipe to edit subscriptions, and custom billing cycles.
-- Enhancements: Improved PDF import, duplicate detection, and PhonePe parsing.
-- Customization: New "Rose Pine" palette and adaptive app icons.
-- Convenience: Added Quick Setting toggles and App Shortcuts.
-- Bug fixes
+- Hisab Sathi: Nepal-only rebuild of the app, with NPR as the default currency.
+- Supports eSewa, Khalti, Nabil, NMB, Himalayan, Laxmi Sunrise, Siddhartha and Everest SMS.
+- Teach the app unrecognized SMS by tapping them.
+- Nepali sample data, categories, merchants and fiscal year (starts in Shrawan).
+- Privacy: no SMS content or account numbers in release logs.

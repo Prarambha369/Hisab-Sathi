@@ -1,5 +1,6 @@
 package com.prarambha.hisabsathi.presentation.ui.features.accounts
 
+import com.prarambha.hisabsathi.core.Constants
 import com.prarambha.hisabsathi.data.database.entity.AccountBalanceEntity
 import com.prarambha.hisabsathi.data.database.entity.TransactionEntity
 import com.prarambha.hisabsathi.presentation.ui.components.BalancePoint
@@ -15,8 +16,8 @@ data class AccountDetailUiState(
     val totalIncome: BigDecimal = BigDecimal.ZERO,
     val totalExpenses: BigDecimal = BigDecimal.ZERO,
     val netBalance: BigDecimal = BigDecimal.ZERO,
-    val primaryCurrency: String = "INR",
-    val baseCurrency: String = "INR",
+    val primaryCurrency: String = Constants.DEFAULT_CURRENCY,
+    val baseCurrency: String = Constants.DEFAULT_CURRENCY,
     val hasMultipleCurrencies: Boolean = false,
     val convertedAmounts: Map<Long, BigDecimal> = emptyMap(),
     val isLoading: Boolean = true

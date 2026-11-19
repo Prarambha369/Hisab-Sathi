@@ -4,6 +4,12 @@ package com.prarambha.hisabsathi.core
  * Application-wide constants to avoid hardcoded values
  */
 object Constants {
+
+    /**
+     * Hisab Sathi is Nepal-only: every currency default and fallback is NPR.
+     * Other currencies stay selectable for foreign-currency transactions.
+     */
+    const val DEFAULT_CURRENCY = "NPR"
     
     /**
      * SMS Processing Configuration
@@ -81,13 +87,12 @@ object Constants {
      * External Links
      */
     object Links {
-        const val DISCORD_URL = "https://discord.gg/6qaYgpJTg"
         const val GITHUB_URL = "https://github.com/Prarambha369/Hisab-Sathi"
-        const val WEBSITE_URL = "https://Prarambha369.github.io/hisabsathi.showcase"
-        const val PRIVACY_POLICY_URL = "https://Prarambha369.github.io/hisabsathi.showcase/privacy"
-        const val TERMS_OF_SERVICE_URL = "https://Prarambha369.github.io/hisabsathi.showcase/terms"
-        const val FAQ_URL = "https://Prarambha369.github.io/hisabsathi.showcase/faq"
-        const val GUIDE_URL = "https://Prarambha369.github.io/hisabsathi.showcase/guides"
+        const val WEBSITE_URL = GITHUB_URL
+        const val PRIVACY_POLICY_URL = "$GITHUB_URL/blob/main/PRIVACY.md"
+        const val TERMS_OF_SERVICE_URL = "$GITHUB_URL/blob/main/LICENSE"
+        const val FAQ_URL = "$GITHUB_URL#readme"
+        const val GUIDE_URL = "$GITHUB_URL/blob/main/README.md"
         const val REPORT_BUG_URL = "https://github.com/Prarambha369/Hisab-Sathi/issues/new/choose"
     }
 }

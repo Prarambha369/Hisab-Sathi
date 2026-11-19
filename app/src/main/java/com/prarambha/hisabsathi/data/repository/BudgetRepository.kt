@@ -1,5 +1,6 @@
 package com.prarambha.hisabsathi.data.repository
 
+import com.prarambha.hisabsathi.core.Constants
 import com.prarambha.hisabsathi.data.database.dao.BudgetDao
 import com.prarambha.hisabsathi.data.database.dao.TransactionDao
 import com.prarambha.hisabsathi.data.database.entity.BudgetCategoryLimitEntity
@@ -102,7 +103,7 @@ class BudgetRepository @Inject constructor(
         amount: BigDecimal,
         year: Int,
         month: Int,
-        currency: String = "INR"
+        currency: String = Constants.DEFAULT_CURRENCY
     ): Long {
         val budget = BudgetEntity(
             name = name,

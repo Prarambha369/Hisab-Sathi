@@ -1,9 +1,9 @@
 package com.prarambha.hisabsathi.utils
 
+import com.prarambha.hisabsathi.core.Constants
 import com.prarambha.hisabsathi.data.currency.model.CurrencySymbols
 import com.prarambha.parser.core.bank.BankParserFactory
 import java.math.BigDecimal
-import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.Currency
 import java.util.Locale
@@ -14,6 +14,23 @@ import java.util.Locale
 object CurrencyFormatter {
 
     private val INDIAN_LOCALE = Locale("en", "IN")
+
+    /**
+     * Latin digits with South-Asian (lakh/crore) grouping, e.g. 1,23,456.5 — how amounts
+     * are written in Nepal. The ne-NP locale is deliberately not used for NPR because it
+     * renders Devanagari digits and its own currency symbol.
+     */
+    private fun lakhGrouped(amount: BigDecimal, minFraction: Int = 0, maxFraction: Int = 2): String =
+        NumberFormat.getNumberInstance(INDIAN_LOCALE).apply {
+            minimumFractionDigits = minFraction
+            maximumFractionDigits = maxFraction
+        }.format(amount)
+
+    /** Formats an NPR amount as "रु 1,23,456". */
+    fun formatNpr(amount: BigDecimal, minFraction: Int = 0, maxFraction: Int = 2): String {
+        val sign = if (amount.signum() < 0) "-" else ""
+        return "$sign${CurrencySymbols.getSymbol("NPR")} ${lakhGrouped(amount.abs(), minFraction, maxFraction)}"
+    }
 
     /**
      * Locale mapping for different currencies
@@ -44,9 +61,10 @@ object CurrencyFormatter {
     /**
      * Formats a BigDecimal amount as currency with the specified currency code
      */
-    fun formatCurrency(amount: BigDecimal, currencyCode: String = "INR"): String {
+    fun formatCurrency(amount: BigDecimal, currencyCode: String = Constants.DEFAULT_CURRENCY): String {
+        if (currencyCode.equals("NPR", ignoreCase = true)) return formatNpr(amount)
         return try {
-            val locale = CURRENCY_LOCALES[currencyCode] ?: INDIAN_LOCALE
+            val locale = CURRENCY_LOCALES[currencyCode] ?: Locale.US
             val formatter = NumberFormat.getCurrencyInstance(locale)
             
             // Get our custom symbol
@@ -88,20 +106,17 @@ object CurrencyFormatter {
     /**
      * Formats a Double amount as currency with the specified currency code
      */
-    fun formatCurrency(amount: Double, currencyCode: String = "INR"): String {
+    fun formatCurrency(amount: Double, currencyCode: String = Constants.DEFAULT_CURRENCY): String {
         return formatCurrency(amount.toBigDecimal(), currencyCode)
     }
 
     /**
-     * Legacy method for backward compatibility - defaults to INR
+     * Formats a bare amount (no symbol) with lakh grouping and two decimals.
      */
-    fun formatAmount(amount: BigDecimal): String {
-        val formatter = DecimalFormat("#,##,##0.00")
-        return formatter.format(amount)
-    }
+    fun formatAmount(amount: BigDecimal): String = lakhGrouped(amount, 2, 2)
 
     /**
-     * Legacy method for backward compatibility - defaults to INR
+     * Formats a bare amount (no symbol) with lakh grouping and two decimals.
      */
     fun formatAmount(amount: Double): String {
         return formatAmount(amount.toBigDecimal())

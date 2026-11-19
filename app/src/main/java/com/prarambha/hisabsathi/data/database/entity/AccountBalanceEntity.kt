@@ -1,5 +1,6 @@
 package com.prarambha.hisabsathi.data.database.entity
 
+import com.prarambha.hisabsathi.core.Constants
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
@@ -31,7 +32,7 @@ data class AccountBalanceEntity(
     @ColumnInfo(name = "source_type")
     val sourceType: String? = null, // TRANSACTION, SMS_BALANCE, MANUAL, CARD_LINK
     @ColumnInfo(name = "created_at") val createdAt: LocalDateTime = LocalDateTime.now(),
-    @ColumnInfo(name = "currency", defaultValue = "INR") val currency: String = "INR",
+    @ColumnInfo(name = "currency", defaultValue = Constants.DEFAULT_CURRENCY) val currency: String = Constants.DEFAULT_CURRENCY,
     @ColumnInfo(name = "is_wallet", defaultValue = "0") val isWallet: Boolean = false,
     @ColumnInfo(name = "color", defaultValue = "#33B5E5") val color: String = "#33B5E5",
     @ColumnInfo(name = "is_sample", defaultValue = "0") val isSample: Boolean = false

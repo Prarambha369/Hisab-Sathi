@@ -1,5 +1,6 @@
 package com.prarambha.hisabsathi.presentation.ui.features.budgets
 
+import com.prarambha.hisabsathi.core.Constants
 import com.prarambha.hisabsathi.data.database.entity.AccountBalanceEntity
 import com.prarambha.hisabsathi.data.repository.BudgetWithSpending
 import com.prarambha.hisabsathi.data.repository.CategoryLimitWithSpending
@@ -21,7 +22,7 @@ data class BudgetUiState(
     val selectedBudgetTransactions: List<TransactionEntity> = emptyList(),
     val allAccounts: List<AccountBalanceEntity> = emptyList(),
     val convertedAmounts: Map<Long, BigDecimal> = emptyMap(),
-    val baseCurrency: String = "INR",
+    val baseCurrency: String = Constants.DEFAULT_CURRENCY,
     val error: String? = null
 )
 
@@ -38,7 +39,7 @@ data class EditBudgetState(
     val budgetType: BudgetType = BudgetType.EXPENSE,
     val accountIds: List<String> = emptyList(),
     val color: String = "#4CAF50",
-    val currency: String = "INR",
+    val currency: String = Constants.DEFAULT_CURRENCY,
     val categoryLimits: List<EditCategoryLimit> = emptyList()
 ) {
     val isNewBudget: Boolean get() = budgetId == null

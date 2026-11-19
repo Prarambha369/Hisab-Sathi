@@ -1,5 +1,6 @@
 package com.prarambha.hisabsathi.data.preferences
 
+import com.prarambha.hisabsathi.core.Constants
 import android.content.Context
 import android.os.Build
 import androidx.datastore.core.DataStore
@@ -96,7 +97,7 @@ constructor(@ApplicationContext private val context: Context) {
                 smsScanAllTime = preferences[PreferencesKeys.SMS_SCAN_ALL_TIME]
                     ?: true,
                 baseCurrency = preferences[PreferencesKeys.BASE_CURRENCY]
-                    ?: "INR",
+                    ?: Constants.DEFAULT_CURRENCY,
                 isAmoledMode = preferences[PreferencesKeys.IS_AMOLED_MODE] ?: false,
                 userName = preferences[PreferencesKeys.USER_NAME] ?: "User",
                 profileImageUri = preferences[PreferencesKeys.PROFILE_IMAGE_URI],
@@ -149,7 +150,7 @@ constructor(@ApplicationContext private val context: Context) {
 
     val baseCurrency: Flow<String> =
         context.dataStore.data.map { preferences ->
-            preferences[PreferencesKeys.BASE_CURRENCY] ?: "INR"
+            preferences[PreferencesKeys.BASE_CURRENCY] ?: Constants.DEFAULT_CURRENCY
         }
 
     suspend fun updateBaseCurrency(currency: String) {
@@ -643,7 +644,7 @@ data class UserPreferences(
         val hasShownScanTutorial: Boolean = false,
         val smsScanMonths: Int = 3, // Default to 3 months
         val smsScanAllTime: Boolean = true,
-        val baseCurrency: String = "INR", // Default to INR
+        val baseCurrency: String = Constants.DEFAULT_CURRENCY, // Nepal-only: default to NPR
         val isAmoledMode: Boolean = false,
         val userName: String = "User",
         val profileImageUri: String? = null,

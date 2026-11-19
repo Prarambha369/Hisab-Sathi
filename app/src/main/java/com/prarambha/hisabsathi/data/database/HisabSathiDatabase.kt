@@ -66,7 +66,7 @@ import com.prarambha.hisabsathi.data.database.entity.UnrecognizedSmsEntity
             BudgetEntity::class,
             BudgetCategoryLimitEntity::class
         ],
-    version = 47,
+    version = 48,
     exportSchema = true,
     autoMigrations =
         [
@@ -89,7 +89,9 @@ import com.prarambha.hisabsathi.data.database.entity.UnrecognizedSmsEntity
             AutoMigration(from = 43, to = 44, spec = Migration43To44::class),
             AutoMigration(from = 44, to = 45, spec = Migration44To45::class),
             AutoMigration(from = 45, to = 46, spec = Migration45To46::class),
-            AutoMigration(from = 46, to = 47, spec = Migration46To47::class)
+            AutoMigration(from = 46, to = 47, spec = Migration46To47::class),
+            // 48: currency column defaults INR -> NPR (Nepal-only). Existing rows are unchanged.
+            AutoMigration(from = 47, to = 48)
         ]
 )
 @TypeConverters(Converters::class)

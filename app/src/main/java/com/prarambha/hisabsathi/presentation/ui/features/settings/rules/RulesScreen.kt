@@ -361,11 +361,10 @@ private fun RuleCard(
                 // Show simple condition summary
                 val conditionSummary = when {
                     rule.name.contains("Small Payments", ignoreCase = true) -> "Amount < 200"
-                    rule.name.contains("UPI Cashback", ignoreCase = true) -> "Amount < 10 from NPCI"
                     rule.name.contains("Salary", ignoreCase = true) -> "Credits with salary keywords"
                     rule.name.contains("Rent", ignoreCase = true) -> "Payments with rent keywords"
                     rule.name.contains("EMI", ignoreCase = true) -> "EMI/loan keywords"
-                    rule.name.contains("Investment", ignoreCase = true) -> "Mutual funds, stocks keywords"
+                    rule.name.contains("Investment", ignoreCase = true) -> "Shares, mutual funds, MeroShare keywords"
                     rule.name.contains("Subscription", ignoreCase = true) -> "Netflix, Spotify, etc."
                     rule.name.contains("Fuel", ignoreCase = true) -> "Petrol pump transactions"
                     rule.name.contains("Healthcare", ignoreCase = true) -> "Hospital, pharmacy keywords"

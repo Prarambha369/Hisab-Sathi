@@ -50,10 +50,10 @@ fun CurrencySelectionBottomSheet(
                     headline = {
                         Text(
                             text = when (currency) {
+                                "NPR" -> "Nepalese Rupee (रु)"
                                 "INR" -> "Indian Rupee (₹)"
                                 "USD" -> "US Dollar ($)"
                                 "AED" -> "UAE Dirham (AED)"
-                                "NPR" -> "Nepalese Rupee (₨)"
                                 "ETB" -> "Ethiopian Birr (ብር)"
                                 else -> currency
                             }

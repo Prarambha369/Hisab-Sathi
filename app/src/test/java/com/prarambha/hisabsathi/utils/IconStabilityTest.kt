@@ -28,7 +28,7 @@ class IconStabilityTest {
 
     @Test
     fun testIconProviderPriority() {
-        val merchantName = "Uber"
+        val merchantName = "Netflix"
         val iconName = "type_travel_transport_taxi"
         
         // Test that getIconForTransaction handles the parameters correctly.
@@ -38,7 +38,7 @@ class IconStabilityTest {
             accountIconName = iconName
         )
         
-        // Uber has a brand logo in BrandIcons, so it should be used first
+        // Netflix has a brand logo in BrandIcons, so it should be used first
         assertTrue("Brand logo or custom icon should be resolved", resource is IconResource.DrawableResource)
     }
 }

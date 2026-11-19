@@ -1,86 +1,47 @@
 package com.prarambha.hisabsathi.utils
 
+import com.prarambha.hisabsathi.core.Constants
 import java.math.BigDecimal
-import java.text.NumberFormat
-import java.util.Currency
-import java.util.Locale
 
 /**
- * Utility functions for currency formatting
+ * Utility functions for formatting amounts in the app's base currency (NPR).
  */
 object CurrencyUtils {
-    
-    private val indianLocale = Locale.Builder().setLanguage("en").setRegion("IN").build()
-    private val indianCurrencyFormat = NumberFormat.getCurrencyInstance(indianLocale).apply {
-        currency = Currency.getInstance("INR")
-        maximumFractionDigits = 0 // No decimal places for whole amounts
-    }
-    
-    /**
-     * Formats a BigDecimal amount as Indian Rupees
-     * @param amount The amount to format
-     * @return Formatted string like "₹1,234" or "₹1,23,456"
-     */
-    fun formatCurrency(amount: BigDecimal): String {
-        // For amounts with decimals, show them
-        return if (amount.stripTrailingZeros().scale() > 0) {
-            val formatter = NumberFormat.getCurrencyInstance(indianLocale).apply {
-                currency = Currency.getInstance("INR")
-                maximumFractionDigits = 2
-                minimumFractionDigits = 1
-            }
-            formatter.format(amount)
-        } else {
-            indianCurrencyFormat.format(amount)
-        }
-    }
-    
-    /**
-     * Formats a Double amount as Indian Rupees
-     */
-    fun formatCurrency(amount: Double): String {
-        return formatCurrency(BigDecimal.valueOf(amount))
-    }
-    
-    /**
-     * Formats an Int amount as Indian Rupees
-     */
-    fun formatCurrency(amount: Int): String {
-        return formatCurrency(BigDecimal(amount))
-    }
-    
-    /**
-     * Formats an amount with a custom number of decimal places
-     */
-    fun formatCurrency(amount: BigDecimal, decimalPlaces: Int): String {
-        val formatter = NumberFormat.getCurrencyInstance(indianLocale).apply {
-            currency = Currency.getInstance("INR")
-            maximumFractionDigits = decimalPlaces
-            minimumFractionDigits = decimalPlaces
-        }
-        return formatter.format(amount)
-    }
 
     /**
-     * Sorts a list of currency codes with INR prioritized first, then alphabetically.
+     * Formats a BigDecimal amount as Nepalese Rupees.
+     * @return Formatted string like "रु 1,234" or "रु 1,23,456.5"
+     */
+    fun formatCurrency(amount: BigDecimal): String =
+        if (amount.stripTrailingZeros().scale() > 0) {
+            CurrencyFormatter.formatNpr(amount, minFraction = 1, maxFraction = 2)
+        } else {
+            CurrencyFormatter.formatNpr(amount, minFraction = 0, maxFraction = 0)
+        }
+
+    /** Formats a Double amount as Nepalese Rupees. */
+    fun formatCurrency(amount: Double): String = formatCurrency(BigDecimal.valueOf(amount))
+
+    /** Formats an Int amount as Nepalese Rupees. */
+    fun formatCurrency(amount: Int): String = formatCurrency(BigDecimal(amount))
+
+    /** Formats an NPR amount with a fixed number of decimal places. */
+    fun formatCurrency(amount: BigDecimal, decimalPlaces: Int): String =
+        CurrencyFormatter.formatNpr(amount, minFraction = decimalPlaces, maxFraction = decimalPlaces)
+
+    /**
+     * Sorts currency codes with the base currency (NPR) first, then alphabetically.
      * This is the standard sorting for currency lists throughout the app.
      *
-     * @param currencies List of currency codes to sort
-     * @return Sorted list with INR first (if present), then alphabetically
-     *
-     * Example:
-     * ```
-     * sortCurrencies(listOf("USD", "EUR", "INR", "GBP"))
-     * // Returns: ["INR", "EUR", "GBP", "USD"]
-     * ```
+     * Example: `sortCurrencies(listOf("USD", "INR", "NPR"))` returns `["NPR", "INR", "USD"]`.
      */
-    fun sortCurrencies(currencies: List<String>): List<String> {
-        return currencies.sortedWith { a, b ->
+    fun sortCurrencies(currencies: List<String>): List<String> =
+        currencies.sortedWith { a, b ->
             when {
-                a == "INR" -> -1 // INR first
-                b == "INR" -> 1
-                else -> a.compareTo(b) // Alphabetical for others
+                a == b -> 0
+                a == Constants.DEFAULT_CURRENCY -> -1
+                b == Constants.DEFAULT_CURRENCY -> 1
+                else -> a.compareTo(b)
             }
         }
-    }
 }

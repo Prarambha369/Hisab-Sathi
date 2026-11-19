@@ -74,7 +74,7 @@ The workflow will:
 The workflow automatically generates release notes from your commits:
 ```markdown
 ## Changes since v2.1.7
-- feat: add ICICI Bank support (abc123)
+- feat: add Kumari Bank support (abc123)
 - fix: resolve download issues (def456)
 - docs: update README (ghi789)
 ```

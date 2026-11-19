@@ -1,5 +1,6 @@
 package com.prarambha.hisabsathi.presentation.ui.features.home
 
+import com.prarambha.hisabsathi.core.Constants
 import android.net.Uri
 import androidx.compose.ui.graphics.Color
 import com.prarambha.hisabsathi.data.database.entity.AccountBalanceEntity
@@ -26,12 +27,12 @@ data class HomeUiState(
     val recentTransactions: List<TransactionEntity> = emptyList(),
     val upcomingSubscriptions: List<SubscriptionEntity> = emptyList(),
     val upcomingSubscriptionsTotal: BigDecimal = BigDecimal.ZERO,
-    val upcomingSubscriptionsCurrency: String = "INR",
+    val upcomingSubscriptionsCurrency: String = Constants.DEFAULT_CURRENCY,
     val accountBalances: List<AccountBalanceEntity> = emptyList(),
     val creditCards: List<AccountBalanceEntity> = emptyList(),
     val totalBalance: BigDecimal = BigDecimal.ZERO,
     val totalAvailableCredit: BigDecimal = BigDecimal.ZERO,
-    val selectedCurrency: String = "INR",
+    val selectedCurrency: String = Constants.DEFAULT_CURRENCY,
     val availableCurrencies: List<String> = emptyList(),
     val isLoading: Boolean = true,
     val isScanning: Boolean = false,
@@ -46,5 +47,5 @@ data class HomeUiState(
     val balanceHistory: List<BalancePoint> = emptyList(),
     val transactionHeatmap: Map<java.time.LocalDate, Int> = emptyMap(),
     val convertedAmounts: Map<Long, BigDecimal> = emptyMap(),
-    val baseCurrency: String = "INR",
+    val baseCurrency: String = Constants.DEFAULT_CURRENCY,
 )

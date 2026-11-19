@@ -87,7 +87,7 @@ class SubscriptionRepository @Inject constructor(
             }
         } ?: LocalDate.now().plusDays(30)
 
-        // For banks that provide UMN (HDFC, SBI, Federal), use it as primary identifier
+        // When the SMS carries a mandate reference number (UMN), use it as the primary identifier
         val existing = if (mandateInfo.umn != null) {
             subscriptionDao.getSubscriptionByUmn(mandateInfo.umn!!)
         } else {

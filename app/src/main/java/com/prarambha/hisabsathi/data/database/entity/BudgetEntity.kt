@@ -1,5 +1,6 @@
 package com.prarambha.hisabsathi.data.database.entity
 
+import com.prarambha.hisabsathi.core.Constants
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -28,8 +29,8 @@ data class BudgetEntity(
     @ColumnInfo(name = "month")
     val month: Int,
 
-    @ColumnInfo(name = "currency", defaultValue = "INR")
-    val currency: String = "INR",
+    @ColumnInfo(name = "currency", defaultValue = Constants.DEFAULT_CURRENCY)
+    val currency: String = Constants.DEFAULT_CURRENCY,
 
     @ColumnInfo(name = "is_active", defaultValue = "1")
     val isActive: Boolean = true,

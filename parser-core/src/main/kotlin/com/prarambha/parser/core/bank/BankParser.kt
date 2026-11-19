@@ -125,7 +125,6 @@ abstract class BankParser {
         return merchant.replace(CompiledPatterns.Cleaning.TRAILING_PARENTHESES, "")
             .replace(CompiledPatterns.Cleaning.REF_NUMBER_SUFFIX, "")
             .replace(CompiledPatterns.Cleaning.DATE_SUFFIX, "")
-            .replace(CompiledPatterns.Cleaning.UPI_SUFFIX, "")
             .replace(CompiledPatterns.Cleaning.TIME_SUFFIX, "")
             .replace(CompiledPatterns.Cleaning.TRAILING_DASH, "")
             .replace(CompiledPatterns.Cleaning.PVT_LTD, "")

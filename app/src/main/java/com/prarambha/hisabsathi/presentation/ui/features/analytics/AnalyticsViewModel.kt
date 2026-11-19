@@ -135,7 +135,7 @@ class AnalyticsViewModel @Inject constructor(
                 startDate = dateRange.first,
                 endDate = dateRange.second
             ).flatMapLatest { allTransactions: List<TransactionEntity> ->
-                // Update available currencies using standard sorting (INR first, then alphabetical)
+                // Update available currencies using standard sorting (NPR first, then alphabetical)
                 val allCurrencies = CurrencyUtils.sortCurrencies(
                     allTransactions.map { it.currency }.distinct()
                 )

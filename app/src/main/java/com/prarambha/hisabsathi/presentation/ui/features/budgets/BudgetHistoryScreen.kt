@@ -1,5 +1,6 @@
 package com.prarambha.hisabsathi.presentation.ui.features.budgets
 
+import com.prarambha.hisabsathi.core.Constants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -120,7 +121,7 @@ fun BudgetHistoryScreen(
                                 Column(modifier = Modifier.padding(Spacing.md)) {
                                     SpendingLineChart(
                                         data = uiState.chartPoints,
-                                        currency = uiState.budget?.currency ?: "INR"
+                                        currency = uiState.budget?.currency ?: Constants.DEFAULT_CURRENCY
                                     )
                                 }
                             }

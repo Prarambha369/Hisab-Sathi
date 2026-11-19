@@ -13,6 +13,7 @@ data class Currency(
          * List of supported currencies based on CurrencyFormatter mappings
          */
         val SUPPORTED_CURRENCIES = listOf(
+            Currency("NPR", "Nepalese Rupee", "रु"),
             Currency("INR", "Indian Rupee", "₹"),
             Currency("USD", "US Dollar", "$"),
             Currency("EUR", "Euro", "€"),
@@ -23,7 +24,6 @@ data class Currency(
             Currency("AUD", "Australian Dollar", "A$"),
             Currency("JPY", "Japanese Yen", "¥"),
             Currency("CNY", "Chinese Yuan", "¥"),
-            Currency("NPR", "Nepalese Rupee", "₨"),
             Currency("ETB", "Ethiopian Birr", "ብር"),
             Currency("THB", "Thai Baht", "฿"),
             Currency("MYR", "Malaysian Ringgit", "RM"),
@@ -43,8 +43,8 @@ data class Currency(
          * Popular currency codes for quick access
          */
         val POPULAR_CURRENCY_CODES = listOf(
-            "INR", "USD", "EUR", "GBP", "JPY", "AUD", "CAD", "CHF",
-            "CNY", "SEK", "NZD", "MXN", "SGD", "AED", "KRW"
+            "NPR", "INR", "USD", "EUR", "GBP", "AUD", "CAD", "JPY",
+            "CNY", "AED", "SAR", "KWD", "MYR", "KRW", "SGD"
         )
 
         /**

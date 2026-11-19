@@ -1,5 +1,6 @@
 package com.prarambha.hisabsathi.presentation.ui.features.accounts
 
+import com.prarambha.hisabsathi.core.Constants
 import com.prarambha.hisabsathi.BuildConfig
 
 import android.content.Context
@@ -46,7 +47,7 @@ data class AccountFormState(
     val accountType: AccountType = AccountType.SAVINGS,
     val iconResId: Int = 0,
     val iconName: String = "",
-    val currency: String = "INR",
+    val currency: String = Constants.DEFAULT_CURRENCY,
     val isValid: Boolean = false,
     val errorMessage: String? = null
 )
@@ -232,7 +233,7 @@ constructor(
         isCreditCard: Boolean = false,
         isWallet: Boolean = false,
         creditLimit: BigDecimal? = null,
-        currency: String = "INR"
+        currency: String = Constants.DEFAULT_CURRENCY
     ) {
         viewModelScope.launch {
             // Check for duplicates
@@ -556,7 +557,7 @@ constructor(
             newIconResId: Int,
             newIconName: String,
             newColorHex: String,
-            newCurrency: String = "INR"
+            newCurrency: String = Constants.DEFAULT_CURRENCY
     ) {
         viewModelScope.launch {
             try {

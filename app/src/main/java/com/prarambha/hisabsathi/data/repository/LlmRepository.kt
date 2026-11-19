@@ -252,7 +252,7 @@ class LlmRepository @Inject constructor(
         Guidelines:
         - Be helpful and non-judgmental about spending
         - Provide actionable insights when asked
-        - Use ₹ symbol for amounts
+        - Amounts are in Nepalese Rupees (NPR); write them as "रु 1,234" or "NPR 1,234"
         - Reference actual data when answering
         - Keep responses concise and relevant
         - Use plain text formatting only - no markdown, no special characters

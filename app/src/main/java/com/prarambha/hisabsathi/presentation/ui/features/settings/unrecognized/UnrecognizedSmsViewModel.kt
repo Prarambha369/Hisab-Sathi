@@ -118,7 +118,7 @@ class UnrecognizedSmsViewModel @Inject constructor(
                     ```
                     
                     ### Expected Behavior
-                    _Describe how this SMS should have been parsed (e.g., this is a transaction of 500 INR from HDFC bank)_
+                    _Describe how this SMS should have been parsed (e.g., this is a debit of NPR 500 from Nabil Bank)_
                 """.trimIndent()
 
                 val encodedTitle = URLEncoder.encode(issueTitle, "UTF-8")

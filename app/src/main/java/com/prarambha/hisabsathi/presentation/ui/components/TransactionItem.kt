@@ -1,5 +1,6 @@
 package com.prarambha.hisabsathi.presentation.ui.components
 
+import com.prarambha.hisabsathi.core.Constants
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
@@ -179,7 +180,7 @@ fun SharedTransitionScope.TransactionItem(
                 if (isRecurring) add("Recurring")
 
                 balanceAfter?.let { balance ->
-                    add("Bal: ${CurrencyFormatter.formatCurrency(balance, balanceCurrency ?: "INR")}")
+                    add("Bal: ${CurrencyFormatter.formatCurrency(balance, balanceCurrency ?: Constants.DEFAULT_CURRENCY)}")
                 }
             }
         }
@@ -285,7 +286,7 @@ fun SharedTransitionScope.TransactionItem(
                         balanceAfter?.let { balance ->
                             TagSeparator()
                             SubtitleTag(
-                                text = "Bal: ${CurrencyFormatter.formatCurrency(balance, balanceCurrency ?: "INR")}",
+                                text = "Bal: ${CurrencyFormatter.formatCurrency(balance, balanceCurrency ?: Constants.DEFAULT_CURRENCY)}",
                                 color = MaterialTheme.colorScheme.secondary
                             )
                             needsSeparator = true

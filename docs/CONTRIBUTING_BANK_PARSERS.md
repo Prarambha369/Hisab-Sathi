@@ -14,8 +14,8 @@ The parser class defines how to identify the bank's SMS and how to extract data 
 2.  **Implementation**: Your class must extend `BankParser`. 
 
 ### Key Methods to Implement:
-*   `getBankName()`: Returns the display name (e.g., `"HDFC Bank"`).
-*   `getCurrency()`: Default currency code (e.g., `"INR"`).
+*   `getBankName()`: Returns the display name (e.g., `"Nabil Bank"`).
+*   `getCurrency()`: Default currency code (e.g., `"NPR"`).
 *   `canHandle(sender: String)`: Returns `true` if this parser should handle messages from the given sender/address.
 *   `extractAmount(message: String)`: Use Regex to find and return the transaction amount as a `BigDecimal`.
 *   `extractTransactionType(message: String)`: Identify if the message represents an **EXPENSE**, **INCOME**, or **TRANSFER**.
@@ -25,7 +25,7 @@ The parser class defines how to identify the bank's SMS and how to extract data 
 ```kotlin
 class ExampleBankParser : BankParser() {
     override fun getBankName() = "Example Bank"
-    override fun getCurrency() = "INR"
+    override fun getCurrency() = "NPR"
 
     override fun canHandle(sender: String) = sender.uppercase().contains("EXAMP")
 

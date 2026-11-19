@@ -1,5 +1,6 @@
 package com.prarambha.hisabsathi.presentation.ui.features.add
 
+import com.prarambha.hisabsathi.core.Constants
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -162,7 +163,7 @@ fun TransactionTabContent(
             AmountInput(
                 amount = uiState.amount.ifEmpty { "0" },
                 currencySymbol = CurrencyFormatter.getCurrencySymbol(
-                    uiState.selectedAccount?.currency ?: "INR"
+                    uiState.selectedAccount?.currency ?: Constants.DEFAULT_CURRENCY
                 ),
                 onClick = {
                     showNumberPad = true

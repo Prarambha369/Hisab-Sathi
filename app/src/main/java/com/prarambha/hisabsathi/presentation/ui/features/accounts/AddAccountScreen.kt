@@ -174,8 +174,8 @@ fun AddAccountScreen(
         placeholder = {
             Text(
                 when (formState.accountType) {
-                    AccountType.SAVINGS, AccountType.CURRENT -> "e.g., HDFC Bank"
-                    AccountType.CREDIT -> "e.g., HDFC Credit Card"
+                    AccountType.SAVINGS, AccountType.CURRENT -> "e.g., Nabil Bank"
+                    AccountType.CREDIT -> "e.g., NMB Credit Card"
                     AccountType.WALLET -> "e.g., Cash"
                 }
             )

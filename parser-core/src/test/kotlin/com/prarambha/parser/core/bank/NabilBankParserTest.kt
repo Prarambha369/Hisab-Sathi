@@ -29,7 +29,8 @@ class NabilBankParserTest {
                     amount = BigDecimal("5000.00"),
                     currency = "NPR",
                     type = TransactionType.EXPENSE,
-                    accountLast4 = "1234"
+                    accountLast4 = "1234",
+                    balance = BigDecimal("45000.00")
                 )
             ),
             ParserTestCase(
@@ -40,7 +41,8 @@ class NabilBankParserTest {
                     amount = BigDecimal("10000.00"),
                     currency = "NPR",
                     type = TransactionType.INCOME,
-                    accountLast4 = "5678"
+                    accountLast4 = "5678",
+                    balance = BigDecimal("55000.00")
                 )
             ),
             ParserTestCase(
