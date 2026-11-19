@@ -68,7 +68,7 @@ Hisab Sathi is a comprehensive financial tracking manager designed for Nepal. It
 - **🇳🇵 NPR Currency Support** - Native support for Nepalese Rupees (₨) with proper localization
 - **📊 Clear Insights** - Analytics and charts to instantly see where money goes
 - **🔄 Subscription Tracking** - Detects and monitors recurring payments
-- **💬 On-device AI Assistant** - Ask questions like "के खर्च भयो मा गत महिना?" (What did I spend on food last month?) locally
+- **💬 On-device AI Assistant** - Ask questions like "के खर्च भयो मा गत महिना?" (What did I spend on food last month?) locally. Pick the model that suits your phone (Qwen 2.5, DeepSeek R1, Phi-4 mini, SmolLM); the app labels which is recommended for your RAM
 - **📤 Data Export** - Export as CSV for taxes or records
 
 ## Supported Nepali Banks & Wallets

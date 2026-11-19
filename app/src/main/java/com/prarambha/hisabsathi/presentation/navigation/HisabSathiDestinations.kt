@@ -216,6 +216,8 @@ data class Transactions(
 
 @Serializable object DataPrivacy
 
+@Serializable object AiModels
+
 
 @Serializable object NotificationSettings
 

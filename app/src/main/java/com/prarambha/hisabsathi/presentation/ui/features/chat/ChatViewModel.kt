@@ -99,7 +99,7 @@ class ChatViewModel @Inject constructor(
         val allText = allMsgs.joinToString(" ") { it.message } + " " + current
         val totalChars = allText.length
         val estimatedTokens = TokenUtils.estimateTokens(allText)
-        val maxTokens = 4096 // Qwen 2.5 with KV cache size 4096
+        val maxTokens = modelRepository.contextTokens()
         
         // Count only visible messages for UI
         val visibleCount = allMsgs.count { !it.isSystemPrompt }
@@ -110,6 +110,7 @@ class ChatViewModel @Inject constructor(
             estimatedTokens = estimatedTokens,
             systemPromptTokens = systemPromptTokens,
             maxTokens = maxTokens,
+            modelName = modelRepository.selectedModel.value?.displayName ?: "AI",
             contextUsagePercent = TokenUtils.calculateContextUsagePercent(estimatedTokens, maxTokens)
         )
     }.stateIn(
@@ -233,5 +234,6 @@ data class ChatStats(
     val estimatedTokens: Int = 0,
     val systemPromptTokens: Int = 0,
     val maxTokens: Int = 1280,
-    val contextUsagePercent: Int = 0
+    val contextUsagePercent: Int = 0,
+    val modelName: String = "AI"
 )

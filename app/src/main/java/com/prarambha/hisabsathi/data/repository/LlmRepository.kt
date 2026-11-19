@@ -7,6 +7,7 @@ import com.prarambha.hisabsathi.data.database.dao.ChatDao
 import com.prarambha.hisabsathi.data.database.entity.ChatMessage
 import com.prarambha.hisabsathi.data.database.entity.TransactionType
 import com.prarambha.hisabsathi.data.model.ChatContext
+import com.prarambha.hisabsathi.data.model.ReasoningFilter
 import com.prarambha.hisabsathi.data.preferences.UserPreferencesRepository
 import com.prarambha.hisabsathi.domain.service.LlmService
 import com.prarambha.hisabsathi.utils.CurrencyUtils
@@ -43,7 +44,7 @@ class LlmRepository @Inject constructor(
                 return Result.failure(Exception("Model not downloaded"))
             }
             
-            val initResult = llmService.initialize(modelFile.absolutePath)
+            val initResult = llmService.initialize(modelFile.absolutePath, modelRepository.contextTokens())
             if (initResult.isFailure) {
                 return Result.failure(initResult.exceptionOrNull() ?: Exception("Failed to initialize LLM"))
             }
@@ -102,7 +103,8 @@ class LlmRepository @Inject constructor(
         val conversationText = buildConversationContext(currentMessages, userMessage)
         val estimatedTokens = conversationText.length / 4 // Rough estimation
         
-        if (estimatedTokens > 1200) { // Leave some buffer (1200 out of 1280)
+        // Leave room for the reply within the selected model's context window.
+        if (estimatedTokens > modelRepository.contextTokens() - 256) {
             // Don't process, throw error to inform user
             throw Exception("Chat memory is full. Please clear the chat to continue.")
         }
@@ -129,7 +131,7 @@ class LlmRepository @Inject constructor(
                 throw Exception("Model not downloaded. Please download from Settings.")
             }
             
-            val initResult = llmService.initialize(modelFile.absolutePath)
+            val initResult = llmService.initialize(modelFile.absolutePath, modelRepository.contextTokens())
             if (initResult.isFailure) {
                 throw initResult.exceptionOrNull() ?: Exception("Failed to initialize LLM")
             }
@@ -152,14 +154,18 @@ class LlmRepository @Inject constructor(
         val responseBuilder = StringBuilder()
         var messageInserted = false
         
+        // Reasoning models (DeepSeek R1) think in <think>…</think> first; show only the answer.
+        val reasoningFilter = if (modelRepository.selectedModel.value?.emitsReasoning == true) ReasoningFilter() else null
+
         llmService.generateResponseStream(conversationContext)
             .collect { partialResponse ->
                 responseBuilder.append(partialResponse)
-                emit(partialResponse)
+                val visible = reasoningFilter?.accept(partialResponse) ?: partialResponse
+                if (visible.isNotEmpty()) emit(visible)
             }
         
         // Save the complete AI response at the end
-        val finalResponse = responseBuilder.toString()
+        val finalResponse = reasoningFilter?.visible() ?: responseBuilder.toString()
         if (BuildConfig.DEBUG) Log.d("LlmRepository", "Saving AI response: ${finalResponse.take(50)}...")
         val aiMessage = ChatMessage(
             message = finalResponse,
@@ -227,7 +233,7 @@ class LlmRepository @Inject constructor(
         val upcomingPayments = activeSubs.filter { it.nextPaymentDays <= 7 }
         
         return """
-        You are HisabSathi AI, a friendly financial assistant helping users track expenses and manage money.
+        You are Hisab Sathi AI, a friendly financial assistant helping users track expenses and manage money.
         
         Current Financial Overview (${context.currentDate}):
         - This month: ${CurrencyUtils.formatCurrency(monthSummary.totalExpense)} spent, ${CurrencyUtils.formatCurrency(monthSummary.totalIncome)} income
@@ -277,7 +283,7 @@ class LlmRepository @Inject constructor(
         val activeSubs = chatContext.activeSubscriptions
         
         return """
-        Hi! I'm HisabSathi AI, your financial assistant.
+        Hi! I'm Hisab Sathi AI, your financial assistant.
         
         I have access to:
         • Your last 2 weeks of transactions ($recentCount recent ones)
