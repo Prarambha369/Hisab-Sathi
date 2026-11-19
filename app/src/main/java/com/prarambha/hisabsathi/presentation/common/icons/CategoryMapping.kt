@@ -94,7 +94,8 @@ object CategoryMapping {
         "rising mall", "sherpa mall", "ctc mall", "bluebird mall"
     )
 
-    private val SHOPPING_EXCLUDE = setOf("big mart", "bigmart", "kk mart", "q mart", "family mart", "fresh mart", "cg mart")
+    // Grocery marts never reach the Shopping rule: Groceries is matched first.
+    private val SHOPPING_EXCLUDE = emptySet<String>()
 
     private val SHOPPING_EXTENDED = setOf(
         "goldstar", "caliber shoes", "bata", "baby bazaar", "cg electronics", "cg digital",

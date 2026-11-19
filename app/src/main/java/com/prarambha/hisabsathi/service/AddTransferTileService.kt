@@ -1,11 +1,14 @@
 package com.prarambha.hisabsathi.service
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
 import android.service.quicksettings.TileService
 import com.prarambha.hisabsathi.MainActivity
 
 class AddTransferTileService : TileService() {
+    // The deprecated Intent overload is only reached below Android 14 (see the SDK check).
+    @SuppressLint("StartActivityAndCollapseDeprecated")
     override fun onClick() {
         val intent = Intent(this, MainActivity::class.java).apply {
             action = MainActivity.ACTION_ADD_TRANSFER
@@ -22,6 +25,7 @@ class AddTransferTileService : TileService() {
                 )
             )
         } else {
+            // Pre-Android 14 only; the PendingIntent overload above is used on 14+.
             @Suppress("DEPRECATION")
             startActivityAndCollapse(intent)
         }
