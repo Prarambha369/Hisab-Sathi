@@ -3,17 +3,13 @@
 Nepal-first backlog. Upstream PennyWise leftovers (Indian banks, merchant logos) have been removed — do not re-add non-Nepali items here.
 
 ## Banks (core scope)
-- [ ] Add more Nepali banks & institutions (see `docs/BANK_SUPPORT.md` future list):
-  - [ ] Nepal Bank Limited (NBL)
-  - [ ] Rastriya Banijya Bank (RBB)
-  - [ ] Nepal Investment Mega Bank (NIMB)
-  - [ ] NIC Asia Bank
-  - [ ] Global IME Bank
-  - [ ] Sanima Bank
-  - [ ] Machhapuchchhre Bank
-  - [ ] Prabhu Bank
-  - [ ] Kumari Bank
-- [ ] Fix `NMBBankParser.canHandle()` matching `contains("NABIL")` — NMB must never claim Nabil senders (Nabil is checked first in `BankParserFactory`, so this is latent, but remove it)
+Full list with priorities: `docs/BANK_SUPPORT.md` → "Roadmap: every Nepali money institution". Every parser needs real, masked SMS samples first.
+
+- [ ] P1 commercial banks: Global IME, NIC Asia, Nepal Investment Mega (NIMB), Prabhu, Nepal Bank Ltd, Rastriya Banijya
+- [ ] P1 wallet: IME Pay
+- [ ] P1 development bank: Muktinath Bikas
+- [ ] P2 commercial banks: Kumari, Prime Commercial, Sanima, Machhapuchchhre, Citizens, ADBL, Nepal SBI, Standard Chartered Nepal
+- [ ] P2 wallets: Prabhu Pay, Namaste Pay, CellPay
 - [ ] Review `EverestBankParser.canHandle()` — it accepts bare numeric senders (`^\d{7,10}$`), which is overly broad
 - [ ] Credit card transaction handling (base parser already reads card type / due date / min-due / available limit — wire real Nepali card SMS formats)
 - [ ] Add chart for existing bank support and templates
