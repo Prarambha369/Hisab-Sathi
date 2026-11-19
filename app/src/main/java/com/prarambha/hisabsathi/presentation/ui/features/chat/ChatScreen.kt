@@ -144,7 +144,7 @@ fun ChatScreen(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             CustomTitleTopAppBar(
-                title = "HisabSathi AI",
+                title = "Hisab Sathi AI",
                 scrollBehaviorSmall = scrollBehaviorSmall,
                 scrollBehaviorLarge = scrollBehavior,
                 hazeState = hazeState,

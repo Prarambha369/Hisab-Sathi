@@ -159,7 +159,7 @@ fun AboutScreen(
                     Spacer(modifier = Modifier.height(Dimensions.Padding.content))
 
                     Text(
-                        text = "HisabSathi",
+                        text = "Hisab Sathi",
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -278,7 +278,7 @@ fun AboutScreen(
 
                     AboutListItem(
                         title = "Guides",
-                        subtitle = "How to use HisabSathi",
+                        subtitle = "How to use Hisab Sathi",
                         icon = Iconax.DocumentText2,
                         iconColor = purple_dark,
                         iconBackground = purple_light,
@@ -295,7 +295,7 @@ fun AboutScreen(
 
                     AboutListItem(
                         title = "Report Bug",
-                        subtitle = "Help us improve HisabSathi",
+                        subtitle = "Help us improve Hisab Sathi",
                         icon = Iconax.Ghost,
                         iconColor = red_dark,
                         iconBackground = red_light,

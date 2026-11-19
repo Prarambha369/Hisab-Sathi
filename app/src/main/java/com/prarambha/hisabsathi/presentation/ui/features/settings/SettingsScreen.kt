@@ -712,7 +712,7 @@ fun SettingsScreen(
                         ) {
                             Image(
                                 painter = painterResource(id = R.drawable.hisabsathi),
-                                contentDescription = "HisabSathi Logo",
+                                contentDescription = "Hisab Sathi logo",
                                 colorFilter = ColorFilter.tint(orange_dark),
                                 modifier = Modifier.size(24.dp)
                             )

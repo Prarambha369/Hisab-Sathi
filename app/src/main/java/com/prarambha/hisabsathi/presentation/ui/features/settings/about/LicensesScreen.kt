@@ -362,7 +362,7 @@ fun LicensesScreen(
                         Spacer(modifier = Modifier.height(Spacing.xl))
 
                         Text(
-                            text = "HisabSathi",
+                            text = "Hisab Sathi",
                             style = MaterialTheme.typography.headlineMedium,
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Center
