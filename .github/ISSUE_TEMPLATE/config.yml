@@ -1,8 +1,14 @@
 blank_issues_enabled: false
 contact_links:
-#  - name: 💬 Discord Community
-#    url: https://discord.gg/H3xWeMWjKQ
-#    about: Get help and chat with other Hisab Sathi users
+  - name: 🔒 Report a security vulnerability
+    url: https://github.com/Prarambha369/Hisab-Sathi/security/advisories/new
+    about: Report security problems privately. Please don't open a public issue for them.
+  - name: 🏦 Supported banks and wallets
+    url: https://github.com/Prarambha369/Hisab-Sathi/blob/main/docs/BANK_SUPPORT.md
+    about: Check whether your bank or wallet is already supported or planned before requesting it.
   - name: 📖 Documentation
     url: https://github.com/Prarambha369/Hisab-Sathi#readme
-    about: Check out the README for setup and usage instructions
+    about: Setup, usage and FAQ.
+  - name: 🛡️ Privacy policy
+    url: https://github.com/Prarambha369/Hisab-Sathi/blob/main/PRIVACY.md
+    about: How Hisab Sathi keeps your data on your phone.

@@ -56,6 +56,7 @@ import com.prarambha.hisabsathi.presentation.ui.icons.*
 import com.prarambha.hisabsathi.presentation.ui.theme.*
 import androidx.compose.foundation.clickable
 import com.prarambha.hisabsathi.core.Constants
+import com.prarambha.hisabsathi.core.GitHubIssues
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.hazeEffect
@@ -303,7 +304,24 @@ fun AboutScreen(
                         onClick = {
                             val intent = Intent(
                                 Intent.ACTION_VIEW,
-                                Constants.Links.REPORT_BUG_URL.toUri()
+                                GitHubIssues.bugReportUrl().toUri()
+                            )
+                            context.startActivity(intent)
+                        },
+                        position = ListItemPosition.Middle
+                    )
+
+                    AboutListItem(
+                        title = "Send Feedback",
+                        subtitle = "Tell us what works and what's missing",
+                        icon = Iconax.Messages,
+                        iconColor = pink_dark,
+                        iconBackground = pink_light,
+                        isLink = true,
+                        onClick = {
+                            val intent = Intent(
+                                Intent.ACTION_VIEW,
+                                GitHubIssues.feedbackUrl().toUri()
                             )
                             context.startActivity(intent)
                         },

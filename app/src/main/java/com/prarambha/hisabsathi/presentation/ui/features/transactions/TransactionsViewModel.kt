@@ -1,5 +1,6 @@
 package com.prarambha.hisabsathi.presentation.ui.features.transactions
 
+import com.prarambha.hisabsathi.core.GitHubIssues
 import com.prarambha.hisabsathi.BuildConfig
 
 import android.content.Context
@@ -35,7 +36,6 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.net.URLDecoder
-import java.net.URLEncoder
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -904,32 +904,12 @@ class TransactionsViewModel @Inject constructor(
     }
     
     fun getReportUrl(transaction: TransactionEntity): String {
-        val smsBody = transaction.smsBody ?: "Transaction: ${transaction.merchantName} - ${transaction.amount}"
-        val sender = transaction.smsSender ?: "Unknown Sender"
-        val bank = transaction.bankName ?: "Manual"
-
-        val issueTitle = "[Parsing Issue] ${transaction.merchantName} - ${transaction.amount}"
-        val issueBody = """
-            ### Transaction Details
-            - **Merchant:** ${transaction.merchantName}
-            - **Amount:** ${transaction.amount} ${transaction.currency}
-            - **Type:** ${transaction.transactionType}
-            - **Bank:** $bank
-            - **Sender:** $sender
-            
-            ### Original SMS
-            ```
-            $smsBody
-            ```
-            
-            ### Expected Behavior
-            _Describe what was wrong (e.g., wrong category, wrong date, etc.)_
-        """.trimIndent()
-
-        val encodedTitle = URLEncoder.encode(issueTitle, "UTF-8")
-        val encodedBody = URLEncoder.encode(issueBody, "UTF-8")
-
-        return "https://github.com/Prarambha369/HisabSathi/issues/new?title=$encodedTitle&body=$encodedBody"
+        return GitHubIssues.smsParsingUrl(
+            sender = transaction.smsSender ?: "Unknown sender",
+            smsBody = transaction.smsBody ?: "(no SMS: manual transaction)",
+            institution = transaction.bankName,
+            parsed = "${transaction.transactionType} of ${transaction.amount} ${transaction.currency} at \"${transaction.merchantName}\" (bank: ${transaction.bankName ?: "none"})"
+        )
     }
     
 }

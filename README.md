@@ -87,7 +87,7 @@ Supporting **8 Nepali financial institutions** with **NPR currency**:
 - **Siddhartha Bank** - Siddhartha Bank Limited
 - **Himalayan Bank** - Himalayan Bank Limited
 
-More Nepali banks coming soon! [Request your bank →](https://github.com/Prarambha369/Hisab-Sathi/issues/new?template=bank_support_request.md)
+More Nepali banks coming soon! [Request your bank →](https://github.com/Prarambha369/Hisab-Sathi/issues/new?template=3-bank_support_request.yml)
 
 ## Privacy First
 
@@ -223,7 +223,7 @@ val testRegistry = BankParserRegistry(listOf(NabilBankParser()))
 ## Community & Support
 
 [//]: # (- **Discord**: Join the community, share feedback, and get help — [Join Discord]&#40;https://discord.gg/H3xWeMWjKQ&#41;)
-- **Issues**: Report bugs or request features — [Open an issue](https://github.com/Prarambha369/Hisab-Sathi/issues)
+- **Issues**: [Report a bug](https://github.com/Prarambha369/Hisab-Sathi/issues/new?template=1-bug_report.yml), [a wrongly read SMS](https://github.com/Prarambha369/Hisab-Sathi/issues/new?template=2-sms_parsing.yml), [request your bank](https://github.com/Prarambha369/Hisab-Sathi/issues/new?template=3-bank_support_request.yml), [suggest a feature](https://github.com/Prarambha369/Hisab-Sathi/issues/new?template=4-feature_request.yml) or [send feedback](https://github.com/Prarambha369/Hisab-Sathi/issues/new?template=5-feedback.yml)
 
 ## Contributing
 
@@ -301,6 +301,7 @@ GNU General Public License v3.0 - see [LICENSE](LICENSE)
 
 <p align="center">
 <a href="https://github.com/Prarambha369/Hisab-Sathi/releases">Download</a> •
-<a href="https://github.com/Prarambha369/Hisab-Sathi/issues">Report Bug</a> •
-<a href="https://github.com/Prarambha369/Hisab-Sathi/issues">Request Feature</a>
+<a href="https://github.com/Prarambha369/Hisab-Sathi/issues/new?template=1-bug_report.yml">Report Bug</a> •
+<a href="https://github.com/Prarambha369/Hisab-Sathi/issues/new?template=4-feature_request.yml">Request Feature</a> •
+<a href="https://github.com/Prarambha369/Hisab-Sathi/issues/new?template=5-feedback.yml">Feedback</a>
 </p>

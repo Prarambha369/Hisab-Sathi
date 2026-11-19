@@ -70,7 +70,7 @@ Parse order in `BankParserFactory` (first match wins):
 
 The full list of institutions a Nepali user's money might move through, so parser work can be planned. The list follows Nepal Rastra Bank's license classes as of mid-2025. Mergers change it often, so check NRB's list of licensed institutions (nrb.org.np) before starting one, and update this table when a merger happens.
 
-**How to add one:** a parser needs real SMS samples. Collect 3–5 transaction SMS per institution (debit, credit, ATM/QR if possible) with account numbers and names masked. File them with the [Bank Support Request template](https://github.com/Prarambha369/Hisab-Sathi/issues/new?template=bank_support_request.md), then follow `docs/CONTRIBUTING_BANK_PARSERS.md` and `docs/parser-test-standards.md`. Never write a parser from a guessed SMS format. Until a parser exists, users can teach the app a message's shape from **Settings → Unrecognized SMS**.
+**How to add one:** a parser needs real SMS samples. Collect 3–5 transaction SMS per institution (debit, credit, ATM/QR if possible) with account numbers and names masked. File them with the [Bank Support Request template](https://github.com/Prarambha369/Hisab-Sathi/issues/new?template=3-bank_support_request.yml), then follow `docs/CONTRIBUTING_BANK_PARSERS.md` and `docs/parser-test-standards.md`. Never write a parser from a guessed SMS format. Until a parser exists, users can teach the app a message's shape from **Settings → Unrecognized SMS**.
 
 Status: ✅ supported · ⬜ not started (needs SMS samples)
 

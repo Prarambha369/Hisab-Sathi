@@ -37,10 +37,15 @@ jobs:
     - name: Run parser-core tests
       run: ./gradlew :parser-core:test --continue
 
+    - name: Run app unit tests
+      run: ./gradlew :app:testStandardDebugUnitTest --continue
+
     - name: Upload parser test results
       uses: actions/upload-artifact@v7
       if: always()
       with:
         name: parser-test-results
-        path: parser-core/build/test-results/test/
+        path: |
+          parser-core/build/test-results/test/
+          app/build/test-results/testStandardDebugUnitTest/
         retention-days: 7

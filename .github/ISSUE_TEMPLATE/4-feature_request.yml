@@ -1,0 +1,45 @@
+name: 💡 Feature request
+description: Suggest a new feature or an improvement.
+title: "[Feature]: "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      placeholder: I split bills with my roommates every month and track it on paper…
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: What would you like the app to do?
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - SMS detection / banks
+        - Transactions
+        - Budgets
+        - Reports and charts
+        - Subscriptions and bills
+        - Accounts and balances
+        - AI assistant
+        - Backup, import and export
+        - Appearance / language (Nepali)
+        - Other
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you've tried (optional)
+  - type: textarea
+    id: extra
+    attributes:
+      label: Mockups, screenshots or anything else (optional)
+  - type: markdown
+    attributes:
+      value: |
+        Hisab Sathi is offline and privacy-first: features that upload financial data to a server won't be added.

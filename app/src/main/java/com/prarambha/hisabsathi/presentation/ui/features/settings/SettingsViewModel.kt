@@ -1,5 +1,6 @@
 package com.prarambha.hisabsathi.presentation.ui.features.settings
 
+import com.prarambha.hisabsathi.core.GitHubIssues
 import com.prarambha.hisabsathi.BuildConfig
 
 import android.app.DownloadManager
@@ -42,7 +43,6 @@ import com.prarambha.hisabsathi.core.Constants
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import java.net.URLEncoder
 import java.io.File
 import javax.inject.Inject
 import androidx.core.net.toUri
@@ -518,25 +518,11 @@ class SettingsViewModel @Inject constructor(
                 val firstUnreported = unrecognizedSmsRepository.getFirstUnreported()
 
                 if (firstUnreported != null) {
-                    val issueTitle = "[Unrecognized SMS] From: ${firstUnreported.sender}"
-                    val issueBody = """
-                        ### Unrecognized SMS Details
-                        - **Sender:** ${firstUnreported.sender}
-                        - **Date:** ${firstUnreported.receivedAt}
-                        
-                        ### Original SMS
-                        ```
-                        ${firstUnreported.smsBody}
-                        ```
-                        
-                        ### Expected Behavior
-                        _Describe how this SMS should have been parsed_
-                    """.trimIndent()
-
-                    val encodedTitle = URLEncoder.encode(issueTitle, "UTF-8")
-                    val encodedBody = URLEncoder.encode(issueBody, "UTF-8")
-
-                    val url = "https://github.com/Prarambha369/HisabSathi/issues/new?title=$encodedTitle&body=$encodedBody"
+                    val url = GitHubIssues.smsParsingUrl(
+                        sender = firstUnreported.sender,
+                        smsBody = firstUnreported.smsBody,
+                        parsed = "Not detected (listed under Unrecognized SMS)"
+                    )
 
                     // Open in browser
                     val intent = Intent(Intent.ACTION_VIEW, url.toUri())
