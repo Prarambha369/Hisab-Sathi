@@ -1,9 +1,9 @@
 Hisab Sathi — Free & Open-Source, private SMS-powered expense tracker
 
-Automatically extracts transaction data from bank SMS messages and PDF Statements [Gpay & Phonepe UPI] using pattern-based parsing. Works 100% offline - no internet connection required.
+Automatically extracts transaction data from Nepali bank and wallet SMS (eSewa, Khalti, Nabil, NMB, Himalayan, Laxmi Sunrise, Siddhartha, Everest) using pattern-based parsing. Works 100% offline - no internet connection required.
 
 Key Features:
-• Multi-Source Transaction Extraction - Automatically parses SMS and PDF Statements [Gpay & Phonepe UPI] with pattern-based extraction
+• Multi-Source Transaction Extraction - Automatically parses bank and wallet SMS with pattern-based extraction
 • 100% Offline Core Features - Transaction parsing, analytics, and exports work without internet
 • Optional AI Chat - Download Qwen 2.5 model (1.5GB, Apache 2.0) for natural language queries
 • Dynamic Home Screen - Customizable widgets including heatmaps, analytics, and transaction lists

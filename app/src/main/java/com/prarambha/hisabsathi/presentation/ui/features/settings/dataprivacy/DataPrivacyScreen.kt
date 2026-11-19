@@ -22,7 +22,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material.icons.rounded.PictureAsPdf
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -36,7 +35,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -75,8 +73,6 @@ import com.prarambha.hisabsathi.presentation.ui.theme.Dimensions
 import com.prarambha.hisabsathi.presentation.ui.theme.Spacing
 import com.prarambha.hisabsathi.presentation.ui.theme.green_dark
 import com.prarambha.hisabsathi.presentation.ui.theme.green_light
-import com.prarambha.hisabsathi.presentation.ui.theme.orange_dark
-import com.prarambha.hisabsathi.presentation.ui.theme.orange_light
 import com.prarambha.hisabsathi.presentation.ui.theme.yellow_dark
 import com.prarambha.hisabsathi.presentation.ui.theme.yellow_light
 import dev.chrisbanes.haze.ExperimentalHazeApi
@@ -93,7 +89,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun DataPrivacyScreen(
     onNavigateBack: () -> Unit,
-    onNavigateToAccounts: () -> Unit,
     viewModel: DataPrivacyViewModel = hiltViewModel(),
     appLockViewModel: AppLockViewModel = hiltViewModel(),
     blurEffects: Boolean
@@ -124,11 +119,6 @@ fun DataPrivacyScreen(
         onResult = { uri -> uri?.let { viewModel.importBackup(it) } }
     )
 
-    val pdfImportLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent(),
-        onResult = { uri -> uri?.let { viewModel.analyzePdfStatement(it) } }
-    )
-
     // Handle export completion
     LaunchedEffect(uiState.exportedBackupFile) {
         uiState.exportedBackupFile?.let { file ->
@@ -140,14 +130,10 @@ fun DataPrivacyScreen(
     LaunchedEffect(uiState.importExportMessage) {
         uiState.importExportMessage?.let { message ->
             scope.launch {
-                val result = snackbarHostState.showSnackbar(
+                snackbarHostState.showSnackbar(
                     message = message,
-                    actionLabel = if (uiState.hasNewAccountsCreated) "Review" else null,
                     withDismissAction = true
                 )
-                if (result == SnackbarResult.ActionPerformed) {
-                    onNavigateToAccounts()
-                }
                 viewModel.clearImportExportMessage()
             }
         }
@@ -326,76 +312,9 @@ fun DataPrivacyScreen(
                             )
                         },
                         onClick = { importLauncher.launch("*/*") },
-                        shape = ListItemPosition.Middle.toShape(),
-                        padding = PaddingValues(0.dp)
-                    )
-
-                    // Import PDF Statement
-                    ListItem(
-                        headline = { Text("Import PDF Statement") },
-                        supporting = { Text("Scan GPay PDF statements") },
-                        leading = {
-                            Box(
-                                modifier = Modifier
-                                    .size(48.dp)
-                                    .background(orange_light, CircleShape),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Rounded.PictureAsPdf,
-                                    contentDescription = null,
-                                    tint = orange_dark
-                                )
-                            }
-                        },
-                        trailing = {
-                            Icon(
-                                Icons.Default.ChevronRight,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        },
-                        onClick = { pdfImportLauncher.launch("application/pdf") },
                         shape = ListItemPosition.Bottom.toShape(),
                         padding = PaddingValues(0.dp)
                     )
-
-                    // PDF Support Warning
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = Spacing.sm),
-                        color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.7f),
-                        shape = MaterialTheme.shapes.large,
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(Spacing.md),
-                            verticalAlignment = Alignment.Top,
-                            horizontalArrangement = Arrangement.spacedBy(Spacing.md)
-                        ) {
-                            Icon(
-                                imageVector = Iconax.Information,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onErrorContainer,
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Column(
-                                verticalArrangement = Arrangement.spacedBy(Spacing.xs)
-                            ) {
-                                Text(
-                                    text = "Only GPay PDF statements are currently supported.",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onErrorContainer,
-                                    fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold
-                                )
-                                Text(
-                                    text = "Balance chart won't add any bank balance information from PDFs as it isn't available in the statement data.",
-                                    style = MaterialTheme.typography.labelMedium,
-                                    color = MaterialTheme.colorScheme.onErrorContainer.copy(0.8f)
-                                )
-                            }
-                        }
-                    }
                 }
                 
                 // Add bottom spacing
@@ -494,28 +413,6 @@ fun DataPrivacyScreen(
                     ) else Modifier
                 ),
             shape = RoundedCornerShape(16.dp),
-        )
-    }
-
-    // PDF Processing / Error dialog
-    if (uiState.isPdfProcessing || uiState.pdfProcessingError != null) {
-        PdfProcessingDialog(
-            isVisible = uiState.isPdfProcessing,
-            error = uiState.pdfProcessingError,
-            onDismissError = { viewModel.dismissPdfImport() },
-            blurEffects = blurEffects,
-            hazeState = hazeState
-        )
-    }
-
-    // PDF Import Review BottomSheet (Unified review of accounts and transactions)
-    uiState.pdfAnalysisResult?.let { result ->
-        PdfImportSheet(
-            analysisResult = result,
-            onConfirm = { transactionDecisions, accountDecisions -> 
-                viewModel.confirmPdfImport(accountDecisions, transactionDecisions)
-            },
-            onDismiss = { viewModel.dismissPdfImport() }
         )
     }
 }

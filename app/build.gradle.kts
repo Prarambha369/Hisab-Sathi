@@ -1,7 +1,6 @@
 import java.util.Properties
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -95,7 +94,6 @@ android {
             isUniversalApk = true
         }
     }
-
 
     buildTypes {
         release {
@@ -263,7 +261,4 @@ dependencies {
 
     // Reorderable
     implementation(libs.reorderable)
-
-    // PDF Box for Android
-    implementation(libs.pdfbox.android)
 }

@@ -319,7 +319,6 @@ fun HisabSathiNavHost(
                 ) {
                     DataPrivacyScreen(
                         onNavigateBack = { navController.safePopBackStack() },
-                        onNavigateToAccounts = { navController.safeNavigate(ManageAccounts) },
                         blurEffects = themeUiState.blurEffects
                     )
                 }
