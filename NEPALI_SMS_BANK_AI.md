@@ -44,18 +44,15 @@ This project has been transformed into **Hisab Sathi** (हिसाब सा�
 
 ## Future Enhancements
 
-Additional Nepali banks to be implemented:
+Additional Nepali banks to be implemented (see `docs/BANK_SUPPORT.md` and `TODO.md`):
 - Nepal Bank Limited (NBL)
 - Rastriya Banijya Bank (RBB)
-- Nepal Investment Bank (NIBL)
-- Machhapuchchhre Bank
-- Sanima Bank
-- Global IME Bank
+- Nepal Investment Mega Bank (NIMB) — former NIBL + Mega Bank
 - NIC Asia Bank
-- Citizens Bank
+- Global IME Bank
+- Sanima Bank
+- Machhapuchchhre Bank
 - Kumari Bank
-- Sunrise Bank
-- Mega Bank
 - Prabhu Bank
 
 ## Branding

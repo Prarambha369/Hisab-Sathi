@@ -1,7 +1,6 @@
 import java.util.Properties
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -12,14 +11,14 @@ plugins {
 }
 
 android {
-    namespace = "com.prarambha.cashiro"
+    namespace = "com.prarambha.hisabsathi"
     compileSdk = 36
     
     buildFeatures {
         buildConfig = true
     }
     defaultConfig {
-        applicationId = "com.prarambha.cashiro"
+        applicationId = "com.prarambha.hisabsathi"
         minSdk = 26
         targetSdk = 36
         versionCode = 94
@@ -96,7 +95,6 @@ android {
         }
     }
 
-
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -129,6 +127,12 @@ android {
 
     buildFeatures {
         compose = true
+    }
+
+    testOptions {
+        // JVM unit tests run against a stub android.jar; without this, the
+        // BuildConfig.DEBUG-guarded android.util.Log calls throw "not mocked".
+        unitTests.isReturnDefaultValues = true
     }
 
     dependenciesInfo {
@@ -257,7 +261,4 @@ dependencies {
 
     // Reorderable
     implementation(libs.reorderable)
-
-    // PDF Box for Android
-    implementation(libs.pdfbox.android)
 }

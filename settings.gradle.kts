@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "cashiro-beta"
+rootProject.name = "hisab-sathi"
 include(":app")
 include(":parser-core")

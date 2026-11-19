@@ -8,10 +8,10 @@ class TestSmsFilter {
     @Test
     fun `isTransactionMessage filters out OTPs`() {
         val otpMessages = listOf(
-            "<#> 557026 is the One Time Password (OTP) for Phone Verification on NoBroker - World's largest brokerage free platform. A7jPtLVJWz3",
-            "Your OTP for ICICI Bank is 1234. Do not share it with anyone.",
+            "<#> 557026 is the One Time Password (OTP) for login on Daraz Nepal. A7jPtLVJWz3",
+            "Your OTP for Nabil Bank is 1234. Do not share it with anyone.",
             "Verification code: 987654. Valid for 10 mins.",
-            "Use 123456 as your one time password for Amazon Pay."
+            "Use 123456 as your one time password for eSewa."
         )
 
         for (msg in otpMessages) {
@@ -24,7 +24,7 @@ class TestSmsFilter {
         val promoMessages = listOf(
             "Get up to 50% discount on your next ride. Use code GO50.",
             "Special offer: Open your account and win up to Rs. 1000.",
-            "Earn cashback offer on every UPI transaction."
+            "Earn cashback offer on every fonepay QR transaction."
         )
 
         for (msg in promoMessages) {

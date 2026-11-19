@@ -3,9 +3,9 @@ package com.prarambha.parser.core
 object CompiledPatterns {
     object Amount {
         val RS_PATTERN = Regex("""Rs\.?\s*([0-9,]+(?:\.\d{2})?)""", RegexOption.IGNORE_CASE)
-        val INR_PATTERN = Regex("""INR\s*([0-9,]+(?:\.\d{2})?)""", RegexOption.IGNORE_CASE)
-        val RUPEE_SYMBOL_PATTERN = Regex("""₹\s*([0-9,]+(?:\.\d{2})?)""")
-        val ALL_PATTERNS = listOf(RS_PATTERN, INR_PATTERN, RUPEE_SYMBOL_PATTERN)
+        val NPR_PATTERN = Regex("""NPR\.?\s*([0-9,]+(?:\.\d{1,2})?)""", RegexOption.IGNORE_CASE)
+        val NEPALI_RUPEE_PATTERN = Regex("""(?:रु|रू)\.?\s*([0-9,]+(?:\.\d{1,2})?)""")
+        val ALL_PATTERNS = listOf(NPR_PATTERN, RS_PATTERN, NEPALI_RUPEE_PATTERN)
     }
 
     object Reference {
@@ -13,9 +13,8 @@ object CompiledPatterns {
             """(?:Ref|Reference|Txn|Transaction)(?:\s+No)?[:\s]+([A-Z0-9]+)""",
             RegexOption.IGNORE_CASE
         )
-        val UPI_REF = Regex("""UPI[:\s]+([0-9]+)""", RegexOption.IGNORE_CASE)
         val REF_NUMBER = Regex("""Reference\s+Number[:\s]+([A-Z0-9]+)""", RegexOption.IGNORE_CASE)
-        val ALL_PATTERNS = listOf(GENERIC_REF, UPI_REF, REF_NUMBER)
+        val ALL_PATTERNS = listOf(GENERIC_REF, REF_NUMBER)
     }
 
     object Account {
@@ -31,19 +30,19 @@ object CompiledPatterns {
 
     object Balance {
         val AVL_BAL_RS = Regex("""(?:Bal|Balance|Avl Bal|Available Balance)[:\s]+Rs\.?\s*([0-9,]+(?:\.\d{2})?)""", RegexOption.IGNORE_CASE)
-        val AVL_BAL_INR = Regex("""(?:Bal|Balance|Avl Bal|Available Balance)[:\s]+INR\s*([0-9,]+(?:\.\d{2})?)""", RegexOption.IGNORE_CASE)
-        val AVL_BAL_RUPEE = Regex("""(?:Bal|Balance|Avl Bal|Available Balance)[:\s]+₹\s*([0-9,]+(?:\.\d{2})?)""", RegexOption.IGNORE_CASE)
+        val AVL_BAL_NPR = Regex("""(?:Bal|Balance|Avl Bal|Available Balance)[:\s]+NPR\.?\s*([0-9,]+(?:\.\d{1,2})?)""", RegexOption.IGNORE_CASE)
+        val AVL_BAL_NEPALI_RUPEE = Regex("""(?:Bal|Balance|Avl Bal|Available Balance)[:\s]+(?:रु|रू)\.?\s*([0-9,]+(?:\.\d{1,2})?)""", RegexOption.IGNORE_CASE)
         val AVL_BAL_NO_CURRENCY = Regex("""(?:Bal|Balance|Avl Bal|Available Balance)[:\s]+([0-9,]+(?:\.\d{2})?)""", RegexOption.IGNORE_CASE)
         val UPDATED_BAL_RS = Regex("""(?:Updated Balance|Remaining Balance)[:\s]+Rs\.?\s*([0-9,]+(?:\.\d{2})?)""", RegexOption.IGNORE_CASE)
-        val UPDATED_BAL_INR = Regex("""(?:Updated Balance|Remaining Balance)[:\s]+INR\s*([0-9,]+(?:\.\d{2})?)""", RegexOption.IGNORE_CASE)
-        val ALL_PATTERNS = listOf(AVL_BAL_RS, AVL_BAL_INR, AVL_BAL_RUPEE, AVL_BAL_NO_CURRENCY, UPDATED_BAL_RS, UPDATED_BAL_INR)
+        val UPDATED_BAL_NPR = Regex("""(?:Updated Balance|Remaining Balance)[:\s]+NPR\.?\s*([0-9,]+(?:\.\d{1,2})?)""", RegexOption.IGNORE_CASE)
+        val ALL_PATTERNS = listOf(AVL_BAL_NPR, AVL_BAL_RS, AVL_BAL_NEPALI_RUPEE, AVL_BAL_NO_CURRENCY, UPDATED_BAL_NPR, UPDATED_BAL_RS)
     }
 
     object Merchant {
         val TO_PATTERN =
-            Regex("""to\s+([^\.\n]+?)(?:\s+on|\s+at|\s+Ref|\s+UPI)""", RegexOption.IGNORE_CASE)
+            Regex("""to\s+([^\.\n]+?)(?:\s+on|\s+at|\s+Ref)""", RegexOption.IGNORE_CASE)
         val FROM_PATTERN =
-            Regex("""from\s+([^\.\n]+?)(?:\s+on|\s+at|\s+Ref|\s+UPI)""", RegexOption.IGNORE_CASE)
+            Regex("""from\s+([^\.\n]+?)(?:\s+on|\s+at|\s+Ref)""", RegexOption.IGNORE_CASE)
         val AT_PATTERN = Regex("""at\s+([^\.\n]+?)(?:\s+on|\s+Ref)""", RegexOption.IGNORE_CASE)
         val FOR_PATTERN =
             Regex("""for\s+([^\.\n]+?)(?:\s+on|\s+at|\s+Ref)""", RegexOption.IGNORE_CASE)
@@ -119,7 +118,6 @@ object CompiledPatterns {
         val TRAILING_PARENTHESES = Regex("""\s*\(.*?\)\s*$""")
         val REF_NUMBER_SUFFIX = Regex("""\s+Ref\s+No.*""", RegexOption.IGNORE_CASE)
         val DATE_SUFFIX = Regex("""\s+on\s+\d{2}.*""")
-        val UPI_SUFFIX = Regex("""\s+UPI.*""", RegexOption.IGNORE_CASE)
         val TIME_SUFFIX = Regex("""\s+at\s+\d{2}:\d{2}.*""")
         val TRAILING_DASH = Regex("""\s*-\s*$""")
         val PVT_LTD =

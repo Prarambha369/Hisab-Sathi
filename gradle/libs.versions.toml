@@ -37,7 +37,6 @@ workVersion = "2.11.0"
 haze = "1.7.1"
 material3Version = "1.4.0"
 desugarJdkLibs = "2.1.5"
-pdfbox = "2.0.27.0"
 
 coilCompose = "3.3.0"
 coilGif = "3.3.0"
@@ -105,7 +104,6 @@ coil-gif = { module = "io.coil-kt.coil3:coil-gif", version.ref = "coilGif" }
 compose-charts = { module = "io.github.ehsannarmani:compose-charts", version.ref = "composeCharts" }
 androidx-compose-animation = { group = "androidx.compose.animation", name = "animation", version.ref = "animation" }
 reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
-pdfbox-android = { module = "com.tom-roush:pdfbox-android", version.ref = "pdfbox" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

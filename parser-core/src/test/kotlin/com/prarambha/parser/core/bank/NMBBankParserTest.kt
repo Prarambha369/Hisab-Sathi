@@ -72,7 +72,8 @@ Your  Esewa Wallet Load for 9850000007 of 300.00 is successful on 24-May-2025 18
             "NMB_ALERT" to true,
             "NMB" to true,
             "NMBBANK" to true,
-            "NABIL" to true,
+            "NABIL" to false,
+            "NIMB_ALERT" to false,
             "HDFC" to false,
             "SBI" to false,
             "" to false

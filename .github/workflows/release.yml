@@ -136,7 +136,7 @@ jobs:
           else
             echo "## Initial Release" >> RELEASE_NOTES.md
             echo "" >> RELEASE_NOTES.md
-            echo "First release of Cashiro" >> RELEASE_NOTES.md
+            echo "First release of Hisab Sathi" >> RELEASE_NOTES.md
           fi
           
           echo "" >> RELEASE_NOTES.md
@@ -213,14 +213,14 @@ jobs:
           # Rename universal APK (contains all architectures)
           if [ -f "$STANDARD_PATH/app-standard-universal-release.apk" ]; then
             mv "$STANDARD_PATH/app-standard-universal-release.apk" \
-               "$STANDARD_PATH/Cashiro-v${VERSION}-universal.apk"
+               "$STANDARD_PATH/HisabSathi-v${VERSION}-universal.apk"
           fi
           
           # Rename architecture-specific APKs
           for arch in armeabi-v7a arm64-v8a x86 x86_64; do
             if [ -f "$STANDARD_PATH/app-standard-${arch}-release.apk" ]; then
               mv "$STANDARD_PATH/app-standard-${arch}-release.apk" \
-                 "$STANDARD_PATH/Cashiro-v${VERSION}-${arch}.apk"
+                 "$STANDARD_PATH/HisabSathi-v${VERSION}-${arch}.apk"
             fi
           done
           
@@ -229,16 +229,16 @@ jobs:
           # When splits are enabled it outputs app-fdroid-universal-release.apk, so handle both.
           if [ -f "$FDROID_PATH/app-fdroid-universal-release.apk" ]; then
             mv "$FDROID_PATH/app-fdroid-universal-release.apk" \
-               "$FDROID_PATH/Cashiro-fdroid-v${VERSION}-universal.apk"
+               "$FDROID_PATH/HisabSathi-fdroid-v${VERSION}-universal.apk"
           elif [ -f "$FDROID_PATH/app-fdroid-release.apk" ]; then
             mv "$FDROID_PATH/app-fdroid-release.apk" \
-               "$FDROID_PATH/Cashiro-fdroid-v${VERSION}-universal.apk"
+               "$FDROID_PATH/HisabSathi-fdroid-v${VERSION}-universal.apk"
           fi
           
           for arch in armeabi-v7a arm64-v8a; do
             if [ -f "$FDROID_PATH/app-fdroid-${arch}-release.apk" ]; then
               mv "$FDROID_PATH/app-fdroid-${arch}-release.apk" \
-                 "$FDROID_PATH/Cashiro-fdroid-v${VERSION}-${arch}.apk"
+                 "$FDROID_PATH/HisabSathi-fdroid-v${VERSION}-${arch}.apk"
             fi
           done
           
@@ -254,7 +254,7 @@ jobs:
           
           # SHA256 for all standard APKs
           cd app/build/outputs/apk/standard/release/
-          for apk in Cashiro-v${VERSION}*.apk; do
+          for apk in HisabSathi-v${VERSION}*.apk; do
             if [ -f "$apk" ]; then
               sha256sum "$apk" > "${apk}.sha256"
               echo "SHA256 for $apk:"
@@ -264,7 +264,7 @@ jobs:
           
           # SHA256 for all F-Droid APKs
           cd ../../fdroid/release/
-          for apk in Cashiro-fdroid-v${VERSION}*.apk; do
+          for apk in HisabSathi-fdroid-v${VERSION}*.apk; do
             if [ -f "$apk" ]; then
               sha256sum "$apk" > "${apk}.sha256"
               echo "SHA256 for $apk:"
@@ -295,10 +295,10 @@ jobs:
           name: Release v${{ steps.next_version.outputs.version }}
           body_path: RELEASE_NOTES.md
           files: |
-            app/build/outputs/apk/standard/release/Cashiro-v${{ steps.next_version.outputs.version }}-universal.apk
-            app/build/outputs/apk/standard/release/Cashiro-v${{ steps.next_version.outputs.version }}-arm64-v8a.apk
-            app/build/outputs/apk/standard/release/Cashiro-v${{ steps.next_version.outputs.version }}-armeabi-v7a.apk
-            app/build/outputs/apk/fdroid/release/Cashiro-fdroid-v${{ steps.next_version.outputs.version }}-universal.apk
+            app/build/outputs/apk/standard/release/HisabSathi-v${{ steps.next_version.outputs.version }}-universal.apk
+            app/build/outputs/apk/standard/release/HisabSathi-v${{ steps.next_version.outputs.version }}-arm64-v8a.apk
+            app/build/outputs/apk/standard/release/HisabSathi-v${{ steps.next_version.outputs.version }}-armeabi-v7a.apk
+            app/build/outputs/apk/fdroid/release/HisabSathi-fdroid-v${{ steps.next_version.outputs.version }}-universal.apk
           draft: false
           prerelease: false
       
@@ -330,16 +330,16 @@ jobs:
           # Rename AAB file
           AAB_PATH="app/build/outputs/bundle/standardRelease"
           mv "$AAB_PATH/app-standard-release.aab" \
-             "$AAB_PATH/Cashiro-v${{ steps.next_version.outputs.version }}.aab"
-          echo "App Bundle created: $AAB_PATH/Cashiro-v${{ steps.next_version.outputs.version }}.aab"
+             "$AAB_PATH/HisabSathi-v${{ steps.next_version.outputs.version }}.aab"
+          echo "App Bundle created: $AAB_PATH/HisabSathi-v${{ steps.next_version.outputs.version }}.aab"
       
       - name: Upload to Play Store
         if: ${{ !inputs.dry_run && inputs.upload_to_play_store }}
         uses: r0adkll/upload-google-play@v1.1.3
         with:
           serviceAccountJsonPlainText: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
-          packageName: com.ritesh.cashiro
-          releaseFiles: app/build/outputs/bundle/standardRelease/Cashiro-v${{ steps.next_version.outputs.version }}.aab
+          packageName: com.prarambha.hisabsathi
+          releaseFiles: app/build/outputs/bundle/standardRelease/HisabSathi-v${{ steps.next_version.outputs.version }}.aab
           track: ${{ inputs.play_store_track }}
           status: ${{ inputs.play_store_status }}
           releaseName: v${{ steps.next_version.outputs.version }}

@@ -1,1 +1,1 @@
-All-In-One Expense-Budget tracker for bank SMS and PDF statements with optional AI chat & Analysis
+Private expense tracker for Nepali bank & wallet SMS, with on-device AI chat

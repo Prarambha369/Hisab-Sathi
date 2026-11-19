@@ -6,7 +6,7 @@ Thank you for your interest in contributing to Hisab Sathi! We welcome contribut
 
 ### 🐛 Reporting Bugs
 
-1. Check if the bug has already been reported in [Issues](https://github.com/sarim2000/pennywiseai-tracker/issues)
+1. Check if the bug has already been reported in [Issues](https://github.com/Prarambha369/Hisab-Sathi/issues)
 2. If not, create a new issue using the bug report template
 3. Include:
    - Device model and Android version
@@ -17,7 +17,7 @@ Thank you for your interest in contributing to Hisab Sathi! We welcome contribut
 
 ### 💡 Suggesting Features
 
-1. Check [existing issues](https://github.com/sarim2000/pennywiseai-tracker/issues) for similar suggestions
+1. Check [existing issues](https://github.com/Prarambha369/Hisab-Sathi/issues) for similar suggestions
 2. Create a new issue using the feature request template
 3. Describe the problem it solves and how it would work
 
@@ -25,7 +25,7 @@ Thank you for your interest in contributing to Hisab Sathi! We welcome contribut
 
 To add support for a new bank:
 
-1. Create a new parser class in `/app/src/main/java/com/pennywiseai/tracker/data/parser/bank/`
+1. Create a new parser class in `parser-core/src/main/kotlin/com/prarambha/parser/core/bank/` (pure Kotlin — no Android imports; Nepali institutions only)
 2. Extend the `BankParser` abstract class
 3. Implement required methods:
    ```kotlin
@@ -75,8 +75,8 @@ To add support for a new bank:
 
 ```bash
 # Clone the repo
-git clone https://github.com/sarim2000/pennywiseai-tracker.git
-cd pennywiseai-tracker
+git clone https://github.com/Prarambha369/Hisab-Sathi.git
+cd Hisab-Sathi
 
 # Build debug APK
 ./gradlew assembleDebug
@@ -92,7 +92,7 @@ cd pennywiseai-tracker
 
 ```
 app/
-├── src/main/java/com/pennywiseai/tracker/
+├── src/main/java/com/prarambha/hisabsathi/
 │   ├── data/
 │   │   ├── database/      # Room database
 │   │   ├── parser/        # SMS parsers
@@ -112,7 +112,7 @@ app/
 ## Community
 
 [//]: # (- Join our [Discord]&#40;https://discord.gg/H3xWeMWjKQ&#41; for discussions)
-- Follow development updates on [GitHub](https://github.com/ritesh-kanwar/Hisab Sathi)
+- Follow development updates on [GitHub](https://github.com/Prarambha369/Hisab Sathi)
 
 ## Code of Conduct
 

@@ -85,7 +85,7 @@ When you export your data:
 ## Open Source Transparency
 
 Hisab Sathi is fully open source:
-- Review our code at [GitHub](https://github.com/ritesh-kanwar/Hisab Sathi)
+- Review our code at [GitHub](https://github.com/Prarambha369/Hisab Sathi)
 - Verify our privacy claims yourself
 - Contribute to make it even better
 
@@ -103,7 +103,7 @@ Any changes to this privacy policy will be:
 ## Contact
 
 For privacy concerns or questions:
-- Open an issue on [GitHub](https://github.com/ritesh-kanwar/Hisab Sathi/issues)
+- Open an issue on [GitHub](https://github.com/Prarambha369/Hisab Sathi/issues)
 
 ## Summary
 

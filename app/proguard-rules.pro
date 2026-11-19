@@ -41,8 +41,8 @@
 -keepclassmembers @androidx.room.Entity class * {
     *;
 }
--keep class com.prarambha.cashiro.data.database.entity.** { *; }
--keep class com.prarambha.cashiro.data.database.dao.** { *; }
+-keep class com.prarambha.hisabsathi.data.database.entity.** { *; }
+-keep class com.prarambha.hisabsathi.data.database.dao.** { *; }
 
 # Hilt
 -keep class dagger.hilt.** { *; }
@@ -65,11 +65,11 @@
 -keepclasseswithmembers class kotlinx.serialization.json.** {
     kotlinx.serialization.KSerializer serializer(...);
 }
--keep,includedescriptorclasses class com.prarambha.cashiro.**$$serializer { *; }
--keepclassmembers class com.prarambha.cashiro.** {
+-keep,includedescriptorclasses class com.prarambha.hisabsathi.**$$serializer { *; }
+-keepclassmembers class com.prarambha.hisabsathi.** {
     *** Companion;
 }
--keepclasseswithmembers class com.prarambha.cashiro.** {
+-keepclasseswithmembers class com.prarambha.hisabsathi.** {
     kotlinx.serialization.KSerializer serializer(...);
 }
 
@@ -85,8 +85,8 @@
 }
 
 # Keep data classes
--keep class com.prarambha.cashiro.data.model.** { *; }
--keep class com.prarambha.cashiro.domain.model.** { *; }
+-keep class com.prarambha.hisabsathi.data.model.** { *; }
+-keep class com.prarambha.hisabsathi.domain.model.** { *; }
 
 # Keep enum classes
 -keepclassmembers enum * {
@@ -118,11 +118,6 @@
 # SLF4J (used by OpenCSV)
 -dontwarn org.slf4j.impl.StaticLoggerBinder
 
-# PDFBox-Android
--keep class com.tom_roush.pdfbox.** { *; }
--dontwarn com.tom_roush.pdfbox.filter.JPXFilter
--dontwarn com.tom_roush.pdfbox.pdmodel.graphics.image.SampledImageReader
--dontwarn com.gemalto.jp2.JP2Decoder
 -dontwarn org.bouncycastle.**
 -dontwarn org.apache.harmony.**
 -dontwarn javax.xml.stream.**

@@ -64,3 +64,6 @@ buck-out/
 build/
 dist/
 ```
+# Local machine config and build sessions
+local.properties
+.kotlin/

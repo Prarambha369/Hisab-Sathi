@@ -1,12 +1,12 @@
-# Cashiro Design System
+# Hisab Sathi Design System
 
 ## Overview
-Cashiro follows Material 3 design principles with a focus on simplicity, clarity, and user-centric design. This document outlines the visual design system, theming approach, and layout guidelines.
+Hisab Sathi follows Material 3 design principles with a focus on simplicity, clarity, and user-centric design. This document outlines the visual design system, theming approach, and layout guidelines.
 
 ## Theme System
 
 ### Material You Integration
-Cashiro leverages Android 12+ dynamic color system to create personalized experiences:
+Hisab Sathi leverages Android 12+ dynamic color system to create personalized experiences:
 - **Dynamic Color**: Automatically derives colors from user's wallpaper
 - **Adaptive Theming**: Seamlessly adapts to system-wide theme preferences
 - **Fallback Colors**: Provides branded colors for older Android versions
@@ -90,7 +90,7 @@ val DarkColorScheme = darkColorScheme(
 ### Theme Implementation
 ```kotlin
 @Composable
-fun CashiroTheme(
+fun HisabSathiTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
@@ -351,7 +351,7 @@ object Animations {
 
 ### Common Icons
 ```kotlin
-object CashiroIcons {
+object HisabSathiIcons {
     val Home = Icons.Outlined.Home
     val Transactions = Icons.Outlined.Receipt
     val Analytics = Icons.Outlined.Analytics
@@ -430,7 +430,7 @@ fun EmptyTransactions() {
 @Preview(name = "Dark Theme", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun ComponentPreview() {
-    CashiroTheme {
+    HisabSathiTheme {
         // Component
     }
 }
