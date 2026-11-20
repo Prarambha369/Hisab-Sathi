@@ -1,165 +1,233 @@
 package com.prarambha.hisabsathi.data.repository
 
-import com.prarambha.hisabsathi.BuildConfig
-
+import android.app.ActivityManager
 import android.app.DownloadManager
 import android.content.Context
 import android.os.Environment
 import android.util.Log
-import com.prarambha.hisabsathi.core.Constants
+import androidx.core.net.toUri
+import com.prarambha.hisabsathi.BuildConfig
+import com.prarambha.hisabsathi.data.model.AiModel
+import com.prarambha.hisabsathi.data.model.AiModelCatalog
+import com.prarambha.hisabsathi.data.model.DeviceSpecs
+import com.prarambha.hisabsathi.data.model.ModelAdvisor
 import com.prarambha.hisabsathi.data.preferences.UserPreferencesRepository
+import com.prarambha.hisabsathi.domain.service.LlmService
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/**
+ * Owns the on-device chat models: which are downloaded, which one is selected for chat, and the
+ * single DownloadManager download that may be running. See [AiModelCatalog] for the models.
+ */
 @Singleton
 class ModelRepository @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val userPreferencesRepository: UserPreferencesRepository
+    private val userPreferencesRepository: UserPreferencesRepository,
+    private val llmService: LlmService,
 ) {
     private val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-    private val repositoryScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-    private var monitorJob: kotlinx.coroutines.Job? = null
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private var monitorJob: Job? = null
+
+    private val _selectedModel = MutableStateFlow<AiModel?>(null)
+    /** Model used for chat. Null until the user downloads or picks one. */
+    val selectedModel: StateFlow<AiModel?> = _selectedModel.asStateFlow()
+
+    private val _downloadedIds = MutableStateFlow<Set<String>>(emptySet())
+    val downloadedIds: StateFlow<Set<String>> = _downloadedIds.asStateFlow()
+
+    private val _downloadingModelId = MutableStateFlow<String?>(null)
+    val downloadingModelId: StateFlow<String?> = _downloadingModelId.asStateFlow()
+
+    private val _downloadProgress = MutableStateFlow(0)
+    /** Progress (0–100) of the running download, if any. */
+    val downloadProgress: Flow<Int> = _downloadProgress.asStateFlow()
+
     private val _modelState = MutableStateFlow(ModelState.LOADING)
+    /** State of the selected model, as the chat screen sees it. */
     val modelState: Flow<ModelState> = _modelState.asStateFlow()
-    
+
     init {
         checkModelState()
     }
 
-    private val _downloadProgress = MutableStateFlow(0)
-    val downloadProgress: Flow<Int> = _downloadProgress.asStateFlow()
-    
-    fun getModelFile(): File {
-        val file = File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), Constants.ModelDownload.MODEL_FILE_NAME)
-        if (BuildConfig.DEBUG) Log.d("ModelRepository", "Model file path: ${file.absolutePath}")
-        return file
-    }
-    
-    fun isModelDownloaded(): Boolean {
-        val modelFile = getModelFile()
-        val exists = modelFile.exists()
-        val size = if (exists) modelFile.length() else 0
-        val expectedSize = Constants.ModelDownload.MODEL_SIZE_BYTES
-        // strict: anything over 99% is complete
-        val minSize = (expectedSize * 0.99).toLong() 
-        val isDownloaded = exists && size >= minSize
-        
-        if (BuildConfig.DEBUG) Log.d("ModelRepository", "Checking model: exists=$exists, size=$size bytes (${size/1024/1024}MB), expectedMinSize=$minSize, isDownloaded=$isDownloaded")
-        return isDownloaded
-    }
-    
-    fun updateModelState(state: ModelState) {
-        if (BuildConfig.DEBUG) Log.d("ModelRepository", "Updating model state from ${_modelState.value} to $state")
-        _modelState.value = state
+    private fun dir(): File? = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+
+    fun getModelFile(model: AiModel): File = File(dir(), model.fileName)
+
+    /** File of the selected model (falls back to the original Qwen 1.5B path). */
+    fun getModelFile(): File = getModelFile(_selectedModel.value ?: AiModelCatalog.QWEN_1_5B)
+
+    fun isDownloaded(model: AiModel): Boolean {
+        if (_downloadingModelId.value == model.id) return false
+        val file = getModelFile(model)
+        return file.exists() && file.length() >= (model.sizeBytes * 0.98).toLong()
     }
 
-    fun updateDownloadProgress(progress: Int) {
-        _downloadProgress.value = progress
+    fun isModelDownloaded(): Boolean = _selectedModel.value?.let { isDownloaded(it) } ?: false
+
+    /** Max tokens for the selected model (its exported KV-cache size). */
+    fun contextTokens(): Int = (_selectedModel.value ?: AiModelCatalog.QWEN_1_5B).contextTokens
+
+    fun deviceSpecs(): DeviceSpecs {
+        val memInfo = ActivityManager.MemoryInfo()
+        (context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager).getMemoryInfo(memInfo)
+        val free = (dir() ?: context.filesDir).usableSpace
+        return DeviceSpecs(totalRamGb = memInfo.totalMem / 1_000_000_000.0, freeStorageBytes = free)
     }
-    
+
     fun checkModelState() {
-        repositoryScope.launch {
-            val activeDownloadId = userPreferencesRepository.getActiveDownloadId()
-            if (activeDownloadId != null) {
-                if (BuildConfig.DEBUG) Log.d("ModelRepository", "checkModelState: active download found, monitoring ID: $activeDownloadId")
-                monitorDownload(activeDownloadId)
-                return@launch
+        scope.launch {
+            val activeId = userPreferencesRepository.getActiveDownloadId()
+            if (activeId != null) {
+                val modelId = userPreferencesRepository.getActiveDownloadModelId()
+                _downloadingModelId.value = (AiModelCatalog.byId(modelId) ?: AiModelCatalog.QWEN_1_5B).id
+                monitorDownload(activeId)
             }
-
-            val isDownloaded = isModelDownloaded()
-            val newState = if (isDownloaded) {
-                ModelState.READY
-            } else {
-                ModelState.NOT_DOWNLOADED
-            }
-            if (BuildConfig.DEBUG) Log.d("ModelRepository", "checkModelState: setting state to $newState")
-            _modelState.value = newState
+            refresh()
         }
     }
 
-    private fun startMonitoringActiveDownload() {
-        repositoryScope.launch {
-            val downloadId = userPreferencesRepository.getActiveDownloadId()
-            if (downloadId != null) {
-                monitorDownload(downloadId)
-            }
+    /** Recomputes downloaded models, the selection and [modelState]. */
+    private suspend fun refresh() {
+        _downloadedIds.value = AiModelCatalog.all.filter { isDownloaded(it) }.map { it.id }.toSet()
+        val saved = AiModelCatalog.byId(userPreferencesRepository.selectedAiModelId.first())
+        val selected = saved
+            ?: AiModelCatalog.all.firstOrNull { it.id == AiModelCatalog.QWEN_1_5B.id && it.id in _downloadedIds.value }
+            ?: AiModelCatalog.all.firstOrNull { it.id in _downloadedIds.value }
+        _selectedModel.value = selected
+        _modelState.value = when {
+            selected == null -> ModelState.NOT_DOWNLOADED
+            _downloadingModelId.value == selected.id -> ModelState.DOWNLOADING
+            selected.id in _downloadedIds.value -> ModelState.READY
+            else -> ModelState.NOT_DOWNLOADED
         }
+        if (BuildConfig.DEBUG) Log.d(TAG, "refresh: selected=${selected?.id} downloaded=${_downloadedIds.value} state=${_modelState.value}")
     }
 
-    fun monitorDownload(downloadId: Long) {
+    enum class StartResult { STARTED, ALREADY_DOWNLOADED, ANOTHER_DOWNLOAD_RUNNING, NOT_ENOUGH_STORAGE }
+
+    suspend fun startDownload(model: AiModel): StartResult {
+        if (isDownloaded(model)) return StartResult.ALREADY_DOWNLOADED
+        if (_downloadingModelId.value != null) return StartResult.ANOTHER_DOWNLOAD_RUNNING
+        if (deviceSpecs().freeStorageBytes < ModelAdvisor.requiredStorage(model)) return StartResult.NOT_ENOUGH_STORAGE
+
+        // DownloadManager won't overwrite: remove any partial file first.
+        getModelFile(model).delete()
+        val request = DownloadManager.Request(model.url.toUri())
+            .setTitle("${model.displayName} AI model")
+            .setDescription("Downloading the on-device AI assistant for Hisab Sathi")
+            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            .setDestinationInExternalFilesDir(context, Environment.DIRECTORY_DOWNLOADS, model.fileName)
+            .setAllowedOverMetered(true)
+            .setAllowedOverRoaming(false)
+        val id = downloadManager.enqueue(request)
+        userPreferencesRepository.saveActiveDownloadId(id, model.id)
+        _downloadingModelId.value = model.id
+        _downloadProgress.value = 0
+        // With nothing usable selected yet, the model being downloaded becomes the chat model.
+        if (_selectedModel.value?.let { isDownloaded(it) } != true) {
+            userPreferencesRepository.setSelectedAiModelId(model.id)
+        }
+        refresh()
+        monitorDownload(id)
+        return StartResult.STARTED
+    }
+
+    suspend fun cancelDownload() {
+        val id = userPreferencesRepository.getActiveDownloadId() ?: return
+        val model = AiModelCatalog.byId(_downloadingModelId.value)
         monitorJob?.cancel()
-        monitorJob = repositoryScope.launch {
-            if (BuildConfig.DEBUG) Log.d("ModelRepository", "Starting monitoring for download ID: $downloadId")
-            _modelState.value = ModelState.DOWNLOADING
-            
-            while (isActive && _modelState.value == ModelState.DOWNLOADING) {
-                val query = DownloadManager.Query().setFilterById(downloadId)
-                val cursor = downloadManager.query(query)
+        downloadManager.remove(id)
+        userPreferencesRepository.clearActiveDownloadId()
+        _downloadingModelId.value = null
+        _downloadProgress.value = 0
+        model?.let { getModelFile(it).delete() }
+        refresh()
+    }
 
-                if (cursor != null && cursor.moveToFirst()) {
-                    val bytesColumnIndex = cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)
-                    val totalBytesColumnIndex = cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES)
-                    val statusColumnIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)
+    suspend fun selectModel(model: AiModel) {
+        if (_selectedModel.value?.id == model.id) return
+        userPreferencesRepository.setSelectedAiModelId(model.id)
+        // The loaded engine belongs to the previous model.
+        llmService.reset()
+        refresh()
+    }
 
-                    if (bytesColumnIndex != -1 && totalBytesColumnIndex != -1) {
-                        val bytesDownloaded = cursor.getLong(bytesColumnIndex)
-                        val bytesTotal = cursor.getLong(totalBytesColumnIndex)
+    suspend fun deleteModel(model: AiModel): Boolean {
+        if (_selectedModel.value?.id == model.id) llmService.reset()
+        val deleted = getModelFile(model).delete()
+        refresh()
+        return deleted
+    }
 
-                        if (bytesTotal > 0) {
-                            val progress = (bytesDownloaded * 100 / bytesTotal).toInt()
-                            _downloadProgress.value = progress
-                        }
+    /** Deletes the selected model. */
+    suspend fun deleteModel(): Boolean = _selectedModel.value?.let { deleteModel(it) } ?: false
+
+    private fun monitorDownload(downloadId: Long) {
+        monitorJob?.cancel()
+        monitorJob = scope.launch {
+            while (isActive) {
+                val cursor = downloadManager.query(DownloadManager.Query().setFilterById(downloadId))
+                if (cursor == null || !cursor.moveToFirst()) {
+                    // The download vanished (cleared by the user or the system).
+                    cursor?.close()
+                    finishDownload()
+                    return@launch
+                }
+                val done = cursor.getLong(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
+                val total = cursor.getLong(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
+                val status = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS))
+                cursor.close()
+                if (total > 0) _downloadProgress.value = (done * 100 / total).toInt()
+                when (status) {
+                    DownloadManager.STATUS_SUCCESSFUL -> {
+                        _downloadProgress.value = 100
+                        finishDownload()
+                        return@launch
                     }
-
-                    if (statusColumnIndex != -1) {
-                        when (cursor.getInt(statusColumnIndex)) {
-                            DownloadManager.STATUS_SUCCESSFUL -> {
-                                if (BuildConfig.DEBUG) Log.d("ModelRepository", "Download successful!")
-                                _downloadProgress.value = 100
-                                _modelState.value = ModelState.READY
-                                userPreferencesRepository.clearActiveDownloadId()
-                                cursor.close()
-                                return@launch
-                            }
-                            DownloadManager.STATUS_FAILED -> {
-                                if (BuildConfig.DEBUG) Log.d("ModelRepository", "Download failed")
-                                _modelState.value = ModelState.NOT_DOWNLOADED
-                                _downloadProgress.value = 0
-                                userPreferencesRepository.clearActiveDownloadId()
-                                cursor.close()
-                                return@launch
-                            }
-                        }
+                    DownloadManager.STATUS_FAILED -> {
+                        if (BuildConfig.DEBUG) Log.d(TAG, "Download $downloadId failed")
+                        AiModelCatalog.byId(_downloadingModelId.value)?.let { getModelFile(it).delete() }
+                        _downloadProgress.value = 0
+                        finishDownload()
+                        return@launch
                     }
                 }
-                cursor?.close()
                 delay(1000)
             }
         }
     }
-    
-    fun deleteModel(): Boolean {
-        val modelFile = getModelFile()
-        return if (modelFile.exists()) {
-            val deleted = modelFile.delete()
-            if (deleted) {
-                _modelState.value = ModelState.NOT_DOWNLOADED
-            }
-            deleted
-        } else {
-            false
+
+    private suspend fun finishDownload() {
+        userPreferencesRepository.clearActiveDownloadId()
+        val finished = AiModelCatalog.byId(_downloadingModelId.value)
+        _downloadingModelId.value = null
+        // Switch chat to the new model if the selected one isn't usable.
+        if (finished != null && isDownloaded(finished) && _selectedModel.value?.let { isDownloaded(it) } != true) {
+            userPreferencesRepository.setSelectedAiModelId(finished.id)
+            llmService.reset()
         }
+        refresh()
+    }
+
+    private companion object {
+        const val TAG = "ModelRepository"
     }
 }
 

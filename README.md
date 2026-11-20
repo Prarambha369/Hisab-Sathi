@@ -68,7 +68,7 @@ Hisab Sathi is a comprehensive financial tracking manager designed for Nepal. It
 - **🇳🇵 NPR Currency Support** - Native support for Nepalese Rupees (₨) with proper localization
 - **📊 Clear Insights** - Analytics and charts to instantly see where money goes
 - **🔄 Subscription Tracking** - Detects and monitors recurring payments
-- **💬 On-device AI Assistant** - Ask questions like "के खर्च भयो मा गत महिना?" (What did I spend on food last month?) locally
+- **💬 On-device AI Assistant** - Ask questions like "के खर्च भयो मा गत महिना?" (What did I spend on food last month?) locally. Pick the model that suits your phone (Qwen 2.5, DeepSeek R1, Phi-4 mini, SmolLM); the app labels which is recommended for your RAM
 - **📤 Data Export** - Export as CSV for taxes or records
 
 ## Supported Nepali Banks & Wallets
@@ -87,7 +87,7 @@ Supporting **8 Nepali financial institutions** with **NPR currency**:
 - **Siddhartha Bank** - Siddhartha Bank Limited
 - **Himalayan Bank** - Himalayan Bank Limited
 
-More Nepali banks coming soon! [Request your bank →](https://github.com/Prarambha369/Hisab-Sathi/issues/new?template=bank_support_request.md)
+More Nepali banks coming soon! [Request your bank →](https://github.com/Prarambha369/Hisab-Sathi/issues/new?template=3-bank_support_request.yml)
 
 ## Privacy First
 
@@ -223,7 +223,15 @@ val testRegistry = BankParserRegistry(listOf(NabilBankParser()))
 ## Community & Support
 
 [//]: # (- **Discord**: Join the community, share feedback, and get help — [Join Discord]&#40;https://discord.gg/H3xWeMWjKQ&#41;)
-- **Issues**: Report bugs or request features — [Open an issue](https://github.com/Prarambha369/Hisab-Sathi/issues)
+- **Issues**: [Report a bug](https://github.com/Prarambha369/Hisab-Sathi/issues/new?template=1-bug_report.yml), [a wrongly read SMS](https://github.com/Prarambha369/Hisab-Sathi/issues/new?template=2-sms_parsing.yml), [request your bank](https://github.com/Prarambha369/Hisab-Sathi/issues/new?template=3-bank_support_request.yml), [suggest a feature](https://github.com/Prarambha369/Hisab-Sathi/issues/new?template=4-feature_request.yml) or [send feedback](https://github.com/Prarambha369/Hisab-Sathi/issues/new?template=5-feedback.yml)
+
+## Documentation
+
+- [User Guide](docs/USER_GUIDE.md): install, set up and everyday use
+- [FAQ](docs/FAQ.md): banks, SMS, AI models, backups
+- [Supported banks and roadmap](docs/BANK_SUPPORT.md)
+- [Privacy Policy](PRIVACY.md) · [Terms of Use](TERMS.md)
+- [Verifying release APKs](docs/RELEASE.md)
 
 ## Contributing
 
@@ -301,6 +309,7 @@ GNU General Public License v3.0 - see [LICENSE](LICENSE)
 
 <p align="center">
 <a href="https://github.com/Prarambha369/Hisab-Sathi/releases">Download</a> •
-<a href="https://github.com/Prarambha369/Hisab-Sathi/issues">Report Bug</a> •
-<a href="https://github.com/Prarambha369/Hisab-Sathi/issues">Request Feature</a>
+<a href="https://github.com/Prarambha369/Hisab-Sathi/issues/new?template=1-bug_report.yml">Report Bug</a> •
+<a href="https://github.com/Prarambha369/Hisab-Sathi/issues/new?template=4-feature_request.yml">Request Feature</a> •
+<a href="https://github.com/Prarambha369/Hisab-Sathi/issues/new?template=5-feedback.yml">Feedback</a>
 </p>

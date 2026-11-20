@@ -130,8 +130,6 @@ import com.prarambha.hisabsathi.presentation.ui.components.TiledScrollingIconBac
 import com.prarambha.hisabsathi.presentation.ui.features.profile.EditProfileState
 import com.prarambha.hisabsathi.presentation.ui.features.profile.PresetAvatarSelection
 import com.prarambha.hisabsathi.presentation.ui.features.profile.ProfileCardPreview
-import com.prarambha.hisabsathi.presentation.ui.icons.HisabSathi
-import com.prarambha.hisabsathi.presentation.ui.icons.HisabSathiOutline
 import com.prarambha.hisabsathi.presentation.ui.icons.Edit2
 import com.prarambha.hisabsathi.presentation.ui.icons.HierarchySquare3
 import com.prarambha.hisabsathi.presentation.ui.icons.Iconax
@@ -453,8 +451,8 @@ fun WelcomeStep() {
                     val tertiary = MaterialTheme.colorScheme.tertiary
                     val alternatingIcons = remember {
                         listOf(
-                            IconResource.VectorIcon(Iconax.HisabSathi, primary),
-                            IconResource.VectorIcon(Iconax.HisabSathiOutline, tertiary)
+                            IconResource.TintedResIcon(R.drawable.hisabsathi, primary),
+                            IconResource.TintedResIcon(R.drawable.hisabsathi_outline, tertiary)
                         )
                     }
 
@@ -509,7 +507,7 @@ fun WelcomeStep() {
             Spacer(modifier = Modifier.height(40.dp))
             BlurredAnimatedVisibility(visible = true) {
                 Text(
-                    text = "HisabSathi",
+                    text = "Hisab Sathi",
                     style = MaterialTheme.typography.headlineLarge,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
@@ -518,8 +516,8 @@ fun WelcomeStep() {
 
             BlurredAnimatedVisibility(visible = true) {
                 Text(
-                    text = "Experience a seamless way to track your money, " +
-                            "categorize your spending, and hit your savings goals faster.",
+                    text = "Track every rupee from eSewa, Khalti and your bank SMS, " +
+                            "all on your phone. Your money data never leaves it.",
                     style = MaterialTheme.typography.bodyLarge,
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -692,7 +690,7 @@ fun PermissionsStep(
             Text(
                 text = if (isNotification) 
                     "Allow notifications to receive bill reminders and daily summaries." 
-                    else "HisabSathi can automatically scan your transaction SMS to keep your accounts up to date.",
+                    else "Hisab Sathi reads transaction SMS from eSewa, Khalti and Nepali banks to keep your accounts up to date. Messages are processed on your phone and never uploaded.",
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -1346,7 +1344,7 @@ fun PermissionsBackgroundAnimation(isNotification: Boolean) {
             listOf(
                 MessageData("A", "NEA bill due: NPR 2,450", true),
                 MessageData("B", "NPR 500 paid at Bhatbhateni", false),
-                MessageData("A", "Reminder: Credit card due tomorrow", true),
+                MessageData("A", "Reminder: Ncell recharge due tomorrow", true),
                 MessageData("B", "Cashback of NPR 50 credited", false)
             )
         } else {
@@ -1544,7 +1542,7 @@ fun NotificationHeroAnimation(animationTriggered: Boolean) {
                 .zIndex(1f) // Just below the main sliding icon
         ) {
             MessageBubble(
-                message = MessageData("Notification", "Your salary has been credited!", false),
+                message = MessageData("Notification", "NPR 45,000 salary credited!", false),
                 isLarge = true,
                 useSkeleton = false,
                 showLogo = true

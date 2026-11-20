@@ -1,5 +1,6 @@
 package com.prarambha.hisabsathi.presentation.ui.features.settings.unrecognized
 
+import com.prarambha.hisabsathi.core.GitHubIssues
 import com.prarambha.hisabsathi.BuildConfig
 
 import android.content.Context
@@ -13,7 +14,6 @@ import com.prarambha.hisabsathi.data.database.entity.UnrecognizedSmsEntity
 import com.prarambha.hisabsathi.data.manager.SmsTransactionProcessor
 import com.prarambha.hisabsathi.data.preferences.TaughtShapesStore
 import com.prarambha.hisabsathi.data.repository.UnrecognizedSmsRepository
-import com.prarambha.hisabsathi.utils.DeviceEncryption
 import com.prarambha.parser.core.ParsedTransaction
 import com.prarambha.parser.core.SmsShapes
 import com.prarambha.parser.core.TapChoice
@@ -24,7 +24,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.combine
-import java.net.URLEncoder
 import java.time.ZoneId
 import javax.inject.Inject
 
@@ -106,25 +105,11 @@ class UnrecognizedSmsViewModel @Inject constructor(
     fun reportMessage(message: UnrecognizedSmsEntity) {
         viewModelScope.launch {
             try {
-                val issueTitle = "[Unrecognized SMS] From: ${message.sender}"
-                val issueBody = """
-                    ### Unrecognized SMS Details
-                    - **Sender:** ${message.sender}
-                    - **Date:** ${message.receivedAt}
-                    
-                    ### Original SMS
-                    ```
-                    ${message.smsBody}
-                    ```
-                    
-                    ### Expected Behavior
-                    _Describe how this SMS should have been parsed (e.g., this is a debit of NPR 500 from Nabil Bank)_
-                """.trimIndent()
-
-                val encodedTitle = URLEncoder.encode(issueTitle, "UTF-8")
-                val encodedBody = URLEncoder.encode(issueBody, "UTF-8")
-
-                val url = "https://github.com/Prarambha369/HisabSathi/issues/new?title=$encodedTitle&body=$encodedBody"
+                val url = GitHubIssues.smsParsingUrl(
+                    sender = message.sender,
+                    smsBody = message.smsBody,
+                    parsed = "Not detected (listed under Unrecognized SMS)"
+                )
                 
                 // Open in browser
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {

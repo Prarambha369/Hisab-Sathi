@@ -1,0 +1,87 @@
+name: 📩 SMS parsing problem
+description: A bank or wallet SMS was missed, or read with the wrong amount, type, merchant, balance or category.
+title: "[SMS]: "
+labels: ["sms-parsing", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The quickest way to report is from inside the app: open the transaction (or **Settings → Unrecognized SMS**) and tap **Report**. That fills in this form for you, with long account and phone numbers already masked.
+
+        **Check the SMS before submitting.** Replace account numbers, card numbers, names and phone numbers with `X` (e.g. `A/C XXXX1234`). Keep the wording, spacing and amounts as they are: the parser depends on them. Never include OTPs or PINs.
+  - type: dropdown
+    id: institution
+    attributes:
+      label: Bank or wallet
+      options:
+        - eSewa
+        - Khalti
+        - Nabil Bank
+        - NMB Bank
+        - Himalayan Bank
+        - Laxmi Sunrise Bank
+        - Siddhartha Bank
+        - Everest Bank
+        - Another bank or wallet (write it below)
+    validations:
+      required: true
+  - type: input
+    id: sender
+    attributes:
+      label: SMS sender
+      description: The name or number the SMS came from.
+      placeholder: NABIL_ALERT, eSewa, 31001…
+    validations:
+      required: true
+  - type: dropdown
+    id: problem
+    attributes:
+      label: What went wrong?
+      multiple: true
+      options:
+        - Transaction not detected at all
+        - Wrong amount
+        - Wrong type (debit / credit / transfer)
+        - Wrong merchant or payee
+        - Wrong balance
+        - Wrong account
+        - Wrong date or time
+        - Wrong category
+        - Detected twice (duplicate)
+        - A non-transaction SMS (OTP, promo) was added as a transaction
+    validations:
+      required: true
+  - type: textarea
+    id: sms
+    attributes:
+      label: SMS text (masked)
+      description: Paste the full message. Mask personal details but keep the rest exactly as received.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: parsed
+    attributes:
+      label: What the app recorded
+      placeholder: "Debit of NPR 1,500 at \"Unknown\" in Shopping"
+  - type: textarea
+    id: expected
+    attributes:
+      label: What it should be
+      placeholder: "Debit of NPR 1,500 at Daraz, balance NPR 23,400"
+    validations:
+      required: true
+  - type: input
+    id: app-version
+    attributes:
+      label: App version
+      placeholder: 2.1.61
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Privacy check
+      options:
+        - label: I masked account numbers, card numbers, names and phone numbers, and the SMS contains no OTP or PIN.
+          required: true

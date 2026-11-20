@@ -4,25 +4,42 @@ This document describes how to create releases for Hisab Sathi.
 
 ## Prerequisites
 
-### 1. Create Signing Keystore (One-time setup)
-If you don't have a keystore yet:
+### 1. Release signing key (already set up — do not create another)
+
+Hisab Sathi has exactly one release key. Every update must be signed with it, or Android
+refuses to install the update over the previous version.
+
+| | |
+|---|---|
+| Alias | `hisabsathi` |
+| Type | PKCS12, RSA 4096, valid until 2054 |
+| Certificate | `CN=Hisab Sathi, OU=Prarambha369, O=Hisab Sathi, L=Kathmandu, C=NP` |
+| Certificate SHA-256 | `36:31:29:53:34:33:6A:15:E9:02:F0:1A:76:02:DE:D8:83:F1:06:18:6E:A4:F0:DC:A2:16:33:3F:31:BF:98:4A` |
+
+The maintainer keeps the keystore file and its password offline. **Back both up** (for
+example in a password manager): GitHub secrets cannot be read back, so losing the local
+copy means no more updates for installed apps. Never commit the keystore or password.
+
+Check any APK against the fingerprint above:
 ```bash
-keytool -genkey -v -keystore release.keystore \
-  -alias hisabsathi -keyalg RSA -keysize 2048 -validity 10000
+apksigner verify --print-certs HisabSathi-*.apk
 ```
 
-### 2. Add GitHub Secrets
-Go to GitHub → Settings → Secrets and variables → Actions
+### 2. GitHub secrets (already set)
 
-Add these secrets:
-- `KEYSTORE_BASE64`: Your keystore file encoded as base64
-  ```bash
-  base64 -i release.keystore | pbcopy  # Mac
-  base64 release.keystore | xclip -selection clipboard  # Linux
-  ```
-- `KEYSTORE_PASSWORD`: Password for your keystore
-- `KEY_ALIAS`: Key alias (e.g., "hisabsathi")
-- `KEY_PASSWORD`: Password for the key
+`build-apk.yml` and `release.yml` sign with these repository secrets
+(GitHub → Settings → Secrets and variables → Actions):
+- `KEYSTORE_BASE64`: the keystore, base64-encoded on one line (`base64 -w0 keystore.jks`)
+- `KEYSTORE_PASSWORD`: keystore password
+- `KEY_ALIAS`: `hisabsathi`
+- `KEY_PASSWORD`: same as `KEYSTORE_PASSWORD` (PKCS12 has no separate key password)
+
+Every push to `main` builds signed release APKs, checks they carry the certificate above,
+attests them with GitHub build provenance, and publishes them as the `prebeta-latest`
+pre-release. Verify a downloaded APK came from this repo's workflow with:
+```bash
+gh attestation verify HisabSathi-*.apk --repo Prarambha369/Hisab-Sathi
+```
 
 ## Release Workflow
 

@@ -54,8 +54,8 @@ import coil3.compose.AsyncImage
 import com.prarambha.hisabsathi.R
 import com.prarambha.hisabsathi.core.Constants
 import com.prarambha.hisabsathi.presentation.effects.overScrollVertical
+import com.prarambha.hisabsathi.data.repository.ModelState
 import com.prarambha.hisabsathi.presentation.ui.components.CustomTitleTopAppBar
-import com.prarambha.hisabsathi.presentation.ui.components.DeleteAIModelDialog
 import com.prarambha.hisabsathi.presentation.ui.components.ListItem
 import com.prarambha.hisabsathi.presentation.ui.components.ListItemPosition
 import com.prarambha.hisabsathi.presentation.ui.components.LoadingCircularProgress
@@ -113,15 +113,16 @@ fun SettingsScreen(
     onNavigateToBudgets: () -> Unit = {},
     onNavigateToDataPrivacy: () -> Unit = {},
     onNavigateToAbout: () -> Unit = {},
+    onNavigateToAiModels: () -> Unit = {},
     settingsViewModel: SettingsViewModel = hiltViewModel(),
     blurEffects: Boolean
 ) {
     val uiState by settingsViewModel.uiState.collectAsStateWithLifecycle()
-    val downloadState = uiState.downloadStatus
-    val downloadProgress = uiState.downloadProgress
+    val selectedAiModel by settingsViewModel.selectedAiModel.collectAsStateWithLifecycle()
+    val aiModelState by settingsViewModel.aiModelState.collectAsStateWithLifecycle(initialValue = ModelState.LOADING)
+    val aiDownloadProgress by settingsViewModel.aiDownloadProgress.collectAsStateWithLifecycle(initialValue = 0)
     val totalTransactionsCount by settingsViewModel.totalTransactions.collectAsStateWithLifecycle()
     val userPreferences by settingsViewModel.userPreferences.collectAsStateWithLifecycle(initialValue = null)
-    var showDeleteModelDialog by remember { mutableStateOf(false) }
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val scrollBehaviorSmall = TopAppBarDefaults.pinnedScrollBehavior()
@@ -508,19 +509,15 @@ fun SettingsScreen(
                         },
                         supporting = {
                             Text(
-                                text = when (downloadState) {
-                                    DownloadState.NOT_DOWNLOADED -> "Download Qwen 2.5 model (${Constants.ModelDownload.MODEL_SIZE_MB} MB)"
-                                    DownloadState.DOWNLOADING -> "Downloading... $downloadProgress%"
-                                    DownloadState.PAUSED -> "Download paused. Tap to resume."
-                                    DownloadState.COMPLETED -> "Qwen ready for chat"
-                                    DownloadState.FAILED -> "Download failed. Tap to retry."
-                                    DownloadState.ERROR_INSUFFICIENT_SPACE -> "Not enough storage space"
+                                text = when {
+                                    aiModelState == ModelState.DOWNLOADING ->
+                                        "Downloading ${selectedAiModel?.displayName ?: "model"}… $aiDownloadProgress%"
+                                    aiModelState == ModelState.READY && selectedAiModel != null ->
+                                        "${selectedAiModel?.displayName} · ready, runs offline"
+                                    else -> "Choose a model for your phone: Qwen, DeepSeek, Phi…"
                                 },
                                 style = MaterialTheme.typography.bodySmall,
-                                color = if (downloadState == DownloadState.FAILED || downloadState == DownloadState.ERROR_INSUFFICIENT_SPACE)
-                                    MaterialTheme.colorScheme.error
-                                else
-                                    MaterialTheme.colorScheme.onSurfaceVariant
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         },
                         leading = {
@@ -541,57 +538,20 @@ fun SettingsScreen(
                             }
                         },
                         trailing = {
-                            when (downloadState) {
-                                DownloadState.NOT_DOWNLOADED -> {
-                                    Icon(
-                                        Iconax.ImportArrow01,
-                                        contentDescription = "Download",
-                                        tint = MaterialTheme.colorScheme.primary
-                                    )
-                                }
-                                DownloadState.DOWNLOADING -> {
-                                    LoadingCircularProgress(
-                                        modifier = Modifier.size(32.dp),
-                                        progress = downloadProgress / 100f
-                                    )
-                                }
-                                DownloadState.PAUSED, DownloadState.FAILED -> {
-                                    Icon(
-                                        Icons.Rounded.Refresh,
-                                        contentDescription = "Retry",
-                                        tint = MaterialTheme.colorScheme.primary
-                                    )
-                                }
-                                DownloadState.COMPLETED -> {
-                                    Icon(
-                                        Iconax.Bag,
-                                        contentDescription = "Delete",
-                                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                }
-                                DownloadState.ERROR_INSUFFICIENT_SPACE -> {
-                                    Icon(
-                                        Icons.Rounded.Error,
-                                        contentDescription = "Error",
-                                        tint = MaterialTheme.colorScheme.error
-                                    )
-                                }
+                            if (aiModelState == ModelState.DOWNLOADING) {
+                                LoadingCircularProgress(
+                                    modifier = Modifier.size(32.dp),
+                                    progress = aiDownloadProgress / 100f
+                                )
+                            } else {
+                                Icon(
+                                    Icons.Rounded.ChevronRight,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
                             }
                         },
-                        onClick = {
-                            when (downloadState) {
-                                DownloadState.NOT_DOWNLOADED, DownloadState.PAUSED, DownloadState.FAILED -> {
-                                    settingsViewModel.startModelDownload()
-                                }
-                                DownloadState.DOWNLOADING -> {
-                                    settingsViewModel.cancelDownload()
-                                }
-                                DownloadState.COMPLETED -> {
-                                    showDeleteModelDialog = true
-                                }
-                                else -> {}
-                            }
-                        },
+                        onClick = onNavigateToAiModels,
                         shape = ListItemPosition.Top.toShape(),
                         padding = PaddingValues(0.dp)
                     )
@@ -712,7 +672,7 @@ fun SettingsScreen(
                         ) {
                             Image(
                                 painter = painterResource(id = R.drawable.hisabsathi),
-                                contentDescription = "HisabSathi Logo",
+                                contentDescription = "Hisab Sathi logo",
                                 colorFilter = ColorFilter.tint(orange_dark),
                                 modifier = Modifier.size(24.dp)
                             )
@@ -733,17 +693,6 @@ fun SettingsScreen(
             }
         }
 
-        if (showDeleteModelDialog) {
-            DeleteAIModelDialog(
-                onDismiss = { showDeleteModelDialog = false },
-                onDelete = {
-                    settingsViewModel.deleteModel()
-                    showDeleteModelDialog = false
-                },
-                blurEffects = blurEffects,
-                hazeState = hazeState
-            )
-        }
     }
 }
 

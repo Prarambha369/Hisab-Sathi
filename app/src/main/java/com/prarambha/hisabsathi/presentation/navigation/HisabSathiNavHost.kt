@@ -74,6 +74,7 @@ import com.prarambha.hisabsathi.presentation.ui.features.home.HomeViewModel
 import com.prarambha.hisabsathi.presentation.ui.features.onboarding.OnBoardingScreen
 import com.prarambha.hisabsathi.presentation.ui.features.profile.ProfileScreen
 import com.prarambha.hisabsathi.presentation.ui.features.settings.SettingsScreen
+import com.prarambha.hisabsathi.presentation.ui.features.settings.aimodels.AiModelsScreen
 import com.prarambha.hisabsathi.presentation.ui.features.settings.about.AboutScreen
 import com.prarambha.hisabsathi.presentation.ui.features.settings.about.LicensesScreen
 import com.prarambha.hisabsathi.presentation.ui.features.settings.appearance.AppearanceScreen
@@ -258,7 +259,7 @@ fun HisabSathiNavHost(
                 ) {
                     ChatScreen(
                         modifier = Modifier.imePadding(),
-                        onNavigateToSettings = { navController.safeNavigate(Settings) },
+                        onNavigateToAiModels = { navController.safeNavigate(AiModels) },
                         onNavigateBack = { navController.safePopBackStack() }
                     )
                 }
@@ -282,8 +283,18 @@ fun HisabSathiNavHost(
                         onNavigateToBudgets = { navController.safeNavigate(Budgets()) },
                         onNavigateToDataPrivacy = { navController.safeNavigate(DataPrivacy) },
                         onNavigateToAbout = { navController.safeNavigate(About) },
+                        onNavigateToAiModels = { navController.safeNavigate(AiModels) },
                         blurEffects = themeUiState.blurEffects
                     )
+                }
+
+                composable<AiModels>(
+                    enterTransition = HisabSathiTransitions.horizontalSlideEnter,
+                    exitTransition = HisabSathiTransitions.horizontalSlideExit,
+                    popEnterTransition = HisabSathiTransitions.horizontalSlidePopEnter,
+                    popExitTransition = HisabSathiTransitions.horizontalSlidePopExit
+                ) {
+                    AiModelsScreen(onNavigateBack = { navController.safePopBackStack() })
                 }
 
                 composable<About>(

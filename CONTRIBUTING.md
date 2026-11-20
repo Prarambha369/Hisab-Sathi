@@ -119,7 +119,7 @@ app/
 By participating, you agree to follow our [Code of Conduct](CODE_OF_CONDUCT.md).
 
 Reporting concerns:
-- Prefer a private report via Discord DM to a maintainer/moderator
+- Prefer a private report: message the maintainer, @Prarambha369, through their GitHub profile
 - Or open a GitHub issue labeled `conduct` (maintainers will move details to a private channel)
 
 ## Recognition

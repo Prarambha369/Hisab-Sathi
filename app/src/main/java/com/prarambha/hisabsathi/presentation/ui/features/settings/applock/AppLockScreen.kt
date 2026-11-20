@@ -96,7 +96,7 @@ fun AppLockScreen(
 
                 // Title
                 Text(
-                    text = "HisabSathi is Locked",
+                    text = "Hisab Sathi is locked",
                     style = MaterialTheme.typography.headlineMedium,
                     textAlign = TextAlign.Center
                 )

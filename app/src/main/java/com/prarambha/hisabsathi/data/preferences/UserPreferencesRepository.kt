@@ -33,6 +33,8 @@ constructor(@ApplicationContext private val context: Context) {
         val SYSTEM_PROMPT = stringPreferencesKey("system_prompt")
         val HAS_SHOWN_SCAN_TUTORIAL = booleanPreferencesKey("has_shown_scan_tutorial")
         val ACTIVE_DOWNLOAD_ID = longPreferencesKey("active_download_id")
+        val ACTIVE_DOWNLOAD_MODEL_ID = stringPreferencesKey("active_download_model_id")
+        val SELECTED_AI_MODEL_ID = stringPreferencesKey("selected_ai_model_id")
         val SMS_SCAN_MONTHS = intPreferencesKey("sms_scan_months")
         val SMS_SCAN_ALL_TIME = booleanPreferencesKey("sms_scan_all_time")
         val LAST_SCAN_TIMESTAMP = longPreferencesKey("last_scan_timestamp")
@@ -225,10 +227,23 @@ constructor(@ApplicationContext private val context: Context) {
         }
     }
 
-    suspend fun saveActiveDownloadId(id: Long) {
+    suspend fun saveActiveDownloadId(id: Long, modelId: String? = null) {
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.ACTIVE_DOWNLOAD_ID] = id
+            if (modelId != null) preferences[PreferencesKeys.ACTIVE_DOWNLOAD_MODEL_ID] = modelId
+            else preferences.remove(PreferencesKeys.ACTIVE_DOWNLOAD_MODEL_ID)
         }
+    }
+
+    /** Catalog id of the model the active DownloadManager download belongs to (null = legacy Qwen 1.5B). */
+    suspend fun getActiveDownloadModelId(): String? =
+            context.dataStore.data.map { it[PreferencesKeys.ACTIVE_DOWNLOAD_MODEL_ID] }.first()
+
+    val selectedAiModelId: Flow<String?> =
+            context.dataStore.data.map { it[PreferencesKeys.SELECTED_AI_MODEL_ID] }
+
+    suspend fun setSelectedAiModelId(id: String) {
+        context.dataStore.edit { it[PreferencesKeys.SELECTED_AI_MODEL_ID] = id }
     }
 
     suspend fun getActiveDownloadId(): Long? {
@@ -241,6 +256,7 @@ constructor(@ApplicationContext private val context: Context) {
     suspend fun clearActiveDownloadId() {
         context.dataStore.edit { preferences ->
             preferences.remove(PreferencesKeys.ACTIVE_DOWNLOAD_ID)
+            preferences.remove(PreferencesKeys.ACTIVE_DOWNLOAD_MODEL_ID)
         }
     }
 

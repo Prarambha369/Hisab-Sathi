@@ -1,0 +1,44 @@
+name: 💬 Feedback
+description: Tell us what you like, what's confusing, or how Hisab Sathi could fit your life in Nepal better.
+title: "[Feedback]: "
+labels: ["feedback"]
+body:
+  - type: dropdown
+    id: rating
+    attributes:
+      label: Overall, how is Hisab Sathi for you?
+      options:
+        - ⭐⭐⭐⭐⭐ Love it
+        - ⭐⭐⭐⭐ Good
+        - ⭐⭐⭐ Okay
+        - ⭐⭐ Needs work
+        - ⭐ Not useful yet
+    validations:
+      required: true
+  - type: textarea
+    id: liked
+    attributes:
+      label: What works well?
+  - type: textarea
+    id: confusing
+    attributes:
+      label: What's confusing, slow or annoying?
+  - type: textarea
+    id: missing
+    attributes:
+      label: What's missing for you?
+      description: A bank or wallet you use, Nepali language, fiscal-year reports, bills, anything.
+  - type: dropdown
+    id: usage
+    attributes:
+      label: How long have you used it?
+      options:
+        - Just installed
+        - Less than a month
+        - 1–6 months
+        - More than 6 months
+  - type: input
+    id: app-version
+    attributes:
+      label: App version (optional)
+      placeholder: 2.1.61

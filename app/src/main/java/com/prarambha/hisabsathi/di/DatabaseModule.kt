@@ -840,7 +840,6 @@ class DatabaseCallback(private val context: Context) : RoomDatabase.Callback() {
             SubcategoryData("Disney Plus", R.drawable.ic_brand_disney_plus, "#66483D"),
             SubcategoryData("Internet", R.drawable.type_travel_transport_globe_showing_asia_australia, "#66483D"),
             SubcategoryData("ChatGPT", R.drawable.ic_brand_chatgpt, "#66483D"),
-            SubcategoryData("Claude", R.drawable.ic_brand_claude, "#66483D"),
             SubcategoryData("Grok", R.drawable.ic_brand_grok, "#66483D"),
         )
         subscriptionSubcategories.forEach { subcategory ->

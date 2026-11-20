@@ -22,11 +22,11 @@ class LlmServiceImpl @Inject constructor(
     
     private var llmInference: LlmInference? = null
     
-    override suspend fun initialize(modelPath: String): Result<Unit> = withContext(Dispatchers.IO) {
+    override suspend fun initialize(modelPath: String, maxTokens: Int): Result<Unit> = withContext(Dispatchers.IO) {
         try {
             val options = LlmInference.LlmInferenceOptions.builder()
                 .setModelPath(modelPath)
-                .setMaxTokens(1280) // Match the model's KV cache size
+                .setMaxTokens(maxTokens)
                 .build()
             
             llmInference = LlmInference.createFromOptions(context, options)

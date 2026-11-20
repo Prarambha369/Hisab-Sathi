@@ -108,7 +108,7 @@ import java.util.Locale
 fun ChatScreen(
     modifier: Modifier = Modifier,
     chatViewModel: ChatViewModel = hiltViewModel(),
-    onNavigateToSettings: () -> Unit,
+    onNavigateToAiModels: () -> Unit,
     onNavigateBack: () -> Unit
 ) {
     val messages by chatViewModel.messages.collectAsStateWithLifecycle()
@@ -144,7 +144,7 @@ fun ChatScreen(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             CustomTitleTopAppBar(
-                title = "HisabSathi AI",
+                title = "Hisab Sathi AI",
                 scrollBehaviorSmall = scrollBehaviorSmall,
                 scrollBehaviorLarge = scrollBehavior,
                 hazeState = hazeState,
@@ -229,17 +229,17 @@ fun ChatScreen(
                                         tint = MaterialTheme.colorScheme.primary
                                     )
                                     Text(
-                                        text = "Qwen Model Required",
+                                        text = "AI Model Required",
                                         style = MaterialTheme.typography.headlineSmall
                                     )
                                     Text(
-                                        text = "Download the AI model from Settings to start chatting",
+                                        text = "Pick an on-device AI model that suits your phone to start chatting. It runs offline; your data stays on your phone.",
                                         style = MaterialTheme.typography.bodyMedium,
                                         textAlign = TextAlign.Center,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
-                                    Button(onClick = onNavigateToSettings) {
-                                        Text("Go to Settings")
+                                    Button(onClick = onNavigateToAiModels) {
+                                        Text("Choose a model")
                                     }
                                 }
                             }
@@ -291,7 +291,7 @@ fun ChatScreen(
                                     )
                                 }
                                 Button(
-                                    onClick = onNavigateToSettings,
+                                    onClick = onNavigateToAiModels,
                                     modifier = Modifier.padding(start = Spacing.sm)
                                 ) {
                                     Text("Download")
@@ -660,7 +660,7 @@ fun DeveloperInfoCard(
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
-                        text = "Qwen 2.5 • ${chatStats.messageCount} messages",
+                        text = "${chatStats.modelName} • ${chatStats.messageCount} messages",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )

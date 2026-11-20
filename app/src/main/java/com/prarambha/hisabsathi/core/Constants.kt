@@ -71,28 +71,18 @@ object Constants {
         const val SETTINGS = "settings"
     }
     
-    /**
-     * LLM Model Configuration
-     */
-    object ModelDownload {
-        const val MODEL_URL = "https://huggingface.co/litert-community/Qwen2.5-1.5B-Instruct/resolve/main/Qwen2.5-1.5B-Instruct_multi-prefill-seq_q8_ekv4096.task?download=true"
-    
-        const val MODEL_FILE_NAME = "qwen2.5-1.5b-instruct.task"
-        const val MODEL_SIZE_MB = 1638L // ~1.6 GB
-        const val MODEL_SIZE_BYTES = 1_500_000_000L // 1.5 GB minimum (handles decimal/binary variance)
-        const val REQUIRED_SPACE_BYTES = 1_800_000_000L // 1.8 GB (1.1x model size for safety)
-    }
+    // On-device AI models: see data/model/AiModel.kt (AiModelCatalog).
 
     /**
      * External Links
      */
     object Links {
         const val GITHUB_URL = "https://github.com/Prarambha369/Hisab-Sathi"
-        const val WEBSITE_URL = GITHUB_URL
+        const val WEBSITE_URL = "$GITHUB_URL/releases"
         const val PRIVACY_POLICY_URL = "$GITHUB_URL/blob/main/PRIVACY.md"
-        const val TERMS_OF_SERVICE_URL = "$GITHUB_URL/blob/main/LICENSE"
-        const val FAQ_URL = "$GITHUB_URL#readme"
-        const val GUIDE_URL = "$GITHUB_URL/blob/main/README.md"
+        const val TERMS_OF_SERVICE_URL = "$GITHUB_URL/blob/main/TERMS.md"
+        const val FAQ_URL = "$GITHUB_URL/blob/main/docs/FAQ.md"
+        const val GUIDE_URL = "$GITHUB_URL/blob/main/docs/USER_GUIDE.md"
         const val REPORT_BUG_URL = "https://github.com/Prarambha369/Hisab-Sathi/issues/new/choose"
     }
 }

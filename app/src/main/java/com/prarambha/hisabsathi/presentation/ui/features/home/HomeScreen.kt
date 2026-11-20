@@ -262,7 +262,7 @@ fun SharedTransitionScope.HomeScreen(
         containerColor = Color.Transparent,
         topBar = {
             CustomTitleTopAppBar(
-                title = "HisabSathi",
+                title = "Hisab Sathi",
                 scrollBehaviorSmall = scrollBehaviorSmall,
                 scrollBehaviorLarge = scrollBehavior,
                 hazeState = hazeState,

@@ -1,0 +1,83 @@
+name: 🏦 New bank or wallet
+description: Ask for support for a Nepali bank, wallet or financial institution that isn't supported yet.
+title: "[Bank]: "
+labels: ["bank-support", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Hisab Sathi only supports **Nepali** institutions. Check the [supported and planned list](https://github.com/Prarambha369/Hisab-Sathi/blob/main/docs/BANK_SUPPORT.md) first.
+
+        A parser needs **real SMS samples**: at least one debit and one credit, more if possible. **Mask** account numbers, card numbers, names and phone numbers with `X`, but keep the wording, punctuation and amounts exactly as received. Never include OTPs or PINs.
+  - type: input
+    id: institution
+    attributes:
+      label: Institution name
+      placeholder: Global IME Bank, Prabhu Bank, IME Pay…
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Type of institution
+      options:
+        - Commercial bank (Class A)
+        - Development bank (Class B)
+        - Finance company (Class C)
+        - Microfinance (Class D)
+        - Digital wallet
+        - Payment network (Fonepay, ConnectIPS, NPS…)
+        - Cooperative
+        - Remittance company
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: sender
+    attributes:
+      label: SMS sender name(s) or number(s)
+      placeholder: GIBL_ALERT, 32233
+    validations:
+      required: true
+  - type: textarea
+    id: sms-debit
+    attributes:
+      label: Debit / payment SMS (masked)
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: sms-credit
+    attributes:
+      label: Credit / deposit SMS (masked)
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: sms-other
+    attributes:
+      label: Other SMS types (optional)
+      description: QR payments, ATM withdrawals, card payments, fund transfers, balance alerts, loan/EMI reminders, etc. One per block, with a line saying what each one is.
+      render: text
+  - type: checkboxes
+    id: tx-types
+    attributes:
+      label: Which transactions do you get SMS for?
+      options:
+        - label: Account debit / credit
+        - label: Fonepay QR payments
+        - label: ConnectIPS / mobile banking transfers
+        - label: eSewa / Khalti wallet load from bank
+        - label: ATM withdrawals
+        - label: Debit / credit card (POS, online)
+        - label: Remittance received
+        - label: Bill payments (NEA, Khanepani, internet, recharge)
+        - label: Loan / EMI and credit card due reminders
+        - label: Balance alerts
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Privacy check
+      options:
+        - label: I masked account numbers, card numbers, names and phone numbers, and no SMS contains an OTP or PIN.
+          required: true

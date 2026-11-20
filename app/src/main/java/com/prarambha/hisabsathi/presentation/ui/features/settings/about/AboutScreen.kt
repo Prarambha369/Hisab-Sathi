@@ -56,6 +56,7 @@ import com.prarambha.hisabsathi.presentation.ui.icons.*
 import com.prarambha.hisabsathi.presentation.ui.theme.*
 import androidx.compose.foundation.clickable
 import com.prarambha.hisabsathi.core.Constants
+import com.prarambha.hisabsathi.core.GitHubIssues
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.hazeEffect
@@ -101,8 +102,8 @@ fun AboutScreen(
                 val tertiary = MaterialTheme.colorScheme.tertiary
                 val alternatingIcons = remember {
                     listOf(
-                        IconResource.VectorIcon(Iconax.HisabSathi, primary),
-                        IconResource.VectorIcon(Iconax.HisabSathiOutline, tertiary)
+                        IconResource.TintedResIcon(R.drawable.hisabsathi, primary),
+                        IconResource.TintedResIcon(R.drawable.hisabsathi_outline, tertiary)
                     )
                 }
 
@@ -159,7 +160,7 @@ fun AboutScreen(
                     Spacer(modifier = Modifier.height(Dimensions.Padding.content))
 
                     Text(
-                        text = "HisabSathi",
+                        text = "Hisab Sathi",
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -219,8 +220,8 @@ fun AboutScreen(
                     verticalArrangement = Arrangement.spacedBy(1.5.dp)
                 ) {
                     AboutListItem(
-                        title = "Website",
-                        subtitle = "hisabsathi.showcase",
+                        title = "Downloads",
+                        subtitle = "Latest releases and APKs",
                         icon = Iconax.Shop,
                         iconColor = orange_dark,
                         iconBackground = orange_light,
@@ -261,7 +262,7 @@ fun AboutScreen(
 
                     AboutListItem(
                         title = "FAQ",
-                        subtitle = "Frequently asked questions",
+                        subtitle = "Banks, SMS, AI models and backups",
                         icon = Iconax.MessageQuestion,
                         iconColor = orange_dark,
                         iconBackground = orange_light,
@@ -278,7 +279,7 @@ fun AboutScreen(
 
                     AboutListItem(
                         title = "Guides",
-                        subtitle = "How to use HisabSathi",
+                        subtitle = "Set up and use Hisab Sathi",
                         icon = Iconax.DocumentText2,
                         iconColor = purple_dark,
                         iconBackground = purple_light,
@@ -295,7 +296,7 @@ fun AboutScreen(
 
                     AboutListItem(
                         title = "Report Bug",
-                        subtitle = "Help us improve HisabSathi",
+                        subtitle = "Help us improve Hisab Sathi",
                         icon = Iconax.Ghost,
                         iconColor = red_dark,
                         iconBackground = red_light,
@@ -303,7 +304,24 @@ fun AboutScreen(
                         onClick = {
                             val intent = Intent(
                                 Intent.ACTION_VIEW,
-                                Constants.Links.REPORT_BUG_URL.toUri()
+                                GitHubIssues.bugReportUrl().toUri()
+                            )
+                            context.startActivity(intent)
+                        },
+                        position = ListItemPosition.Middle
+                    )
+
+                    AboutListItem(
+                        title = "Send Feedback",
+                        subtitle = "Tell us what works and what's missing",
+                        icon = Iconax.Messages,
+                        iconColor = pink_dark,
+                        iconBackground = pink_light,
+                        isLink = true,
+                        onClick = {
+                            val intent = Intent(
+                                Intent.ACTION_VIEW,
+                                GitHubIssues.feedbackUrl().toUri()
                             )
                             context.startActivity(intent)
                         },
@@ -312,7 +330,7 @@ fun AboutScreen(
 
                     AboutListItem(
                         title = "Privacy Policy",
-                        subtitle = "Your data usage and privacy",
+                        subtitle = "How your data stays on your phone",
                         icon = Iconax.SecuritySafe,
                         iconColor = green_dark,
                         iconBackground = green_light,
@@ -328,8 +346,8 @@ fun AboutScreen(
                     )
 
                     AboutListItem(
-                        title = "Terms of Service",
-                        subtitle = "Rules for using the app",
+                        title = "Terms of Use",
+                        subtitle = "Licence, accuracy and no warranty",
                         icon = Iconax.DocumentText2,
                         iconColor = cyan_dark,
                         iconBackground = cyan_light,
@@ -346,7 +364,7 @@ fun AboutScreen(
 
                     AboutListItem(
                         title = "Licenses",
-                        subtitle = "Open source libraries",
+                        subtitle = "Open source libraries and AI models",
                         icon = Iconax.Status,
                         iconColor = orange_dark,
                         iconBackground = orange_light,
@@ -380,7 +398,7 @@ fun AboutScreen(
                 Spacer(modifier = Modifier.height(Dimensions.Padding.card))
 
                 Text(
-                    text = "Built with ❤️ for privacy",
+                    text = "नेपालको लागि, नेपालबाट · private by design",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurface.copy(0.5f),
                     textAlign = TextAlign.Center,
