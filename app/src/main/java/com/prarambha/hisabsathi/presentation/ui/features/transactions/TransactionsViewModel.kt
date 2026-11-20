@@ -27,7 +27,6 @@ import com.prarambha.hisabsathi.data.repository.CurrencyRepository
 import com.prarambha.hisabsathi.data.repository.SubcategoryRepository
 import com.prarambha.hisabsathi.data.currency.CurrencyConversionService
 import com.prarambha.hisabsathi.utils.CurrencyUtils
-import com.prarambha.hisabsathi.utils.DeviceEncryption
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.ExperimentalCoroutinesApi

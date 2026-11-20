@@ -88,7 +88,6 @@ tasksGenai = "0.10.29"  # MediaPipe Tasks GenAI
 - Min SDK: 26
 
 # Environment Setup
-echo "RSA_PUBLIC_KEY=\"your_key_here\"" >> local.properties
 echo "RELEASE_STORE_FILE=path/to/keystore.jks" >> local.properties
 # Add remaining signing properties as needed
 ```

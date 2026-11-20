@@ -14,7 +14,6 @@ import com.prarambha.hisabsathi.data.database.entity.UnrecognizedSmsEntity
 import com.prarambha.hisabsathi.data.manager.SmsTransactionProcessor
 import com.prarambha.hisabsathi.data.preferences.TaughtShapesStore
 import com.prarambha.hisabsathi.data.repository.UnrecognizedSmsRepository
-import com.prarambha.hisabsathi.utils.DeviceEncryption
 import com.prarambha.parser.core.ParsedTransaction
 import com.prarambha.parser.core.SmsShapes
 import com.prarambha.parser.core.TapChoice

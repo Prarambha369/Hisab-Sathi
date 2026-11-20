@@ -24,7 +24,6 @@ import com.prarambha.hisabsathi.core.Constants
 import com.prarambha.hisabsathi.data.database.entity.AccountBalanceEntity
 import com.prarambha.hisabsathi.data.database.entity.SubcategoryEntity
 import com.prarambha.hisabsathi.utils.CurrencyFormatter
-import com.prarambha.hisabsathi.utils.DeviceEncryption
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.ExperimentalCoroutinesApi
