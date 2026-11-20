@@ -59,88 +59,26 @@ fi
 # 4. Generate changelog
 LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
 
-# Check if claude CLI is available and user wants to use it
-USE_CLAUDE=false
-if command -v claude &> /dev/null; then
-    echo ""
-    read -p "Generate release notes with Claude AI? (y/n) " -n 1 -r
-    echo
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        USE_CLAUDE=true
-    fi
-fi
+echo "# Release v$NEXT_VERSION" > RELEASE_NOTES.md
+echo "" >> RELEASE_NOTES.md
 
-if [ "$USE_CLAUDE" = true ] && [ -n "$LAST_TAG" ]; then
-    echo -e "${YELLOW}🤖 Generating release notes with Claude...${NC}"
-
-    # Get commit messages
-    COMMITS=$(git log $LAST_TAG..HEAD --pretty=format:"- %s (%h)")
-
-    # Create prompt for Claude
-    CLAUDE_PROMPT="Generate concise, user-friendly release notes for version $NEXT_VERSION of Hisab Sathi (an Android expense tracker app that parses bank SMS messages).
-
-    Just return the release notes, don't include any other text. We will directly copy the release notes to the RELEASE_NOTES.md file.
-
-Based on these git commits since $LAST_TAG:
-$COMMITS
-
-Create release notes with these sections:
-1. A brief summary (1-2 sentences)
-2. New Features (if any)
-3. Improvements (if any)
-4. Bug Fixes (if any)
-
-Guidelines:
-- Use clear, non-technical language
-- Group related changes together
-- Highlight the most important changes first
-- Keep it concise (max 500 words)
-- Format in Markdown
-- Don't include commit hashes
-- Focus on user impact, not technical details
-- If commits mention specific banks, mention them by name
-
-Start with '# Release v$NEXT_VERSION' as the title."
-
-    # Use claude CLI to generate release notes
-    if echo "$CLAUDE_PROMPT" | claude > RELEASE_NOTES_TEMP.md 2>/dev/null; then
-        mv RELEASE_NOTES_TEMP.md RELEASE_NOTES.md
-
-        # Append installation section
-        echo "" >> RELEASE_NOTES.md
-        echo "---" >> RELEASE_NOTES.md
-        echo "### Installation" >> RELEASE_NOTES.md
-        echo "Download the APK below and install it on your Android device." >> RELEASE_NOTES.md
-
-        echo -e "${GREEN}✅ AI-powered release notes generated${NC}"
-    else
-        echo -e "${YELLOW}⚠️  Claude generation failed, falling back to standard format${NC}"
-        USE_CLAUDE=false
-    fi
-fi
-
-# Fallback to standard changelog if Claude not used or failed
-if [ "$USE_CLAUDE" = false ]; then
-    echo "# Release v$NEXT_VERSION" > RELEASE_NOTES.md
+if [ -n "$LAST_TAG" ]; then
+    echo "## Changes since $LAST_TAG" >> RELEASE_NOTES.md
     echo "" >> RELEASE_NOTES.md
-
-    if [ -n "$LAST_TAG" ]; then
-        echo "## Changes since $LAST_TAG" >> RELEASE_NOTES.md
-        echo "" >> RELEASE_NOTES.md
-        git log $LAST_TAG..HEAD --pretty=format:"- %s (%h)" >> RELEASE_NOTES.md
-    else
-        echo "## Initial Release" >> RELEASE_NOTES.md
-        echo "" >> RELEASE_NOTES.md
-        echo "First release of Hisab Sathi" >> RELEASE_NOTES.md
-    fi
-
+    git log $LAST_TAG..HEAD --pretty=format:"- %s (%h)" >> RELEASE_NOTES.md
+else
+    echo "## Initial Release" >> RELEASE_NOTES.md
     echo "" >> RELEASE_NOTES.md
-    echo "---" >> RELEASE_NOTES.md
-    echo "### Installation" >> RELEASE_NOTES.md
-    echo "Download the APK below and install it on your Android device." >> RELEASE_NOTES.md
-
-    echo -e "${GREEN}✅ Changelog generated${NC}"
+    echo "First release of Hisab Sathi" >> RELEASE_NOTES.md
 fi
+
+echo "" >> RELEASE_NOTES.md
+echo "---" >> RELEASE_NOTES.md
+echo "### Installation" >> RELEASE_NOTES.md
+echo "Download the APK below and install it on your Android device." >> RELEASE_NOTES.md
+
+echo -e "${GREEN}✅ Changelog generated${NC}"
+
 
 if [ "$DRY_RUN" = "true" ]; then
     echo -e "${YELLOW}🔍 DRY RUN SUMMARY${NC}"
@@ -159,38 +97,8 @@ echo -e "${GREEN}✅ Using version: $NEXT_VERSION (code: $NEXT_CODE) from build.
 CHANGES_MADE=true  # Mark that we've made changes (changelog file)
 CHANGELOG_FILE="$CHANGELOG_DIR/${NEXT_CODE}.txt"
 
-# Try to use Claude for Play Store changelog if available and already used for main release notes
-if [ "$USE_CLAUDE" = true ]; then
-    echo -e "${YELLOW}🤖 Generating Play Store changelog with Claude...${NC}"
-
-    # Create prompt for Play Store release notes (more concise)
-    PLAYSTORE_PROMPT="Generate very concise Play Store release notes for Hisab Sathi version $NEXT_VERSION (max 500 characters).
-
-Based on these changes:
-$COMMITS
-
-Rules:
-- Maximum 500 characters total
-- Use bullet points (•)
-- Focus only on most important user-facing changes
-- Mention specific banks if added
-- No technical jargon
-- Start with 'What's New in v$NEXT_VERSION'"
-
-    # Use claude CLI to generate Play Store notes
-    if echo "$PLAYSTORE_PROMPT" | claude > "$CHANGELOG_FILE.tmp" 2>/dev/null; then
-        # Truncate to 500 characters if needed
-        head -c 500 "$CHANGELOG_FILE.tmp" > "$CHANGELOG_FILE"
-        rm -f "$CHANGELOG_FILE.tmp"
-        echo -e "${GREEN}✅ Play Store changelog generated with Claude${NC}"
-    else
-        echo -e "${YELLOW}⚠️  Claude generation failed for Play Store, using standard format${NC}"
-        USE_CLAUDE=false
-    fi
-fi
-
-# Fallback to standard changelog if Claude not used
-if [ "$USE_CLAUDE" = false ]; then
+# Generate the Play Store / F-Droid changelog from conventional commits
+if true; then
     # Generate simple changelog for fastlane
     if [ -n "$LAST_TAG" ]; then
         echo "Version $NEXT_VERSION" > "$CHANGELOG_FILE"
